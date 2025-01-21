@@ -1,0 +1,16 @@
+{
+  "name": "firestore-unit-testing",
+  "version": "1.0.0",
+  "description": "Firebase Security Rules Unit Testing For An App Called Alcoholic.Essentially It Let People Selling Alcohol Create Alcohol Grand Prices That Can Be Won By Their Customers.",
+  "main": "test.js",
+   "type": "module",
+  "scripts": {
+    "test": "mocha --timeout 5000000 --exit"
+  },
+  "author": "Lwandile Ganyile",
+  "license": "ISC",
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^3.0.4",
+    "mocha": "^10.7.3"
+  }
+}

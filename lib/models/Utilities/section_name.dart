@@ -1,0 +1,18 @@
+// Branch : user_models_creation
+enum SectionName {
+  mutUmlaziDurbanKwaZuluNatalSouthAfrica,
+  hawardCollegeCampusUKZNDurbanKwaZuluNatalSouthAfrica,
+  westvilleCampusUKZNDurbanKwaZuluNatalSouthAfrica,
+  edgewoodCampusUKZNPinetownKwaZuluNatalSouthAfrica,
+  steveBikoCampusDutDurbanKwaZuluNatalSouthAfrica,
+
+  catoCrestMayvilleDurbanKwaZuluNatalSouthAfrica,
+  catoManorMayvilleDurbanKwaZuluNatalSouthAfrica,
+  dunbarMayvilleDurbanKwaZuluNatalSouthAfrica,
+  masxhaMayvilleDurbanKwaZuluNatalSouthAfrica,
+  bonelaMayvilleDurbanKwaZuluNatalSouthAfrica,
+  sherwoodMayvilleDurbanKwaZuluNatalSouthAfrica,
+  richviewMayvilleDurbanKwaZuluNatalSouthAfrica,
+  nsimbiniMayvilleDurbanKwaZuluNatalSouthAfrica,
+  manorGardensMayvilleDurbanKwaZuluNatalSouthAfrica,
+}

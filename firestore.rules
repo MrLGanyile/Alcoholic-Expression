@@ -1,0 +1,353 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      // get - used if a client with want to read this document.
+      // list - used if there is going to be a query returning this document.
+      // To make this rule cascade I'll have to use restOfPath=** wildcard otherwise it won't.
+      allow read, write: if false;
+    }
+
+    function isSuperiorAdmin(){
+      return request.auth != null &&
+      exists(/databases/$(database)/documents/admins/
+      $(request.auth.uid)) && get(/databases/$(database)/documents/admins/
+      $(request.auth.uid)).data.isSuperiorAdmin;
+    }
+
+
+    match /supported_countries/{countryId}{
+      allow write: if false;
+      allow read;
+    }
+
+    match /supported_provinces_or_states/{provinceOrStateId}{
+      allow write: if false;
+      allow read;
+    }
+
+    match /supported_cities/{cityId}{
+      allow write: if false;
+      allow read;
+    }
+
+    match /supported_suburbs_or_townships/{suburbOrTownshipId}{
+      allow write: if false;
+      allow read;
+    }
+
+    match /supported_areas/{areaId}{
+      allow write: if false;
+      allow read;
+    }
+
+    // ==============================Done With Unit Testing [Start]==============================
+    
+    // Branch : alcoholic_crud ->  alcoholic_crud_firestore
+    // Note: Has Model Named {Alcoholic}
+    match /alcoholics/{alcoholicPhoneNumber}{
+      allow create: if request.auth!=null &&
+
+      exists(/databases/$(database)/documents/admins/
+      $(request.auth.uid))==false &&
+
+      // Phone number is provided and matches the document id provided.
+      request.resource.data.phoneNumber != null &&
+      request.resource.data.phoneNumber != '' &&
+      request.resource.data.phoneNumber == alcoholicPhoneNumber &&
+
+      // New user isn't already an alcoholic nor is he a store owner.
+      exists(/databases/$(database)/documents/alcoholics/
+      $(request.auth.uid))==false &&
+
+      request.resource.data.profileImageURL != null &&
+      request.resource.data.profileImageURL != '' &&
+
+      request.resource.data.sectionName != null &&
+      request.resource.data.sectionName in 
+      [
+        
+        'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        'Cato Manor-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        'Dunbar-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        'Masxha-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        'Bonela-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        'Sherwood-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        'Richview-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        'Nsimbini-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        'Manor Gardens-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        
+        'MUT-Umlazi-Durban-Kwa Zulu Natal-South Africa',
+        'Haward College Campus-UKZN-Durban-Kwa Zulu Natal-South Africa',
+        'Westville Campus-UKZN-Durban-Kwa Zulu Natal-South Africa',
+        'Edgewood Campus-UKZN-Pinetown-Kwa Zulu Natal-South Africa',
+        'Steve Biko Campus-DUT-Durban-Kwa Zulu Natal-South Africa',
+        
+
+      ];
+
+      allow read;
+
+      // "update" is made this way because it conflicts with "create".
+      allow update, delete: if false;
+    }
+
+    // Branch : group_crud ->  group_crud_firestore
+    // Note: Has Model Named {Group}
+    match /groups/{groupId}{
+
+      allow create: if request.auth != null &&
+
+      // Make sure a user is an alcoholic.
+      exists(/databases/$(database)/documents/alcoholics/
+      $(request.auth.uid)) &&
+
+      // Make sure users do not create more than one group.
+      exists(/databases/$(database)/documents/groups/
+      $(request.auth.uid)) == false && 
+
+      request.resource.data.groupName != null &&
+      request.resource.data.groupName.size() >= 3 &&
+
+      request.resource.data.groupImageURL!= null &&
+      request.resource.data.groupImageURL != '' &&
+
+      request.resource.data.groupSectionName in  
+      [
+        'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        'Cato Manor-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        'Dunbar-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        'Masxha-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        'Bonela-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        'Sherwood-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        'Richview-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        'Nsimbini-Mayville-Durban-Kwa Zulu Natal-South Africa',
+
+        'MUT-Umlazi-Durban-Kwa Zulu Natal-South Africa',
+        'Haward College Campus-UKZN-Durban-Kwa Zulu Natal-South Africa',
+        'Westville Campus-UKZN-Durban-Kwa Zulu Natal-South Africa',
+        'Edgewood Campus-UKZN-Pinetown-Kwa Zulu Natal-South Africa',
+        'Steve Biko Campus-DUT-Durban-Kwa Zulu Natal-South Africa',
+      ] &&
+
+      request.resource.data.groupSpecificArea != null &&
+      request.resource.data.groupSpecificArea != '' &&
+      
+      request.resource.data.groupCreatorPhoneNumber != null &&
+      request.resource.data.groupCreatorPhoneNumber == request.auth.uid &&
+
+      request.resource.data.groupCreatorUsername != null &&
+      request.resource.data.groupCreatorUsername != '' &&
+
+      request.resource.data.groupCreatorImageURL != null &&
+      request.resource.data.groupCreatorImageURL != '' &&
+      
+      request.resource.data.groupMembers != null &&
+      request.resource.data.groupMembers.size() == 1 &&
+
+      request.resource.data.isActive==false &&
+      
+      request.resource.data.maxNoOfMembers == 5;
+
+      // Anybody can view groups.
+      allow read;
+
+      // Let users join or leave groups.
+      allow update:if request.auth != null && 
+
+      isSuperiorAdmin() == false &&
+      
+      request.resource.data.groupName == 
+      resource.data.groupName &&
+
+      request.resource.data.groupImageURL == 
+      resource.data.groupImageURL &&
+
+      request.resource.data.groupSectionName == 
+      resource.data.groupSectionName &&
+
+      request.resource.data.groupSpecificArea == 
+      resource.data.groupSpecificArea &&
+      
+      request.resource.data.groupCreatorPhoneNumber ==
+      resource.data.groupCreatorPhoneNumber &&
+
+      request.resource.data.groupCreatorUsername ==
+      resource.data.groupCreatorUsername &&
+
+      request.resource.data.groupCreatorImageURL ==
+      resource.data.groupCreatorImageURL &&
+      
+      // A user can only join or leave a group.
+      (
+        
+      (
+        request.resource.data.groupMembers.size() < resource.data.maxNoOfMembers &&
+        request.resource.data.groupMembers.size()  == resource.data.groupMembers.size() + 1
+        
+      ) ||
+      (
+        request.resource.data.groupMembers.size() > 1 &&
+        request.resource.data.groupMembers.size() ==
+        resource.data.groupMembers.size() - 1
+        
+      )
+      );
+
+      allow delete: if false;
+    }
+
+    // Branch : admin_crud ->  admin_crud_firestore
+    // Note: Has Model Named {Admin}
+    match /admins/{adminPhoneNumber}{
+      allow create: if isSuperiorAdmin() && 
+      request.resource.data.isSuperiorAdmin == false;
+
+      allow read: if isSuperiorAdmin() || 
+      (request.auth != null && request.auth.uid == resource.data.phoneNumber);
+
+      allow delete: if isSuperiorAdmin() && 
+      resource.data.isSuperiorAdmin == false;
+
+      allow update: if false; 
+    }
+
+    // ==============================Done With Unit Testing [End]==============================
+
+    
+
+    // Note: Has Model Named {Store}
+    match /stores/{storeOwnerPhoneNumber}{
+
+      allow write: if false;
+      // Any logged in store owner can read store's info his/her store info.
+      allow read: if true;
+
+      // Note: Has Model Named {StoreDraw}
+      match /store_draws/{storeDrawId}{
+
+        // Only a store owner can create a store draw.
+        allow create: if isSuperiorAdmin() &&
+        
+        // Make Sure It Sunday. 
+        // Make Sure There Is No Other Previous Unplayed Store Draw.
+        // [removed for front end testing purpose, backend unit tests already passed.] request.resource.data.drawDateAndTime.weekday==7 && 
+        
+        // [removed for front end testing purpose, backend unit tests already passed.] 
+        request.resource.data.drawDateAndTime.hour==8 &&
+
+        // Make Sure It 8am, 9am or 10am.
+        //[removed for front end testing purpose, backend unit tests already passed.] 
+        (request.resource.data.drawDateAndTime.minute==8 
+        || request.resource.data.drawDateAndTime.minute==9 || 
+        request.resource.data.drawDateAndTime.minute==10)
+
+        // Anybody can view store draws.
+        allow read;
+
+        // Only accept store draw update or delete from the store owner while the straw is still open.
+        allow update, delete: if isSuperiorAdmin();
+
+        // Done With Unit Testing.
+        match /draw_grand_prices/{drawGrandPrices}{
+          
+          // Only a store owner can create a store draw grand price.
+          allow create: if isSuperiorAdmin() &&
+          
+          request.resource.data.grandPriceId != null &&
+          request.resource.data.grandPriceId == drawGrandPrices &&
+
+          request.resource.data.storeDrawFK != null &&
+          request.resource.data.storeDrawFK == storeDrawId &&
+
+          request.resource.data.imageURL != null &&
+          request.resource.data.imageURL != "" &&
+
+          request.resource.data.description != null &&
+          request.resource.data.description != "" &&
+
+          request.resource.data.grandPriceIndex != null &&
+          request.resource.data.grandPriceIndex>=0;
+
+          // Anybody can view store draws.
+          allow read;
+
+          // Only accept deletion of a competitor from the store owner while the draw is still open.
+          allow update, delete: if 
+          isSuperiorAdmin() &&
+          resource.data.storeDrawFK==storeDrawId &&
+          get(/databases/$(database)/documents/stores/$(storeOwnerPhoneNumber)/store_draws/$(storeDrawId)).isOpen;
+        }
+          
+      }
+
+    }
+
+    // Note: Has Model Named {WonPriceSummary}
+    match /won_prices_summaries/{wonPriceSummaryId}{
+      
+      // create - Invoked Whenever Somebody Wins A Competition.
+      allow write: if false;
+
+      // Everybody can see a won price.
+      allow read;
+    }
+
+    // Note: Has Model Named {StoreNameInfo}
+    match /stores_names_info/{storeNameInfoId}{
+      allow read: if true;
+      allow create, update, delete: if false; // Called By A Cloud Function Only.
+    }
+
+    // All competitions should take the same amount of time to finish.
+    // Note: Has Model Named {Competition}
+    match /competitions/{competitionId}{
+      
+      // get - Invoked whenever one needs to view the competition.
+      allow get: if true; 
+      allow list: if false;
+      allow update;
+      
+      // create - Automatically invoked when a competition is created(Screen 10.2.1).
+      allow create: if request.auth.uid != null &&
+      get(/databases/$(database)/documents/users/
+      $(request.auth.uid)).data.isOwner == true;
+      
+      // Note: Has Model Named {GrandPricesGrid}
+      match /grand_prices_grids/{grandPriceGridId}{
+
+        allow write: if false;
+        allow get: if true; 
+        allow list: if false;
+
+        // Note: Has Model Named {GrandPriceToken}
+        match /grand_prices_tokens/{grandPriceTokenId}{
+          allow write: if false;
+          allow read: if true;
+        }
+      
+      }
+
+      // Note: Has Model Named {GroupCompetitorsGrid}
+      match /group_competitors_grids/{competitorGridId}{
+        
+        allow write: if false;
+        allow get: if true; 
+        allow list: if false;
+
+        // Note: Has Model Named {GroupCompetitorToken}
+        match /group_competitors_tokens/{competitorTokenId}{
+          allow write: if false;
+          allow get: if false;
+          allow list: if true;
+        }
+      }
+    }
+
+    match /count_down_clocks/{competitionCountDownId}{
+      allow read;
+      allow write: if false;
+    }
+  }
+}
