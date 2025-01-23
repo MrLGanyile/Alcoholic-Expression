@@ -2,7 +2,10 @@ import 'package:alco/controllers/share_dao_functions.dart';
 import 'package:alco/screens/home_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
+
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
+
+import 'dart:developer' as debug;
 
 import 'page_navigation.dart';
 
@@ -68,8 +71,16 @@ class _VerificationScreenState extends State<VerificationScreen> {
       child: Column(
         children: [
           Pinput(
-            validator: ((value) =>
-                value == widget.correctPin ? null : 'Incorrect Pin'),
+            validator: ((value) {
+              debug.log(value!);
+              debug.log('${widget.correctPin} ${widget.phoneNumber}');
+
+              if (value == widget.correctPin) {
+                return null;
+              } else {
+                return 'Incorrect Pin';
+              }
+            }),
             onCompleted: (userPin) {
               showProgressBar = true;
               if (userPin == widget.correctPin) {
@@ -117,9 +128,9 @@ class _VerificationScreenState extends State<VerificationScreen> {
         ),
       );
 
-  Widget _numberText() => const Text(
-        '+27661813561',
-        style: TextStyle(
+  Widget _numberText() => Text(
+        widget.phoneNumber,
+        style: const TextStyle(
           fontWeight: FontWeight.w500,
           fontSize: 15,
         ),

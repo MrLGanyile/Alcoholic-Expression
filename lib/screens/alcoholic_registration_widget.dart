@@ -17,6 +17,7 @@ import '../main.dart';
 
 import 'utils/globals.dart';
 import 'dart:developer' as debug;
+import 'dart:math';
 
 // groups_crud -> create_group_front_end
 class AlcoholicRegistrationWidget extends StatefulWidget {
@@ -121,7 +122,7 @@ class _AlcoholicRegistrationWidgetState
                       icon: Icon(Icons.camera_alt,
                           color: MyApplication.logoColor2),
                       onPressed: () {
-                        userController.captureAlcoholicProfileImageWithCamera();
+                        // userController.captureAlcoholicProfileImageWithCamera();
                       },
                     ),
                   ),
@@ -252,15 +253,16 @@ class _AlcoholicRegistrationWidgetState
                                   ) {
                                 /*Navigator.of(context).push(
                                   CustomPageRoute(
-                                      child: VerifyPhoneNumberScreen(
+                                      child: VerificationScreen(
                                     phoneNumber:
                                         phoneNumberEditingController.text,
+                                    correctPin: '000011',
                                   )),
-                                );*/
+                                ); */
 
                                 final auth = FirebaseAuth.instance;
                                 await auth.verifyPhoneNumber(
-                                  phoneNumber: '+27661813561',
+                                  phoneNumber: '+27714294940',
 
                                   /* This handler will only be called on Android devices which 
                                   support automatic SMS code resolution.When the SMS code is delivered 
@@ -303,11 +305,22 @@ class _AlcoholicRegistrationWidgetState
                                   codeSent: (String verificationId,
                                       int? resendToken) async {
                                     showProgressBar = true;
+
+                                    String generatedPin = '';
+                                    for (int digitIndex = 0;
+                                        digitIndex < 4;
+                                        digitIndex++) {
+                                      generatedPin +=
+                                          Random().nextInt(10).toString();
+                                    }
+
+                                    debug.log('generated pin $generatedPin');
+
                                     Navigator.of(context).push(CustomPageRoute(
                                         child: VerificationScreen(
                                       phoneNumber:
-                                          phoneNumberEditingController.text,
-                                      correctPin: verificationId,
+                                          '+27${phoneNumberEditingController.text}',
+                                      correctPin: generatedPin,
                                     )));
                                     // Update the UI - wait for the user to enter the SMS code
 

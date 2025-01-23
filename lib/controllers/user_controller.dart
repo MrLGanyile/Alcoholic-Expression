@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:developer' as debug;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -30,34 +31,70 @@ enum GroupUpdatingStatus {
 class UserController extends GetxController {
   static UserController instance = Get.find();
 
-  late Rx<File?> pickedProfileImageFile;
-  File? get alcoholicProfileImageFile => pickedProfileImageFile.value;
+  late Rx<File?> pickedGroupImageFile;
+  File? get groupImageFile => pickedGroupImageFile.value;
 
-  void chooseAlcoholicProfileImageFromGallery() async {
+  late Rx<File?> pickedMember1ProfileImageFile;
+  File? get member1ProfileImageFile => pickedMember1ProfileImageFile.value;
+
+  late Rx<File?> pickedMember2ProfileImageFile;
+  File? get member2ProfileImageFile => pickedMember2ProfileImageFile.value;
+
+  late Rx<File?> pickedMember3ProfileImageFile;
+  File? get member3ProfileImageFile => pickedMember3ProfileImageFile.value;
+
+  late Rx<File?> pickedMember4ProfileImageFile;
+  File? get member4ProfileImageFile => pickedMember4ProfileImageFile.value;
+
+  late Rx<File?> pickedLeaderProfileImageFile;
+  File? get leaderProfileImageFile => pickedLeaderProfileImageFile.value;
+
+  // ==========================Alcoholic [Start]==========================
+
+  void chooseMemberProfileImageFromGallery(int memberIndex) async {
     final pickedImageFile =
         await ImagePicker().pickImage(source: ImageSource.gallery);
 
-    if (pickedImageFile != null) {
-      Get.snackbar('Image Status', 'Image File Successfully Picked.');
+    switch (memberIndex) {
+      case 1:
+        pickedMember1ProfileImageFile = Rx<File?>(File(pickedImageFile!.path));
+        break;
+      case 2:
+        pickedMember2ProfileImageFile = Rx<File?>(File(pickedImageFile!.path));
+        break;
+      case 3:
+        pickedMember3ProfileImageFile = Rx<File?>(File(pickedImageFile!.path));
+        break;
+      case 4:
+        pickedMember4ProfileImageFile = Rx<File?>(File(pickedImageFile!.path));
+        break;
+      default:
+        pickedLeaderProfileImageFile = Rx<File?>(File(pickedImageFile!.path));
     }
-
-    // Share the chosen image file on Getx State Management.
-    pickedProfileImageFile = Rx<File?>(File(pickedImageFile!.path));
   }
 
-  void captureAlcoholicProfileImageWithCamera() async {
+  void captureMemberProfileImageFromGallery(int memberIndex) async {
     final pickedImageFile =
         await ImagePicker().pickImage(source: ImageSource.camera);
 
-    if (pickedImageFile != null) {
-      Get.snackbar('Image Status', 'Image File Successfully Captured.');
+    switch (memberIndex) {
+      case 1:
+        pickedMember1ProfileImageFile = Rx<File?>(File(pickedImageFile!.path));
+        break;
+      case 2:
+        pickedMember2ProfileImageFile = Rx<File?>(File(pickedImageFile!.path));
+        break;
+      case 3:
+        pickedMember3ProfileImageFile = Rx<File?>(File(pickedImageFile!.path));
+        break;
+      case 4:
+        pickedMember4ProfileImageFile = Rx<File?>(File(pickedImageFile!.path));
+        break;
+      default:
+        pickedLeaderProfileImageFile = Rx<File?>(File(pickedImageFile!.path));
     }
-
-    // Share the chosen image file on Getx State Management.
-    pickedProfileImageFile = Rx<File?>(File(pickedImageFile!.path));
   }
 
-  // ==========================Alcoholic [Start]==========================
   void saveAlcoholic(File alcoholicProfileImage, String phoneNumber,
       SectionName sectionName, String uid, String username) async {
     // Step 1 - create user in the firebase authentication. [Performed On The Screen Calling This Method]
@@ -91,11 +128,51 @@ class UserController extends GetxController {
   // ==========================Alcoholic [End]==========================
 
   // ==========================Group [Start]==========================
+
+  void chooseGroupImageFromGallery() async {
+    final pickedImageFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (pickedImageFile != null) {
+      Get.snackbar('Image Status', 'Image File Successfully Picked.');
+    }
+
+    // Share the chosen image file on Getx State Management.
+    pickedGroupImageFile = Rx<File?>(File(pickedImageFile!.path));
+  }
+
+  void captureGroupProfileImageWithCamera() async {
+    final pickedImageFile =
+        await ImagePicker().pickImage(source: ImageSource.camera);
+
+    if (pickedImageFile != null) {
+      Get.snackbar('Image Status', 'Image File Successfully Captured.');
+    }
+
+    // Share the chosen image file on Getx State Management.
+    pickedGroupImageFile = Rx<File?>(File(pickedImageFile!.path));
+  }
+
+  Future<void> createGroup() async {
+    final httpCallable =
+        FirebaseFunctions.instance.httpsCallable('createGroup');
+
+    const data = {
+      'param1': 1,
+      'param2': 2,
+    };
+
+    final result = await httpCallable.call(data);
+
+    debug.log(result.data);
+  }
+
   // groups_crud -> create_group
   GroupSavingStatus saveGroup(
     File groupImage,
     String groupName,
     String groupSpecificArea,
+    SectionName sectionName,
   ) {
     GroupSavingStatus groupSavingStatus = GroupSavingStatus.loginRequired;
 
