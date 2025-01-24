@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:alco/screens/single_member_form_widget.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,6 +11,7 @@ import '../controllers/user_controller.dart';
 import '../main.dart';
 import '../models/Utilities/converter.dart';
 import '../models/locations/supported_area.dart';
+import '../models/users/alcoholic.dart';
 import 'page_navigation.dart';
 import 'dart:developer' as debug;
 import 'dart:math';
@@ -362,7 +365,7 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
             onUsernameChanged: updateUsername,
           ),
           // Group Name
-          userSpecificLocation(false),
+          userSpecificLocationOrGroupName(false),
 
           const SizedBox(
             height: 10,
@@ -400,7 +403,7 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
           ),
 
           // Group Specific Area
-          userSpecificLocation(true),
+          userSpecificLocationOrGroupName(true),
 
           const SizedBox(
             height: 10,
@@ -537,8 +540,42 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
             )),
         child: InkWell(
           onTap: () async {
+            await userController.createGroup(
+              File(
+                  'C:\\Users\\Lwandile-Ganyile\\Documents\\Lwandile Ganyile\\Alcoholic-Expression\\Storage Duplicate\\groups_specific_locations\\0612345678.jpg'),
+              'Goal Creators',
+              'Mpompini',
+              Converter.toSectionName(dropDowButton.value!),
+              File('assets/0612345678.jpg'),
+              leaderPhoneNumber!,
+              leaderUsername!,
+              [
+                leaderPhoneNumber!,
+                user1PhoneNumber!,
+                user2PhoneNumber!
+              ], // Phone Numbers
+              [leaderUsername!, user1Username!, user2Username!], // Usernames
+              [
+                File(
+                    'C:\\Users\\Lwandile-Ganyile\\Documents\\Lwandile Ganyile\\Alcoholic-Expression\\Storage Duplicate\\alcoholics\\profile_images\\0612345678.jpg'),
+                File(
+                    'C:\\Users\\Lwandile-Ganyile\\Documents\\Lwandile Ganyile\\Alcoholic-Expression\\Storage Duplicate\\alcoholics\\profile_images\\0712345678.jpg'),
+                File(
+                    'C:\\Users\\Lwandile-Ganyile\\Documents\\Lwandile Ganyile\\Alcoholic-Expression\\Storage Duplicate\\alcoholics\\profile_images\\0812345678.jpg')
+              ], // Profile Images
+            );
+            debug.log('Done Saving Group.');
+            /*GroupSavingStatus groupSavingStatus = userController.saveGroup(
+              File(
+                  'C:\\Users\\Lwandile-Ganyile\\Documents\\Lwandile Ganyile\\Alcoholic-Expression\\Storage Duplicate\\groups_specific_locations\\+27657635413.jpg'),
+              'Goal Creators',
+              'Mpompini',
+              Converter.toSectionName(dropDowButton.value!),
+            ); */
+
             // Create Alcoholic Now
             if (isValidInput()) {
+              /*
               final auth = FirebaseAuth.instance;
               await auth.verifyPhoneNumber(
                 phoneNumber: leaderPhoneNumber,
@@ -550,6 +587,7 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
 
                   debug.log('1. Successfully Signed In User...');
 
+                  // Save Leader
                   if (hasLeader) {
                     userController.saveAlcoholic(
                         userController.leaderProfileImageFile!,
@@ -559,6 +597,7 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
                         leaderUsername!);
                   }
 
+                  // Save Member 1
                   if (hasUser1) {
                     userController.saveAlcoholic(
                         userController.member1ProfileImageFile!,
@@ -568,6 +607,7 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
                         user1Username!);
                   }
 
+                  // Save Member 2
                   if (hasUser2) {
                     userController.saveAlcoholic(
                         userController.member2ProfileImageFile!,
@@ -577,6 +617,7 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
                         user2Username!);
                   }
 
+                  // Save Member 3
                   if (hasUser3) {
                     userController.saveAlcoholic(
                         userController.member3ProfileImageFile!,
@@ -586,6 +627,7 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
                         user3Username!);
                   }
 
+                  // Save Member 4
                   if (hasUser4) {
                     userController.saveAlcoholic(
                         userController.member4ProfileImageFile!,
@@ -629,6 +671,8 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
                 },
                 codeAutoRetrievalTimeout: (String verificationId) {},
               );
+            
+              */
             }
           },
           child: const Center(
@@ -687,6 +731,7 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
       onChanged: (String? value) {
         setState(() {
           selectedValue = value;
+          groupSectionName = dropDowButton.value;
         });
       },
       buttonStyleData: ButtonStyleData(
@@ -733,11 +778,13 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
     return DropdownButtonHideUnderline(child: dropDowButton);
   }
 
-  Widget userSpecificLocation(bool forSpecificArea) => TextField(
+  Widget userSpecificLocationOrGroupName(bool forSpecificArea) => TextField(
         onChanged: forSpecificArea ? updateGroupSpecificArea : updateGroupName,
         style: TextStyle(color: MyApplication.logoColor1),
         cursorColor: MyApplication.logoColor1,
-        controller: groupSpecificAreaEditingController,
+        controller: forSpecificArea
+            ? groupSpecificAreaEditingController
+            : groupNameEditingController,
         decoration: InputDecoration(
           labelText: forSpecificArea ? 'Group Specific Area' : 'Group Name',
           prefixIcon: Icon(forSpecificArea ? Icons.location_city : Icons.group,

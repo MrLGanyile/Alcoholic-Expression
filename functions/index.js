@@ -92,7 +92,7 @@ supportedSuburbOrTownships.set(
     "Westmead", ["Edgewood Campus UKZN"],
 );
 
-
+// There is an error on name display.
 const supportedAreas = new Map();
 supportedAreas.set(
     "Mayville",
@@ -238,6 +238,7 @@ export const createStoreNameInfo = onDocumentCreated("/stores/" +
   return await docReference.set(storeNameInfo);
 });
 
+// Works as expected.
 export const createGroup1 = onCall(async(request)=>{
 
   const param1 = request.data.param1;
@@ -293,6 +294,8 @@ export const createGroup = onCall(async(request)=>{
 
   // Send back a message that we've successfully written to the db.
   res.json({result: `All Groups & Alcoholics Are Saved.`});
+
+
 });
 
 

@@ -153,9 +153,10 @@ class UserController extends GetxController {
     pickedGroupImageFile = Rx<File?>(File(pickedImageFile!.path));
   }
 
-  Future<void> createGroup() async {
+  // Works as expected.
+  Future<void> createGroup1() async {
     final httpCallable =
-        FirebaseFunctions.instance.httpsCallable('createGroup');
+        FirebaseFunctions.instance.httpsCallable('createGroup1');
 
     const data = {
       'param1': 1,
@@ -164,7 +165,84 @@ class UserController extends GetxController {
 
     final result = await httpCallable.call(data);
 
-    debug.log(result.data);
+    debug.log(result.data.toString());
+  }
+
+  bool isValidPhoneNumber(String phoneNumber) {
+    return phoneNumber.isNotEmpty &&
+        phoneNumber.length == 10 &&
+        phoneNumber.isNumericOnly &&
+        (phoneNumber.startsWith('06') ||
+            phoneNumber.startsWith('07') ||
+            phoneNumber.startsWith('08'));
+  }
+
+  bool allValidPhoneNumbers(List<String> phoneNumbers) {
+    for (int phoneIndex = 0; phoneIndex < phoneNumbers.length; phoneIndex++) {
+      if (!isValidPhoneNumber(phoneNumbers[phoneIndex])) return false;
+    }
+    return true;
+  }
+
+  Future<void> createGroup(
+    File groupImage,
+    String groupName,
+    String groupSpecificArea,
+    SectionName sectionName,
+    File groupCreatorImage,
+    String groupCreatorPhoneNumber,
+    String groupCreatorUsername,
+    List<String> phoneNumbers,
+    List<String> usernames,
+    List<File> profileImages,
+  ) async {
+    if (groupName.isNotEmpty &&
+        groupSpecificArea.isNotEmpty &&
+        isValidPhoneNumber(groupCreatorPhoneNumber) &&
+        allValidPhoneNumbers(phoneNumbers) &&
+        phoneNumbers.contains(groupCreatorPhoneNumber) &&
+        phoneNumbers.isNotEmpty &&
+        groupCreatorUsername.isNotEmpty &&
+        usernames.contains(groupCreatorUsername) &&
+        phoneNumbers.length == usernames.length &&
+        phoneNumbers.length == profileImages.length) {
+      String groupImageURL = await uploadResource(
+          groupImage, '/groups_specific_locations/$groupCreatorPhoneNumber');
+
+      String groupCreatorImageURL = await uploadResource(
+          groupCreatorImage, '/alcoholics/$groupCreatorPhoneNumber');
+
+      String groupSectionName = Converter.asString(sectionName);
+
+      List<Map<String, dynamic>> members = [];
+      for (int alcoholicIndex = 0;
+          alcoholicIndex < phoneNumbers.length;
+          alcoholicIndex++) {
+        String groupMemberImageURL = await uploadResource(
+            profileImages[alcoholicIndex],
+            '/alcoholics/${phoneNumbers[alcoholicIndex]}');
+        members.add({
+          'phoneNumber': phoneNumbers[alcoholicIndex],
+          'userName': usernames[alcoholicIndex],
+          'profileImage': groupMemberImageURL
+        });
+      }
+
+      final group = {
+        'groupName': groupName,
+        'groupImageURL': groupImageURL,
+        'groupSectionName': groupSectionName,
+        'groupSpecificArea': groupSpecificArea,
+        'groupCreatorPhoneNumber': groupCreatorPhoneNumber,
+        'groupCreatorImageURL': groupCreatorImageURL,
+        'groupCreatorUsername': groupCreatorUsername,
+        'groupMembers': members
+      };
+
+      final httpCallable =
+          FirebaseFunctions.instance.httpsCallable('createGroup');
+      await httpCallable.call(group);
+    }
   }
 
   // groups_crud -> create_group
