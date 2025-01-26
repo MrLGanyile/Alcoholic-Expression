@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 
-import '../controllers/authentication_controller.dart';
 import '../controllers/location_controller.dart';
 import '../controllers/user_controller.dart';
 import '../main.dart';
@@ -19,7 +18,6 @@ import 'utils/globals.dart';
 import 'dart:developer' as debug;
 import 'dart:math';
 
-// groups_crud -> create_group_front_end
 class AlcoholicRegistrationWidget extends StatefulWidget {
   static const id = 'Alcoholic-Registration-Widget';
 
@@ -35,8 +33,6 @@ class AlcoholicRegistrationWidget extends StatefulWidget {
 
 class _AlcoholicRegistrationWidgetState
     extends State<AlcoholicRegistrationWidget> {
-  AuthenticationController authenticationController =
-      AuthenticationController.instanceAuth;
   UserController userController = UserController.instance;
   LocationController locationController = LocationController.locationController;
 

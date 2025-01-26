@@ -1,7 +1,7 @@
 import 'supported_country.dart';
 
 // Collection Name /provinces_or_states/{provinceOrStateId}
-// Branch : location_models_creation
+// Branch : supported_locations_resources_crud ->  create_supported_locations_front_end
 class SupportedProvinceOrState {
   String provinceOrStateId;
   String provinceOrStateName;

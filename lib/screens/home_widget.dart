@@ -9,7 +9,7 @@ import 'competition/won_price_summary_widget.dart';
 import 'dart:developer' as debug;
 import 'package:get/get.dart';
 
-// won_prices_crud -> read_won_prices
+// Branch : won_price_summary_resources_crud -> view_won_price_summaries
 class HomeWidget extends StatefulWidget {
   HomeWidget({
     super.key,

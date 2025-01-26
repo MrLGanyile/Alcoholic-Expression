@@ -6,7 +6,7 @@ import '../../models/stores/store.dart';
 import '../../models/competitions/won_price_summary.dart';
 import '../store/store_info_widget.dart';
 
-// won_prices_crud -> create_won_price
+// : Branch : won_price_summary_resources_crud -> view_won_price_summaries
 class WinnerWidget extends StatefulWidget {
   final WonPriceSummary wonPriceSummary;
   final bool showStoreInfoFirst;

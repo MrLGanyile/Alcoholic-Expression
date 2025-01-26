@@ -2,12 +2,12 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import '../../main.dart';
 
-import '../../models/Utilities/converter.dart';
+import '../../models/locations/converter.dart';
 import '../../models/competitions/won_price_summary.dart';
 import 'dart:developer' as debug;
 import 'dart:math';
 
-// won_prices_crud -> create_won_price
+// Branch : won_price_summary_resources_crud -> view_won_price_summaries
 class WonPriceSummaryWidget extends StatefulWidget {
   WonPriceSummary wonPriceSummary;
   WonPriceSummaryWidget({

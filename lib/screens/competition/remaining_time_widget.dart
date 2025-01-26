@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../main.dart';
 
-// competitions_crud -> view_currently_playing_competition
+// Branch : competition_resources_crud ->  view_competitions
 class RemainingTimeWidget extends StatefulWidget {
   Duration remainingTime;
 

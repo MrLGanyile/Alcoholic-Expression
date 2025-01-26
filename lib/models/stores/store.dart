@@ -1,8 +1,8 @@
-import '../Utilities/converter.dart';
-import '../Utilities/section_name.dart';
+import '../locations/converter.dart';
+import '../locations/section_name.dart';
 
 // Collection Name /stores/storeId
-// Branch : store_resources_creation
+// Branch : store_resources_crud ->  create_store_resources_store_front_end
 class Store {
   String storeOwnerPhoneNumber;
   String storeName;

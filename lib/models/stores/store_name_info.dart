@@ -1,8 +1,8 @@
-import '/models/Utilities/converter.dart';
+import '../locations/converter.dart';
 
-import '../Utilities/section_name.dart';
+import '../locations/section_name.dart';
 
-// Branch : store_resources_creation
+// Branch : store_resources_crud ->  create_store_resources_store_front_end
 class StoreNameInfo implements Comparable<StoreNameInfo> {
   String storeNameInfoId;
   String storeName;

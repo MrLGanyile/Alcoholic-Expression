@@ -1,10 +1,10 @@
-import '../Utilities/section_name.dart';
+import '../locations/section_name.dart';
 import 'dart:math';
 
-import '../Utilities/converter.dart';
+import '../locations/converter.dart';
 
 // Collection Name /groups
-// groups_crud -> create_group_front_end
+// groups_crud -> group_resources_crud ->  create_group_resources_front_end
 class Group implements Comparable<Group> {
   String groupName;
   String groupImageURL;

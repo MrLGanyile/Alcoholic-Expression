@@ -6,7 +6,6 @@ import '../main.dart';
 import 'groups_screen.dart';
 import 'home_widget.dart';
 
-// initialization -> app_establishment
 class StartScreen extends StatefulWidget {
   StartScreen({
     super.key,

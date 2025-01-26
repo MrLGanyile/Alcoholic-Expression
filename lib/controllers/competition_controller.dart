@@ -4,10 +4,11 @@ import 'package:get/get.dart';
 import '../models/competitions/competition.dart';
 import '../models/competitions/won_price_summary.dart';
 
-// Branch : competitions_data_access
+// Branch : competition_resources_crud ->  competitions_data_access
 class CompetitionController extends GetxController {
   static CompetitionController competitionController = Get.find();
 
+  // Branch : won_price_summary_resources_crud ->  won_price_summary_resources_data_access
   Stream<List<WonPriceSummary>> readAllWonPriceSummaries() =>
       FirebaseFirestore.instance
           .collection('won_prices_summaries')
@@ -19,6 +20,7 @@ class CompetitionController extends GetxController {
                 return wonPriceSummary;
               }).toList());
 
+  // Branch : competition_resources_crud ->  competitions_data_access
   Stream<DocumentSnapshot>? findCompetition(String competitionId) {
     return FirebaseFirestore.instance
         .collection('competitions')
@@ -26,6 +28,7 @@ class CompetitionController extends GetxController {
         .snapshots();
   }
 
+  // Branch : competition_resources_crud ->  competitions_data_access
   // To Delete - Branches competitions_crud -> view_currently_playing_competition
   Future<Competition?> findFutureCompetition(String competitionId) async {
     DocumentReference reference = FirebaseFirestore.instance
@@ -39,6 +42,7 @@ class CompetitionController extends GetxController {
     return null;
   }
 
+  // Branch : competition_resources_crud ->  competitions_data_access
   Stream<DocumentSnapshot<Object?>> retrieveCountDownClock(
       String countDownClockId) {
     DocumentReference reference = FirebaseFirestore.instance

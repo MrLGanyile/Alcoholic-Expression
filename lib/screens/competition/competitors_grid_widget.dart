@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-// competitions_crud -> view_currently_playing_competition
+// Branch : competition_resources_crud ->  view_competitions
 class CompetitorsGridWidget extends StatefulWidget {
   String competitionId;
   int passedTime;

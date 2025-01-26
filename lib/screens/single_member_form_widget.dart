@@ -7,6 +7,7 @@ import 'single_member_text_field.dart';
 
 typedef OnProfileImageURLChanged = Function(int, String);
 
+// Branch : group_resources_crud ->  create_group_resources_front_end
 class SingleMemberFormWidget extends StatefulWidget {
   TextEditingController controller1;
   TextEditingController controller2;
@@ -92,13 +93,18 @@ class SingleMemberFormWidgetState extends State<SingleMemberFormWidget> {
       : Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            // Upload Icon
             Expanded(
               child: IconButton(
                   color: Colors.white,
                   iconSize: MediaQuery.of(context).size.width * 0.15,
                   icon: Icon(Icons.upload, color: MyApplication.logoColor1),
-                  onPressed: () {}),
+                  onPressed: () {
+                    userController.chooseMemberProfileImageFromGallery(
+                        widget.memberIndex);
+                  }),
             ),
+            // 'Or' Icons Seperator
             Expanded(
                 child: Center(
               child: Text(
@@ -110,6 +116,7 @@ class SingleMemberFormWidgetState extends State<SingleMemberFormWidget> {
                 ),
               ),
             )),
+            // Camera Icon
             Expanded(
               child: IconButton(
                 color: Colors.white,
@@ -117,7 +124,7 @@ class SingleMemberFormWidgetState extends State<SingleMemberFormWidget> {
                 icon: Icon(Icons.camera_alt, color: MyApplication.logoColor1),
                 onPressed: () async {
                   userController
-                      .chooseMemberProfileImageFromGallery(widget.memberIndex);
+                      .captureMemberProfileImageFromCamera(widget.memberIndex);
 
                   switch (widget.memberIndex) {
                     case 1:

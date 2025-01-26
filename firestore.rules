@@ -17,26 +17,31 @@ service cloud.firestore {
     }
 
 
+    // Branch : supported_locations_resources_crud -> supported_locaitons_resources_crud_firestore_security_rules
     match /supported_countries/{countryId}{
       allow write: if false;
       allow read;
     }
 
+    // Branch : supported_locations_resources_crud -> supported_locaitons_resources_crud_firestore_security_rules
     match /supported_provinces_or_states/{provinceOrStateId}{
       allow write: if false;
       allow read;
     }
 
+    // Branch : supported_locations_resources_crud -> supported_locaitons_resources_crud_firestore_security_rules
     match /supported_cities/{cityId}{
       allow write: if false;
       allow read;
     }
 
+    // Branch : supported_locations_resources_crud -> supported_locaitons_resources_crud_firestore_security_rules
     match /supported_suburbs_or_townships/{suburbOrTownshipId}{
       allow write: if false;
       allow read;
     }
 
+    // Branch : supported_locations_resources_crud -> supported_locaitons_resources_crud_firestore_security_rules
     match /supported_areas/{areaId}{
       allow write: if false;
       allow read;
@@ -44,7 +49,7 @@ service cloud.firestore {
 
     // ==============================Done With Unit Testing [Start]==============================
     
-    // Branch : alcoholic_crud ->  alcoholic_crud_firestore
+    // Branch : group_resources_crud_storage_security_rules
     // Note: Has Model Named {Alcoholic}
     match /alcoholics/{alcoholicPhoneNumber}{
       allow create: if request.auth!=null &&
@@ -93,7 +98,7 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
-    // Branch : group_crud ->  group_crud_firestore
+    // Branch : group_resources_crud_storage_security_rules
     // Note: Has Model Named {Group}
     match /groups/{groupId}{
 
@@ -198,7 +203,6 @@ service cloud.firestore {
       allow delete: if false;
     }
 
-    // Branch : admin_crud ->  admin_crud_firestore
     // Note: Has Model Named {Admin}
     match /admins/{adminPhoneNumber}{
       allow create: if isSuperiorAdmin() && 
@@ -216,7 +220,7 @@ service cloud.firestore {
     // ==============================Done With Unit Testing [End]==============================
 
     
-
+    // Branch : store_resources_crud ->  store_resources_crud_storage_security_rules
     // Note: Has Model Named {Store}
     match /stores/{storeOwnerPhoneNumber}{
 
@@ -224,6 +228,7 @@ service cloud.firestore {
       // Any logged in store owner can read store's info his/her store info.
       allow read: if true;
 
+      // Branch : store_resources_crud ->  store_resources_crud_storage_security_rules
       // Note: Has Model Named {StoreDraw}
       match /store_draws/{storeDrawId}{
 
@@ -249,6 +254,7 @@ service cloud.firestore {
         // Only accept store draw update or delete from the store owner while the straw is still open.
         allow update, delete: if isSuperiorAdmin();
 
+        // Branch : store_resources_crud ->  store_resources_crud_storage_security_rules
         // Done With Unit Testing.
         match /draw_grand_prices/{drawGrandPrices}{
           
@@ -284,6 +290,7 @@ service cloud.firestore {
 
     }
 
+    // Branch : won_price_summary_resources_crud -> won_price_summary_crud_firestore_security_rules
     // Note: Has Model Named {WonPriceSummary}
     match /won_prices_summaries/{wonPriceSummaryId}{
       
@@ -294,12 +301,14 @@ service cloud.firestore {
       allow read;
     }
 
+    // Branch : store_resources_crud ->  store_resources_crud_storage_security_rules
     // Note: Has Model Named {StoreNameInfo}
     match /stores_names_info/{storeNameInfoId}{
       allow read: if true;
       allow create, update, delete: if false; // Called By A Cloud Function Only.
     }
 
+    // Branch : competition_resources_crud ->  competition_resources_crud_firestore_security_rules
     // All competitions should take the same amount of time to finish.
     // Note: Has Model Named {Competition}
     match /competitions/{competitionId}{
@@ -314,6 +323,7 @@ service cloud.firestore {
       get(/databases/$(database)/documents/users/
       $(request.auth.uid)).data.isOwner == true;
       
+      // Branch : competition_resources_crud ->  competition_resources_crud_firestore_security_rules
       // Note: Has Model Named {GrandPricesGrid}
       match /grand_prices_grids/{grandPriceGridId}{
 
@@ -321,6 +331,7 @@ service cloud.firestore {
         allow get: if true; 
         allow list: if false;
 
+        // Branch : competition_resources_crud ->  competition_resources_crud_firestore_security_rules
         // Note: Has Model Named {GrandPriceToken}
         match /grand_prices_tokens/{grandPriceTokenId}{
           allow write: if false;
@@ -329,6 +340,7 @@ service cloud.firestore {
       
       }
 
+      // Branch : competition_resources_crud ->  competition_resources_crud_firestore_security_rules
       // Note: Has Model Named {GroupCompetitorsGrid}
       match /group_competitors_grids/{competitorGridId}{
         
@@ -336,6 +348,7 @@ service cloud.firestore {
         allow get: if true; 
         allow list: if false;
 
+        // Branch : competition_resources_crud ->  competition_resources_crud_firestore_security_rules
         // Note: Has Model Named {GroupCompetitorToken}
         match /group_competitors_tokens/{competitorTokenId}{
           allow write: if false;
@@ -345,6 +358,7 @@ service cloud.firestore {
       }
     }
 
+    // Branch : competition_resources_crud ->  competition_resources_crud_firestore_security_rules
     match /count_down_clocks/{competitionCountDownId}{
       allow read;
       allow write: if false;

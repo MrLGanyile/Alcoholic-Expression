@@ -1,12 +1,12 @@
 import 'dart:math';
 
-import '../Utilities/converter.dart';
+import '../locations/converter.dart';
 
-import '../Utilities/section_name.dart';
+import '../locations/section_name.dart';
 import 'dart:developer' as debug;
 
 // Collection Name /won_prices_summaries/wonPriceSummaryId
-// Branch : competition_resources_creation
+// Branch : won_price_summary_resources_crud -> create_won_price_summary_front_end
 class WonPriceSummary {
   String wonPriceSummaryId; // Same as the storeDrawId & competitionId
 

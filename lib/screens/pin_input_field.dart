@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 
-// groups_crud -> create_group_front_end
 class PinInputField extends StatefulWidget {
   final int length;
   final void Function(bool)? onFocusChange;

@@ -1,6 +1,5 @@
 import 'user.dart';
 
-// Branch : user_models_creation
 class Admin extends User {
   bool isSuperiorAdmin;
   String key;

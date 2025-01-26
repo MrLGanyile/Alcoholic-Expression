@@ -28,27 +28,33 @@ import { log } from "firebase-functions/logger";
 
 const queriedStoreDraws = [];
 
+// Branch : supported_locations_resources_crud -> create_supported_locaitons_back_end
 const supportedCountries = new Map();
 supportedCountries.set(
     "ZA-South Africa", ["Kwa Zulu Natal"],
 );
 
+// Branch : supported_locations_resources_crud -> create_supported_locaitons_back_end
 const supportedProvincesOrStates = new Map();
 supportedProvincesOrStates.set(
     "Kwa Zulu Natal", ["Durban", "Pinetown"],
 );
 
+// Branch : supported_locations_resources_crud -> create_supported_locaitons_back_end
 const supportedCities = new Map();
 supportedCities.set(
     "Durban", ["Mayville", "Umlazi",
       "Durban Central",
       "Manor Gardens", "Westville"],
 );
+
+// Branch : supported_locations_resources_crud -> create_supported_locaitons_back_end
 supportedCities.set(
     "Pinetown", ["Westmead"],
 
 );
 
+// Branch : supported_locations_resources_crud -> create_supported_locaitons_back_end
 const supportedSuburbOrTownships = new Map();
 supportedSuburbOrTownships.set(
     "Mayville",
@@ -60,6 +66,8 @@ supportedSuburbOrTownships.set(
       "Manor Gardens",
     ],
 );
+
+// Branch : supported_locations_resources_crud -> create_supported_locaitons_back_end
 supportedSuburbOrTownships.set(
     "Umlazi",
     [
@@ -76,22 +84,27 @@ supportedSuburbOrTownships.set(
     ],
 );
 
+// Branch : supported_locations_resources_crud -> create_supported_locaitons_back_end
 supportedSuburbOrTownships.set(
     "Durban Central", ["DUT"],
 );
 
+// Branch : supported_locations_resources_crud -> create_supported_locaitons_back_end
 supportedSuburbOrTownships.set(
     "Manor Gardens", ["Haward Campus UKZN"],
 );
 
+// Branch : supported_locations_resources_crud -> create_supported_locaitons_back_end
 supportedSuburbOrTownships.set(
     "Westville", ["Westville Campus UKZN"],
 );
 
+// Branch : supported_locations_resources_crud -> create_supported_locaitons_back_end
 supportedSuburbOrTownships.set(
     "Westmead", ["Edgewood Campus UKZN"],
 );
 
+// Branch : supported_locations_resources_crud -> create_supported_locaitons_back_end
 // There is an error on name display.
 const supportedAreas = new Map();
 supportedAreas.set(
@@ -140,6 +153,7 @@ initializeApp();
 
 const pickingMultipleInSeconds = 3;
 
+// Branch : store_resources_crud -> create_store_resources_back_end
 // http://127.0.0.1:5001/alcoholic-expressions/us-central1/saveStoreAndAdmins
 export const saveStoreAndAdmins = onRequest(async(req, res)=>{
   
@@ -206,6 +220,7 @@ export const saveStoreAndAdmins = onRequest(async(req, res)=>{
    res.json({result: `All Admins And Store Are Saved.`});
 });
 
+// Branch : store_resources_crud -> create_resources_store_back_end
 /* Each time a new store is created, it has to have a corresponding store name
 info document which is responsible for holding information that users
 will be seeing, like a store's current state(hasNoCompetition,
@@ -238,6 +253,7 @@ export const createStoreNameInfo = onDocumentCreated("/stores/" +
   return await docReference.set(storeNameInfo);
 });
 
+// Branch : group_resources_crud -> create_group_back_end
 // Works as expected.
 export const createGroup1 = onCall(async(request)=>{
 
@@ -253,6 +269,7 @@ export const createGroup1 = onCall(async(request)=>{
   };
 });
 
+// Branch : group_resources_crud -> create_group_back_end
 export const createGroup = onCall(async(request)=>{
   
   const group = {
@@ -298,7 +315,231 @@ export const createGroup = onCall(async(request)=>{
 
 });
 
+// Branch : group_resources_crud -> create_group_back_end
+// req.body.param;
+// http://127.0.0.1:5001/alcoholic-expressions/us-central1/create5MembersGroups
+export const create5MembersGroups = onRequest(async(req, res)=>{
+  
+  const group1 = {
+    groupName: 'Izinja',
+    groupImageURL: '/groups_specific_locations/+27621234765.jpg',
+    groupSectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
+    groupSpecificArea: 'Ringini',
 
+    groupCreatorPhoneNumber: '+27621234765',
+    groupCreatorImageURL: '/alcoholics/profile_images/+27621234765.jpg',
+    groupCreatorUsername: 'Sanele',
+    isActive: true, // A group is active if it has atleast 10 members.
+    maxNoOfMembers: 5, // 5
+
+    groupMembers: [
+      {
+        phoneNumber: '+27674533329',
+        profileImageURL: '/alcoholics/profile_images/+27674533329.jpg',
+        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        username: 'Popi',
+        groupFK: '+27621234765',
+      },
+      {
+        phoneNumber: '+27674563110',
+        profileImageURL: '/alcoholics/profile_images/+27674563110.jpg',
+        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        username: 'Popi',
+        groupFK: '+27621234765',
+      },
+      {
+        phoneNumber: '+27674511120',
+        profileImageURL: '/alcoholics/profile_images/+27674511120.jpg',
+        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        username: 'Zinhle',
+        groupFK: '+27621234765',
+      },
+      {
+        phoneNumber: '+27621234765',
+        profileImageURL: '/alcoholics/profile_images/+27621234765.jpg',
+        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        username: 'Sanele',
+        groupFK: '+27621234765',
+      },
+      {
+        phoneNumber: '+27638947653',
+        profileImageURL: '/alcoholics/profile_images/+27638947653.jpg',
+        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        username: 'Zee',
+        groupFK: '+27621234765',
+      },
+      
+    ]
+  };
+
+  const group2 = {
+    groupName: 'Faka Phansi',
+    groupImageURL: '/groups_specific_locations/+27638947650.jpg',
+    groupSectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
+    groupSpecificArea: 'Emakhontena',
+
+    groupCreatorPhoneNumber: '+27638947650',
+    groupCreatorImageURL: '/alcoholics/profile_images/+27638947650.jpg',
+    groupCreatorUsername: 'Cindy',
+    isActive: true, // A group is active if it has atleast 10 members.
+    maxNoOfMembers: 5, // 5
+
+    groupMembers: [
+      {
+        phoneNumber: '+27638947650',
+        profileImageURL: '/alcoholics/profile_images/+27638947650.jpg',
+        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        username: 'Cindy',
+        groupFK: '+27638947650',
+      },
+      {
+        phoneNumber: '+27657788903',
+        profileImageURL: '/alcoholics/profile_images/+27657788903.jpg',
+        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        username: 'Popayi',
+        groupFK: '+27638947650',
+      },
+    ]
+  };
+
+  const group3 = {
+    groupName: 'Fuseg Go 1',
+    groupImageURL: '/groups_specific_locations/+27642312958.jpg',
+    groupSectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
+    groupSpecificArea: 'STOP 9',
+
+    groupCreatorPhoneNumber: '+27642312958',
+    groupCreatorImageURL: '/alcoholics/profile_images/+27642312958.jpg',
+    groupCreatorUsername: 'Izi',
+    isActive: true, // A group is active if it has atleast 10 members.
+    maxNoOfMembers: 5, // 5
+
+    groupMembers: [
+
+      {
+        phoneNumber: '+27642312958',
+        profileImageURL: '/alcoholics/profile_images/+27642312958.jpg',
+        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        username: 'Izi',
+        groupFK: '+27642312958',
+      },
+      {
+        phoneNumber: '+27674563228',
+        profileImageURL: '/alcoholics/profile_images/+27674563228.jpg',
+        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        username: 'Thembani',
+        groupFK: '+27642312958',
+      },
+      {
+        phoneNumber: '+27657635413',
+        profileImageURL: '/alcoholics/profile_images/+27657635413.jpg',
+        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        username: 'Soh',
+        groupFK: '+27642312958',
+      },
+    ]
+  };
+
+  const group4 = {
+    groupName: 'Abomayo',
+    groupImageURL: '/groups_specific_locations/+27656736820.jpg',
+    groupSectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
+    groupSpecificArea: 'Green Land',
+
+    groupCreatorPhoneNumber: '+27656736820',
+    groupCreatorImageURL: '/alcoholics/profile_images/+27656736820.jpg',
+    groupCreatorUsername: 'Izi',
+    isActive: true, // A group is active if it has atleast 10 members.
+    maxNoOfMembers: 5, // 5
+
+    groupMembers: [
+      {
+        phoneNumber: '+27656736820',
+        profileImageURL: '/alcoholics/profile_images/+27656736820.jpg',
+        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        username: 'Izi',
+        groupFK: '+27656736820',
+      },
+      {
+        phoneNumber: '+27674511128',
+        profileImageURL: '/alcoholics/profile_images/+27674511128.jpg',
+        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        username: 'Zakhele',
+        groupFK: '+27656736820',
+      },
+      {
+        phoneNumber: '+27674533320',
+        profileImageURL: '/alcoholics/profile_images/+27674533320.jpg',
+        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        username: 'Thula',
+        groupFK: '+27656736820',
+      },
+      {
+        phoneNumber: '+27657635412',
+        profileImageURL: '/alcoholics/profile_images/+27657635412.jpg',
+        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        username: 'Sihle',
+        groupFK: '+27656736820',
+      },
+    ]
+  };
+
+  const group5 = {
+    groupName: 'Excluded',
+    groupImageURL: '/groups_specific_locations/+27674563119.jpg',
+    groupSectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
+    groupSpecificArea: 'Stop Street',
+
+    groupCreatorPhoneNumber: '+27674563119',
+    groupCreatorImageURL: '/alcoholics/profile_images/+27674563119.jpg',
+    groupCreatorUsername: 'Jiro',
+    isActive: true, // A group is active if it has atleast 10 members.
+    maxNoOfMembers: 5, // 5
+
+    groupMembers: [
+      {
+        phoneNumber: '+27674563119',
+        profileImageURL: '/alcoholics/profile_images/+27674563119.jpg',
+        sectionName: 'Nsimbini-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        username: 'Mandla',
+        groupFK: '+27674563119',
+      },
+    ]
+  };
+
+  const groups = [group1, group2, group3, group4, group5];
+
+
+  let groupReference;
+  let groupMembersPhoneNumbers;
+
+  for(let groupIndex = 0; groupIndex < groups.length; groupIndex++){
+    const group = groups[groupIndex];
+    groupReference = getFirestore().collection('groups').doc(group.groupCreatorPhoneNumber);
+    
+    // List of group members phone numbers.
+    groupMembersPhoneNumbers = [];
+
+
+    let alcoholicReference;
+    for(let alcoholicIndex = 0; alcoholicIndex < group.groupMembers.length;alcoholicIndex++){
+      const alcoholic = group.groupMembers[alcoholicIndex];
+      groupMembersPhoneNumbers.push(alcoholic.phoneNumber);
+      alcoholicReference = getFirestore().collection('alcoholics').doc(alcoholic.phoneNumber);
+      
+      await alcoholicReference.set(alcoholic);
+    }
+
+    // Replace group members alcoholic object with phone numbers as strings.
+    group.groupMembers = groupMembersPhoneNumbers;
+
+    await groupReference.set(group);
+    
+  }
+
+  // Send back a message that we've successfully written to the db.
+  res.json({result: `All Groups & Alcoholics Are Saved.`});
+});
 
 // declare the function
 const shuffle = (array) => {
@@ -310,6 +551,7 @@ const shuffle = (array) => {
 };
 
 
+// Branch : competition_resources_crud -> create_competition_resources_back_end
 /* Do not modify application state inside of your transaction functions.
 Doing so will introduce concurrency issues, because transaction functions
 can run multiple times and are not guaranteed to run on the UI thread.
@@ -440,6 +682,7 @@ onRequest(async (req, res)=>{
   }
 });
 
+// Branch : competition_resources_crud -> create_competition_resources_back_end
 export const createGrandPricesGrid =
 onDocumentCreated("/competitions/" +
   "{competitionId}", async (event) => {
@@ -505,6 +748,7 @@ onDocumentCreated("/competitions/" +
       });
 });
 
+// Branch : competition_resources_crud -> create_competition_resources_back_end
 export const createGrandPricesTokens =
   onDocumentCreated("/competitions/" +
     "{competitionId}/grand_prices_grids/" +
@@ -564,6 +808,7 @@ export const createGrandPricesTokens =
         });
   });
 
+// Branch : competition_resources_crud -> create_competition_resources_back_end
 export const createGroupCompetitiorsGrid =
 onDocumentCreated("/competitions/" +
 "{competitionId}", async (event) => {
@@ -629,6 +874,7 @@ onDocumentCreated("/competitions/" +
       });
 });
 
+// Branch : competition_resources_crud -> create_competition_resources_back_end
 export const createGroupCompetitorsTokens =
   onDocumentCreated("/competitions/" +
   "{competitionId}/group_competitors_grids/" +
@@ -728,6 +974,7 @@ const batchWriteTester = (async (remainingTime)=>{
 
 /* Make sure all competitions start at an acceptable time,
 like 08:30 for instance.*/
+// Branch : competition_resources_crud -> create_competition_resources_back_end
 export const maintainCountDownClocks =
 onDocumentCreated("/competitions/" +
   "{competitionId}", async (event) => {
@@ -793,6 +1040,7 @@ onDocumentCreated("/competitions/" +
   const keepTrackOfReadOnly = (async (readOnlyId) => {
  */
 
+// Branch : competition_resources_crud -> create_competition_resources_back_end
 /* eslint brace-style: ["warn", "stroustrup"]*/
 export const setIsLiveForQualifyingCompetitions = onDocumentUpdated("/read_only/" +
   "{readOnlyId}", async (event) => {
@@ -838,6 +1086,7 @@ export const setIsLiveForQualifyingCompetitions = onDocumentUpdated("/read_only/
       });
 });
 
+// Branch : won_price_summary_resources_crud -> create_won_price_summary
 /* eslint max-len: ["off", { "code", 80, "comments": 80 }] */
 export const createWonPriceSummary =
  onDocumentUpdated("/competitions/" +
@@ -1049,6 +1298,7 @@ export const createWonPriceSummary =
   });
 });
 
+// Branch : supported_locations_resources_crud -> create_supported_locaitons_back_end
 // http://127.0.0.1:5001/alcoholic-expressions/us-central1/createSupportedAreas/
 export const createSupportedAreas = onRequest(async (req, res)=>{
   let reference;
@@ -1837,231 +2087,6 @@ const groupsLocations = [
 ];
 
 // ========================================Create Groups Data[End]========================================
-
-// req.body.param;
-// http://127.0.0.1:5001/alcoholic-expressions/us-central1/create5MembersGroups
-export const create5MembersGroups = onRequest(async(req, res)=>{
-  
-  const group1 = {
-    groupName: 'Izinja',
-    groupImageURL: '/groups_specific_locations/+27621234765.jpg',
-    groupSectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-    groupSpecificArea: 'Ringini',
-
-    groupCreatorPhoneNumber: '+27621234765',
-    groupCreatorImageURL: '/alcoholics/profile_images/+27621234765.jpg',
-    groupCreatorUsername: 'Sanele',
-    isActive: true, // A group is active if it has atleast 10 members.
-    maxNoOfMembers: 5, // 5
-
-    groupMembers: [
-      {
-        phoneNumber: '+27674533329',
-        profileImageURL: '/alcoholics/profile_images/+27674533329.jpg',
-        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        username: 'Popi',
-        groupFK: '+27621234765',
-      },
-      {
-        phoneNumber: '+27674563110',
-        profileImageURL: '/alcoholics/profile_images/+27674563110.jpg',
-        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        username: 'Popi',
-        groupFK: '+27621234765',
-      },
-      {
-        phoneNumber: '+27674511120',
-        profileImageURL: '/alcoholics/profile_images/+27674511120.jpg',
-        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        username: 'Zinhle',
-        groupFK: '+27621234765',
-      },
-      {
-        phoneNumber: '+27621234765',
-        profileImageURL: '/alcoholics/profile_images/+27621234765.jpg',
-        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        username: 'Sanele',
-        groupFK: '+27621234765',
-      },
-      {
-        phoneNumber: '+27638947653',
-        profileImageURL: '/alcoholics/profile_images/+27638947653.jpg',
-        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        username: 'Zee',
-        groupFK: '+27621234765',
-      },
-      
-    ]
-  };
-
-  const group2 = {
-    groupName: 'Faka Phansi',
-    groupImageURL: '/groups_specific_locations/+27638947650.jpg',
-    groupSectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-    groupSpecificArea: 'Emakhontena',
-
-    groupCreatorPhoneNumber: '+27638947650',
-    groupCreatorImageURL: '/alcoholics/profile_images/+27638947650.jpg',
-    groupCreatorUsername: 'Cindy',
-    isActive: true, // A group is active if it has atleast 10 members.
-    maxNoOfMembers: 5, // 5
-
-    groupMembers: [
-      {
-        phoneNumber: '+27638947650',
-        profileImageURL: '/alcoholics/profile_images/+27638947650.jpg',
-        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        username: 'Cindy',
-        groupFK: '+27638947650',
-      },
-      {
-        phoneNumber: '+27657788903',
-        profileImageURL: '/alcoholics/profile_images/+27657788903.jpg',
-        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        username: 'Popayi',
-        groupFK: '+27638947650',
-      },
-    ]
-  };
-
-  const group3 = {
-    groupName: 'Fuseg Go 1',
-    groupImageURL: '/groups_specific_locations/+27642312958.jpg',
-    groupSectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-    groupSpecificArea: 'STOP 9',
-
-    groupCreatorPhoneNumber: '+27642312958',
-    groupCreatorImageURL: '/alcoholics/profile_images/+27642312958.jpg',
-    groupCreatorUsername: 'Izi',
-    isActive: true, // A group is active if it has atleast 10 members.
-    maxNoOfMembers: 5, // 5
-
-    groupMembers: [
-
-      {
-        phoneNumber: '+27642312958',
-        profileImageURL: '/alcoholics/profile_images/+27642312958.jpg',
-        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        username: 'Izi',
-        groupFK: '+27642312958',
-      },
-      {
-        phoneNumber: '+27674563228',
-        profileImageURL: '/alcoholics/profile_images/+27674563228.jpg',
-        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        username: 'Thembani',
-        groupFK: '+27642312958',
-      },
-      {
-        phoneNumber: '+27657635413',
-        profileImageURL: '/alcoholics/profile_images/+27657635413.jpg',
-        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        username: 'Soh',
-        groupFK: '+27642312958',
-      },
-    ]
-  };
-
-  const group4 = {
-    groupName: 'Abomayo',
-    groupImageURL: '/groups_specific_locations/+27656736820.jpg',
-    groupSectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-    groupSpecificArea: 'Green Land',
-
-    groupCreatorPhoneNumber: '+27656736820',
-    groupCreatorImageURL: '/alcoholics/profile_images/+27656736820.jpg',
-    groupCreatorUsername: 'Izi',
-    isActive: true, // A group is active if it has atleast 10 members.
-    maxNoOfMembers: 5, // 5
-
-    groupMembers: [
-      {
-        phoneNumber: '+27656736820',
-        profileImageURL: '/alcoholics/profile_images/+27656736820.jpg',
-        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        username: 'Izi',
-        groupFK: '+27656736820',
-      },
-      {
-        phoneNumber: '+27674511128',
-        profileImageURL: '/alcoholics/profile_images/+27674511128.jpg',
-        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        username: 'Zakhele',
-        groupFK: '+27656736820',
-      },
-      {
-        phoneNumber: '+27674533320',
-        profileImageURL: '/alcoholics/profile_images/+27674533320.jpg',
-        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        username: 'Thula',
-        groupFK: '+27656736820',
-      },
-      {
-        phoneNumber: '+27657635412',
-        profileImageURL: '/alcoholics/profile_images/+27657635412.jpg',
-        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        username: 'Sihle',
-        groupFK: '+27656736820',
-      },
-    ]
-  };
-
-  const group5 = {
-    groupName: 'Excluded',
-    groupImageURL: '/groups_specific_locations/+27674563119.jpg',
-    groupSectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-    groupSpecificArea: 'Stop Street',
-
-    groupCreatorPhoneNumber: '+27674563119',
-    groupCreatorImageURL: '/alcoholics/profile_images/+27674563119.jpg',
-    groupCreatorUsername: 'Jiro',
-    isActive: true, // A group is active if it has atleast 10 members.
-    maxNoOfMembers: 5, // 5
-
-    groupMembers: [
-      {
-        phoneNumber: '+27674563119',
-        profileImageURL: '/alcoholics/profile_images/+27674563119.jpg',
-        sectionName: 'Nsimbini-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        username: 'Mandla',
-        groupFK: '+27674563119',
-      },
-    ]
-  };
-
-  const groups = [group1, group2, group3, group4, group5];
-
-
-  let groupReference;
-  let groupMembersPhoneNumbers;
-
-  for(let groupIndex = 0; groupIndex < groups.length; groupIndex++){
-    const group = groups[groupIndex];
-    groupReference = getFirestore().collection('groups').doc(group.groupCreatorPhoneNumber);
-    
-    // List of group members phone numbers.
-    groupMembersPhoneNumbers = [];
-
-
-    let alcoholicReference;
-    for(let alcoholicIndex = 0; alcoholicIndex < group.groupMembers.length;alcoholicIndex++){
-      const alcoholic = group.groupMembers[alcoholicIndex];
-      groupMembersPhoneNumbers.push(alcoholic.phoneNumber);
-      alcoholicReference = getFirestore().collection('alcoholics').doc(alcoholic.phoneNumber);
-      
-      await alcoholicReference.set(alcoholic);
-    }
-
-    // Replace group members alcoholic object with phone numbers as strings.
-    group.groupMembers = groupMembersPhoneNumbers;
-
-    await groupReference.set(group);
-    
-  }
-
-  // Send back a message that we've successfully written to the db.
-  res.json({result: `All Groups & Alcoholics Are Saved.`});
-});
 
 // http://127.0.0.1:5001/alcoholic-expressions/us-central1/saveFakeAlcoholics
 // If your function should be openly available,set the cors policy to true.

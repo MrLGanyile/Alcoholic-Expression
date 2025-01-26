@@ -2,12 +2,12 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import '../../main.dart';
 
-import '../models/Utilities/converter.dart';
+import '../models/locations/converter.dart';
 import '../models/users/group.dart';
 import 'dart:developer' as debug;
 import 'dart:math';
 
-// groups_crud -> view_groups
+// Branch : group_resources_crud ->  create_group_resources_front_end
 class SingleGroupWidget extends StatefulWidget {
   Group competitorsGroup;
   SingleGroupWidget({

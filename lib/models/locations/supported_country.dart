@@ -1,5 +1,5 @@
 // Collection Name /supported_countries/{supportedCountryId}
-// Branch : location_models_creation
+// Branch : supported_locations_resources_crud ->  create_supported_locations_front_end
 class SupportedCountry {
   String countryId;
   String countryName;

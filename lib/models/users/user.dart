@@ -1,4 +1,4 @@
-// Branch : user_models_creation
+// Branch : group_resources_crud ->  create_group_resources_front_end
 abstract class User {
   String phoneNumber;
   String profileImageURL;

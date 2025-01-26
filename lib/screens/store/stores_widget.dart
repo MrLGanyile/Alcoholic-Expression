@@ -8,7 +8,7 @@ import '../../main.dart';
 
 import '../../models/stores/store_name_info.dart';
 
-// initialization -> create_store
+// Branch : store_resources_crud ->  view_stores_front_end
 class StoresWidget extends StatefulWidget {
   StoresWidget({
     super.key,

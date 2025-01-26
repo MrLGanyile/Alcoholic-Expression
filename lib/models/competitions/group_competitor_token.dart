@@ -3,7 +3,7 @@ import '../users/group.dart';
 /* Collection Name /competition/competitionId
 /competitors_grids/competitorsGridId
 /competitor_tokens*/
-// Branch : competition_resources_creation
+// Branch : competition_resources_crud ->  create_competition_resources_front_end
 class GroupCompetitorToken {
   String groupCompetitorTokenId;
   String groupCompetitorsGridFK;

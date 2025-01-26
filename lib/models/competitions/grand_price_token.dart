@@ -5,7 +5,7 @@
 // Competition & CompetitorGrid Have Similar IDs
 import '../stores/draw_grand_price.dart';
 
-// Branch : competition_resources_creation
+// Branch : competition_resources_crud ->  create_competition_resources_front_end
 class GrandPriceToken {
   String grandPriceTokenId;
   String grandPricesGridFK;

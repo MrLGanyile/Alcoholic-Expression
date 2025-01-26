@@ -1,12 +1,12 @@
-import '/models/Utilities/converter.dart';
+import '../locations/converter.dart';
 import '/models/stores/draw_grand_price.dart';
 
-import '../Utilities/section_name.dart';
+import '../locations/section_name.dart';
 import '../users/group.dart';
 import 'competition_state.dart';
 
 // Collection Name /competition/competitionId
-// Branch : competition_resources_creation
+// Branch : competition_resources_crud ->  create_competition_resources_front_end
 class Competition {
   String? competitionId;
   String storeFK;

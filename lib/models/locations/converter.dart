@@ -3,8 +3,9 @@ import '/models/competitions/competition_state.dart';
 import 'section_name.dart';
 import '../stores/store_draw_state.dart';
 
-// Branch : user_models_creation
+// groups_crud -> group_resources_crud ->  create_group_resources_front_end
 class Converter {
+  // Branch : competition_resources_crud ->  create_competition_resources_front_end
   static StoreDrawState toStoreDrawState(String state) {
     switch (state) {
       case "converted-to-competition":
@@ -14,6 +15,7 @@ class Converter {
     }
   }
 
+  // Branch : competition_resources_crud ->  create_competition_resources_front_end
   static String fromStoreDrawStateToString(StoreDrawState storeDrawState) {
     switch (storeDrawState) {
       case StoreDrawState.convertedToCompetition:
@@ -23,6 +25,7 @@ class Converter {
     }
   }
 
+  // Branch : competition_resources_crud ->  create_competition_resources_front_end
   static CompetitionState toCompetitionState(String state) {
     switch (state) {
       case "on-count-down":
@@ -34,6 +37,7 @@ class Converter {
     }
   }
 
+  // Branch : competition_resources_crud ->  create_competition_resources_front_end
   static String fromCompetitionStateToString(
       CompetitionState competitionState) {
     switch (competitionState) {
@@ -46,6 +50,7 @@ class Converter {
     }
   }
 
+  // Branch : supported_locations_resources_crud ->  create_supported_locations_front_end
   // Convert any section string to a section name constant.
   static SectionName toSectionName(String section) {
     switch (section) {
@@ -84,6 +89,7 @@ class Converter {
     }
   }
 
+  // Branch : supported_locations_resources_crud ->  create_supported_locations_front_end
   static String asString(SectionName sectionName) {
     switch (sectionName) {
       // ==============================Mayville==============================

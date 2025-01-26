@@ -3,12 +3,12 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 import '../../main.dart';
-import '../../models/Utilities/converter.dart';
+import '../../models/locations/converter.dart';
 import '../../models/users/group.dart';
 
 import 'dart:developer' as debug;
 
-// won_prices_crud -> read_won_prices
+// Branch : competition_resources_crud ->  view_competitions
 class CompetitionResultWidget extends StatelessWidget {
   Group wonGroup;
   DrawGrandPrice wonPrice;

@@ -1,11 +1,11 @@
 // Collection Name /alcoholics/{alcoholicId}
-import '/models/Utilities/converter.dart';
+import '../locations/converter.dart';
 
-import '../Utilities/section_name.dart';
+import '../locations/section_name.dart';
 import 'user.dart';
 
 // Collection Name /alcoholics/alcoholicId
-// Branch : user_models_creation
+// groups_crud -> group_resources_crud ->  create_group_resources_front_end
 class Alcoholic extends User {
   SectionName sectionName;
   String username;

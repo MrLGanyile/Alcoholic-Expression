@@ -9,7 +9,6 @@ import 'controllers/competition_controller.dart';
 import 'controllers/location_controller.dart';
 import 'controllers/store_controller.dart';
 import '/controllers/user_controller.dart';
-import '/controllers/authentication_controller.dart';
 
 import 'firebase_options.dart';
 import 'screens/alcoholic_registration_widget.dart';
@@ -26,7 +25,6 @@ Future main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform)
       .then((value) {
     Get.put(StoreController());
-    Get.put(AuthenticationController());
     Get.put(UserController());
     Get.put(CompetitionController());
     Get.put(LocationController());

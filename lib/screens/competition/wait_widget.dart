@@ -14,7 +14,7 @@ typedef OnCurrentlyViewedUpdate = Function(bool);
 
 typedef OnCurrentGroupSet = Function(GroupCompetitorWidget);
 
-// store_draws_crud -> view_store_draws
+// Branch : competition_resources_crud ->  view_competitions
 class WaitWidget extends StatefulWidget {
   StoreDraw storeDraw;
 

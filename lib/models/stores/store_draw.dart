@@ -1,9 +1,9 @@
 // Collection Name /stores/storeId/store_draws/storeDrawId
-// Branch : store_resources_creation
+// Branch : competition_resources_crud ->  create_competition_resources_front_end
 import '/models/stores/store_draw_state.dart';
 
-import '../Utilities/converter.dart';
-import '../Utilities/section_name.dart';
+import '../locations/converter.dart';
+import '../locations/section_name.dart';
 
 // Only the latest store draw of a given store can be updated in a way that reflects in front end.
 class StoreDraw implements Comparable<StoreDraw> {

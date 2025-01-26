@@ -1,16 +1,16 @@
 import 'package:firebase_storage/firebase_storage.dart';
 
 import '../../controllers/store_controller.dart';
-import '../../models/Utilities/converter.dart';
+import '../../models/locations/converter.dart';
 import '../../models/stores/store_draw.dart';
 import 'package:flutter/material.dart';
 
 import '../../main.dart';
-import '../../models/Utilities/section_name.dart';
+import '../../models/locations/section_name.dart';
 
 import 'dart:developer' as debug;
 
-// initialization -> create_store
+// Branch : store_resources_crud ->  view_stores_front_end
 class StoreInfoWidget extends StatefulWidget {
   String storeName;
   String storeId;

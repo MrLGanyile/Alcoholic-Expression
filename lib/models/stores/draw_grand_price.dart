@@ -1,5 +1,5 @@
 // Collection Name /stores/storeId/store_draws/drawId/draw_grand_prices/drawGrandPriceId
-// Branch : store_resources_creation
+// Branch : competition_resources_crud ->  create_competition_resources_front_end
 class DrawGrandPrice {
   String grandPriceId;
   String storeDrawFK;

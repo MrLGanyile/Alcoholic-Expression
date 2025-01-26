@@ -13,7 +13,7 @@ import '../../models/stores/store_draw.dart';
 import 'package:flutter/material.dart';
 
 import '../../main.dart';
-import '../../models/Utilities/converter.dart';
+import '../../models/locations/converter.dart';
 
 import 'dart:developer' as debug;
 
@@ -24,7 +24,7 @@ import '../competition/group_competitor_widget.dart';
 import '../competition/no_competition_widget.dart';
 import '../competition/wait_widget.dart';
 
-// initialization -> create_store
+// Branch : store_resources_crud ->  view_stores_front_end
 class StoreNameInfoWidget extends StatefulWidget {
   StoreNameInfo storeNameInfo;
 

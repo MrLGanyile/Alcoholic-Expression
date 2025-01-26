@@ -10,13 +10,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../models/stores/store.dart';
 
-// Branch : stores_data_access
+// Branch : store_resources_crud ->  store_resources_crud_data_access
 class StoreController extends GetxController {
   static StoreController storeController = Get.find();
 
   late Rx<File?> storePickedFile;
   File? get storeImageFile => storePickedFile.value;
 
+  // Branch : store_resources_crud ->  store_resources_crud_data_access
   void chooseStoreImageFromGallery() async {
     final storePickedImageFile =
         await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -30,6 +31,7 @@ class StoreController extends GetxController {
     storePickedFile = Rx<File?>(File(storePickedImageFile!.path));
   }
 
+  // Branch : store_resources_crud ->  store_resources_crud_data_access
   void captureStoreImageWithCamera() async {
     final storePickedImageFile =
         await ImagePicker().pickImage(source: ImageSource.camera);
@@ -43,6 +45,8 @@ class StoreController extends GetxController {
   }
 
   /*===========================Stores [Start]============================= */
+
+  // Branch : store_resources_crud ->  store_resources_crud_data_access
   Future<Store?> findStore(String storeId) async {
     DocumentReference reference =
         FirebaseFirestore.instance.collection('stores').doc(storeId);
@@ -59,6 +63,7 @@ class StoreController extends GetxController {
 /*===========================Stores [End]============================= */
 
 /*======================Store Name Info [Start]======================== */
+  // Branch : store_resources_crud ->  store_resources_crud_data_access
   Stream<DocumentSnapshot> retrieveStoreNameInfo(String storeNameInfoId) {
     return FirebaseFirestore.instance
         .collection("stores_names_info")
@@ -66,6 +71,7 @@ class StoreController extends GetxController {
         .snapshots();
   }
 
+  // Branch : store_resources_crud ->  store_resources_crud_data_access
   Future<StoreNameInfo?> findStoreNameInfo(String storeNameInfoId) async {
     DocumentReference reference = FirebaseFirestore.instance
         .collection("stores_names_info")
@@ -78,6 +84,7 @@ class StoreController extends GetxController {
     return null;
   }
 
+  // Branch : store_resources_crud ->  store_resources_crud_data_access
   Stream<List<StoreNameInfo>> readAllStoreNameInfo() {
     Stream<List<StoreNameInfo>> stream = FirebaseFirestore.instance
         .collection('stores_names_info')
@@ -93,6 +100,7 @@ class StoreController extends GetxController {
   /*======================Store Name Info [End]======================== */
 
   /*=========================Store Draws [Start]========================= */
+  // Branch : competition_resources_crud ->  competitions_data_access
   Stream<List<StoreDraw>> findStoreDraws(String storeFK) {
     return FirebaseFirestore.instance
         .collection('stores')
@@ -109,6 +117,7 @@ class StoreController extends GetxController {
             .toList());
   }
 
+  // Branch : competition_resources_crud ->  competitions_data_access
   Stream<DocumentSnapshot<Object?>> retrieveStoreDraw(
       String storeFK, String storeDrawId) {
     DocumentReference reference = FirebaseFirestore.instance
@@ -145,6 +154,7 @@ class StoreController extends GetxController {
   /*===========================Store Draws [End]====================== */
 
   /*======================Draw Grand Price[Start]===================== */
+  // Branch : competition_resources_crud ->  competitions_data_access
   Stream<List<DrawGrandPrice>> findDrawGrandPrices(
           String storeId, String storeDrawId) =>
       FirebaseFirestore.instance

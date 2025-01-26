@@ -7,8 +7,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../models/Utilities/converter.dart';
-import '../models/Utilities/section_name.dart';
+import '../models/locations/converter.dart';
+import '../models/locations/section_name.dart';
 import '../models/users/alcoholic.dart';
 import '../models/users/group.dart';
 import 'share_dao_functions.dart';
@@ -27,7 +27,7 @@ enum GroupUpdatingStatus {
   updated,
 }
 
-// Branch : users_data_access
+// Branch : group_resources_crud ->  group_crud_data_access
 class UserController extends GetxController {
   static UserController instance = Get.find();
 
@@ -54,6 +54,9 @@ class UserController extends GetxController {
   void chooseMemberProfileImageFromGallery(int memberIndex) async {
     final pickedImageFile =
         await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedImageFile != null) {
+      Get.snackbar('Image Status', 'Image File Successfully Captured.');
+    }
 
     switch (memberIndex) {
       case 1:
@@ -73,9 +76,13 @@ class UserController extends GetxController {
     }
   }
 
-  void captureMemberProfileImageFromGallery(int memberIndex) async {
+  void captureMemberProfileImageFromCamera(int memberIndex) async {
     final pickedImageFile =
         await ImagePicker().pickImage(source: ImageSource.camera);
+
+    if (pickedImageFile != null) {
+      Get.snackbar('Image Status', 'Image File Successfully Captured.');
+    }
 
     switch (memberIndex) {
       case 1:

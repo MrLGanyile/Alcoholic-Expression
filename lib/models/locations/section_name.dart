@@ -1,4 +1,4 @@
-// Branch : user_models_creation
+// Branch : supported_locations_resources_crud ->  create_supported_locations_front_end
 enum SectionName {
   mutUmlaziDurbanKwaZuluNatalSouthAfrica,
   hawardCollegeCampusUKZNDurbanKwaZuluNatalSouthAfrica,

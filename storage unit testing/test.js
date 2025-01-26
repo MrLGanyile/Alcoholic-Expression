@@ -206,6 +206,7 @@ describe('Our Alcoholic App',()=>{
   // await assertFails(ref.updateMetadata({})
   //================================Store Images [Start]====================================
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/stores_images/{storeImageId}
   it('Offline User : Do not allow not logged in users to upload a store image during store registration.', async()=>{
     
@@ -216,6 +217,7 @@ describe('Our Alcoholic App',()=>{
     );
   }); 
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/stores_images/{storeImageId}
   it('Online User : Do not allow logged in users to upload store images with doc id different from their uid[1].', async()=>{
     
@@ -226,6 +228,7 @@ describe('Our Alcoholic App',()=>{
     );
   }); 
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/stores_images/{storeImageId}
   it('Online User : Do not allow logged in users to upload store images if they are already store owners[3].', async()=>{
     
@@ -241,6 +244,7 @@ describe('Our Alcoholic App',()=>{
     );
   }); 
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/stores_images/{storeImageId}
   it('Online User : Do not allow logged in users to upload store images if they have already[4].', async()=>{
     
@@ -262,6 +266,7 @@ describe('Our Alcoholic App',()=>{
     );
   }); 
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/stores_images/{storeImageId}
   it('Online User : Do not allow logged in users to upload store images with huge size[5].', async()=>{
     
@@ -272,6 +277,7 @@ describe('Our Alcoholic App',()=>{
     );
   });
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/stores_images/{storeImageId}
   it('Online User : Allow logged in users to upload store images.', async()=>{
     
@@ -282,6 +288,7 @@ describe('Our Alcoholic App',()=>{
     );
   });
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/stores_images/{storeImageId}
   it('Store Owner : Do not allow store owners to upload store images.', async()=>{
     
@@ -295,7 +302,7 @@ describe('Our Alcoholic App',()=>{
 
 
 
-
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/stores_images/{storeImageId}
   it('Offline User : Allow not logged in users to view store images.', async()=>{
     
@@ -307,6 +314,7 @@ describe('Our Alcoholic App',()=>{
     await assertSucceeds(storageRef.getDownloadURL());
   }); 
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/stores_images/{storeImageId}
   it('Online User : Do not allow logged in users to view store images.', async()=>{
     
@@ -317,6 +325,7 @@ describe('Our Alcoholic App',()=>{
     await assertSucceeds(storageRef.getDownloadURL());
   }); 
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/stores_images/{storeImageId}
   it('Store Owner : Allow store owners to view store images.', async()=>{
     
@@ -330,7 +339,7 @@ describe('Our Alcoholic App',()=>{
 
   
   
-
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/stores_images/{storeImageId}
   it('Offline User : Do not allow not logged in users to delete store images.', async()=>{
 
@@ -341,7 +350,8 @@ describe('Our Alcoholic App',()=>{
 
     await assertFails(storageRef.delete());
   }); 
-
+  
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/stores_images/{storeImageId}
   it('Online User : Do not allow logged in users to delete store images.', async()=>{
 
@@ -353,6 +363,7 @@ describe('Our Alcoholic App',()=>{
     await assertFails(storageRef.delete());
   }); 
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/stores_images/{storeImageId}
   it('Store Owner : Do not allow store owners to delete store images.', async()=>{
 
@@ -367,6 +378,8 @@ describe('Our Alcoholic App',()=>{
   //================================Store Images[End]==================================
 
  //================================Store Owner Images[Start]==================================
+
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/store_owner_images/{storeOwnerImageId}
   it('Offline User : Do not allow not logged in users to upload a store owner image.', async()=>{
     
@@ -377,6 +390,7 @@ describe('Our Alcoholic App',()=>{
     );
   }); 
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/store_owner_images/{storeOwnerImageId}
   it('Online User : Do not allow logged in users to upload a store owner image if it document id is not the same as the store owner document id[2].', async()=>{
     
@@ -387,6 +401,7 @@ describe('Our Alcoholic App',()=>{
     );
   }); 
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/store_owner_images/{storeOwnerImageId}
   it('Online User : Do not allow logged in users to upload a store owner image if the store does not already exist[4].', async()=>{
     
@@ -397,6 +412,7 @@ describe('Our Alcoholic App',()=>{
     );
   });
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/store_owner_images/{storeOwnerImageId}
   it('Online User : Do not allow logged in users to upload a store owner image if the store owner already exist[5].', async()=>{
     
@@ -422,6 +438,7 @@ describe('Our Alcoholic App',()=>{
     );
   });
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/store_owner_images/{storeOwnerImageId}
   it('Online User : Do not allow logged in users to upload a store owner image with huge size[6].', async()=>{
     
@@ -444,6 +461,7 @@ describe('Our Alcoholic App',()=>{
     );
   });
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/store_owner_images/{storeOwnerImageId}
   it('Online User : Allow logged in users to upload a store owner image if the store already exist[7].', async()=>{
     
@@ -466,6 +484,7 @@ describe('Our Alcoholic App',()=>{
     );
   });
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/store_owner_images/{storeOwnerImageId}
   it('Store Owner : Do not allow store owners to upload store owner images.', async()=>{
     
@@ -480,6 +499,7 @@ describe('Our Alcoholic App',()=>{
 
 
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/store_owners_images/{storeOwnerImageId}
   it('Offline User : Allow not logged in users to view store owner images.', async()=>{
     
@@ -491,6 +511,7 @@ describe('Our Alcoholic App',()=>{
     await assertSucceeds(storageRef.getDownloadURL());
   }); 
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/store_owners_images/{storeImageId}
   it('Online User : Allow logged in users to view store owner images.', async()=>{
     
@@ -501,6 +522,7 @@ describe('Our Alcoholic App',()=>{
     await assertSucceeds(storageRef.getDownloadURL());
   }); 
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/store_owners_images/{storeOwnerImageId}
   it('Store Owner : Allow store owners to view store owner images.', async()=>{
     
@@ -515,6 +537,7 @@ describe('Our Alcoholic App',()=>{
 
 
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/stores_images/{storeOwnerImageId}
   it('Offline User : Do not allow not logged in users to delete store images.', async()=>{
 
@@ -526,6 +549,7 @@ describe('Our Alcoholic App',()=>{
     await assertFails(storageRef.delete());
   }); 
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/store_owners_images/{storeOwnerImageId}
   it('Online User : Do not allow logged in users to delete store owner images.', async()=>{
 
@@ -537,6 +561,7 @@ describe('Our Alcoholic App',()=>{
     await assertFails(storageRef.delete());
   }); 
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/store_owners_images/{storeImageId}
   it('Store Owner : Do not allow store owners to delete store owners images.', async()=>{
 
@@ -552,6 +577,7 @@ describe('Our Alcoholic App',()=>{
 
  //================================Store Owner Id Images[Start]==================================
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/store_owner_ids/{storeOwnerIdentityDocumentId}
   it('Offline User : Do not allow not logged in users to upload a store owner identity document image.', async()=>{
     
@@ -562,6 +588,7 @@ describe('Our Alcoholic App',()=>{
     );
   }); 
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/store_owner_ids/{storeOwnerIdentityDocumentId}
   it('Online User : Do not allow logged in users to upload a store owner identity document image if it document id is not the same as the store owner document id[1].', async()=>{
     
@@ -572,6 +599,7 @@ describe('Our Alcoholic App',()=>{
     );
   }); 
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/store_owner_ids/{storeOwnerIdentityDocumentId}
   it('Online User : Do not allow logged in users to upload a store owner identity document image if the store does not already exist[4].', async()=>{
     
@@ -582,6 +610,7 @@ describe('Our Alcoholic App',()=>{
     );
   });
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/store_owner_ids/{storeOwnerIdentityDocumentId}
   it('Online User : Do not allow logged in users to upload a store owner identity document image if the store owner already exist[5].', async()=>{
     
@@ -607,6 +636,7 @@ describe('Our Alcoholic App',()=>{
     );
   });
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/store_owner_ids/{storeOwnerIdentityDocumentId}
   it('Online User : Do not allow logged in users to upload a store owner identity document image with huge size[6].', async()=>{
     
@@ -629,6 +659,7 @@ describe('Our Alcoholic App',()=>{
     );
   });
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/store_owner_ids/{storeOwnerIdentityDocumentId}
   it('Online User : Allow logged in users to upload a store owner identity document image if the store already exist[7].', async()=>{
     
@@ -651,6 +682,7 @@ describe('Our Alcoholic App',()=>{
     );
   });
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/store_owner_ids/{storeOwnerIdentityDocumentId}
   it('Store Owner : Do not allow store owners to upload store owner identity document images.', async()=>{
     
@@ -664,6 +696,7 @@ describe('Our Alcoholic App',()=>{
 
 
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/store_owners_ids/{storeOwnerIdentityDocumentId}
   it('Offline User : Do not allow not logged in users to view store owner identity documents.', async()=>{
     
@@ -675,6 +708,7 @@ describe('Our Alcoholic App',()=>{
     await assertFails(storageRef.getDownloadURL());
   }); 
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/store_owners_ids/{storeOwnerIdentityDocumentId}
   it('Online User : Do not allow logged in users to view store owner identity documents.', async()=>{
     
@@ -685,6 +719,7 @@ describe('Our Alcoholic App',()=>{
     await assertFails(storageRef.getDownloadURL());
   }); 
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/store_owners_ids/{storeOwnerIdentityDocumentId}
   it('Store Owner : Do not allow store owners to view store owner identity documents not belogning to them.', async()=>{
     
@@ -696,6 +731,7 @@ describe('Our Alcoholic App',()=>{
     await assertFails(storageRef.getDownloadURL());
   });
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/store_owners_ids/{storeOwnerIdentityDocumentId}
   it('Store Owner : Do not allow store owners to view store owner identity documents not belogning to them.', async()=>{
     
@@ -707,6 +743,7 @@ describe('Our Alcoholic App',()=>{
     await assertFails(storageRef.getDownloadURL());
   });
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/store_owners_ids/{storeOwnerIdentityDocumentId}
   it('Store Owner : Allow store owners to view their store owner identity document.', async()=>{
     
@@ -718,6 +755,7 @@ describe('Our Alcoholic App',()=>{
     await assertSucceeds(storageRef.getDownloadURL());
   });
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/store_owners_ids/{storeOwnerIdentityDocumentId}
   it('Store Owner : Allow store owners who are admins to view any store owner identity document.', async()=>{
     
@@ -731,6 +769,7 @@ describe('Our Alcoholic App',()=>{
 
 
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/store_owners_ids/{storeOwnerIdentityDocumentId}
   it('Offline User : Do not allow not logged in users to delete store identity document.', async()=>{
 
@@ -742,6 +781,7 @@ describe('Our Alcoholic App',()=>{
     await assertFails(storageRef.delete());
   }); 
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/store_owners_ids/{storeOwnerIdentityDocumentId}
   it('Online User : Do not allow logged in users to delete store owner identity document.', async()=>{
 
@@ -753,6 +793,7 @@ describe('Our Alcoholic App',()=>{
     await assertFails(storageRef.delete());
   }); 
 
+  // Branch : store_resources_crud ->  store_resources_crud_storage_security_unit_testing
   // Testing /store_owners/store_owners_ids/{storeOwnerIdentityDocumentId}
   it('Store Owner : Do not allow store owners to delete store identity document.', async()=>{
 
@@ -768,6 +809,7 @@ describe('Our Alcoholic App',()=>{
 
   //================================Alcoholic Images[Start]==================================
 
+  // Branch : group_resources_crud ->  group_resources_crud_storage_security_unit_testing
   // Testing /alcoholics/profile_images/{profileImageId}
   it('Offline User : Do not allow not logged in users to upload a profile image.', async()=>{
     
@@ -778,6 +820,7 @@ describe('Our Alcoholic App',()=>{
     );
   }); 
 
+  // Branch : group_resources_crud ->  group_resources_crud_storage_security_unit_testing
   // Testing /alcoholics/profile_images/{profileImageId}
   it('Online User : Do not allow logged in users to upload profile images having a different profile image doc id compared to their uid.', async()=>{
 
@@ -788,6 +831,7 @@ describe('Our Alcoholic App',()=>{
     );
   }); 
 
+  // Branch : group_resources_crud ->  group_resources_crud_storage_security_unit_testing
   // Testing /alcoholics/profile_images/{profileImageId}
   it('Online User : Do not allow logged in users to upload profile images if they have already registered as alcoholics or store owners.', async()=>{
 
@@ -798,6 +842,7 @@ describe('Our Alcoholic App',()=>{
     );
   }); 
 
+  // Branch : group_resources_crud ->  group_resources_crud_storage_security_unit_testing
   // Testing /alcoholics/profile_images/{profileImageId}
   it('Online User : Allow logged in users to upload profile images if they are not alcoholics already.', async()=>{
 
@@ -814,6 +859,7 @@ describe('Our Alcoholic App',()=>{
   }); 
 
 
+  // Branch : group_resources_crud ->  group_resources_crud_storage_security_unit_testing
   // Testing /alcoholics/profile_images/{profileImageId}
   it('Store Owner : Do not allow store owners to upload an alcoholic image.', async()=>{
     
@@ -828,6 +874,7 @@ describe('Our Alcoholic App',()=>{
 
 
 
+  // Branch : group_resources_crud ->  group_resources_crud_storage_security_unit_testing
   // Testing /store_owners/profile_images/{profileImageId}
   it('Offline User : Allow not logged in users to view alcoholic profile images.', async()=>{
     
@@ -839,6 +886,7 @@ describe('Our Alcoholic App',()=>{
     await assertSucceeds(storageRef.getDownloadURL());
   }); 
 
+  // Branch : group_resources_crud ->  group_resources_crud_storage_security_unit_testing
   // Testing /store_owners/profile_images/{profileImageId}
   it('Online User : Allow logged in users to view alcoholic profile images.', async()=>{
 
@@ -850,6 +898,7 @@ describe('Our Alcoholic App',()=>{
     await assertSucceeds(storageRef.getDownloadURL());
   }); 
 
+  // Branch : group_resources_crud ->  group_resources_crud_storage_security_unit_testing
   // Testing /store_owners/profile_images/{profileImageId}
   it('Store Owner : Allow store owners to view alcoholic profile images.', async()=>{
 
@@ -865,6 +914,7 @@ describe('Our Alcoholic App',()=>{
 
 
 
+  // Branch : group_resources_crud ->  group_resources_crud_storage_security_unit_testing
   // Testing /store_owners/store_owners_ids/{storeOwnerIdentityDocumentId}
   it('Offline User : Do not allow not logged in users to delete alcoholics profiles.', async()=>{
 
@@ -876,6 +926,7 @@ describe('Our Alcoholic App',()=>{
     await assertFails(storageRef.delete());
   }); 
 
+  // Branch : group_resources_crud ->  group_resources_crud_storage_security_unit_testing
   // Testing /store_owners/store_owners_ids/{storeOwnerIdentityDocumentId}
   it('Online User : Do not allow logged in users to delete alcoholics profiles.', async()=>{
 
@@ -887,6 +938,7 @@ describe('Our Alcoholic App',()=>{
     await assertFails(storageRef.delete());
   }); 
 
+  // Branch : group_resources_crud ->  group_resources_crud_storage_security_unit_testing
   // Testing /store_owners/store_owners_ids/{storeOwnerIdentityDocumentId}
   it('Store Owner : Do not allow store owners to delete alcoholics profiles.', async()=>{
 

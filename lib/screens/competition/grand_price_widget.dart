@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../../../controllers/store_controller.dart';
 import "dart:developer" as debug;
 
-// store_draws_crud -> view_store_draws
+// Branch : competition_resources_crud ->  view_competitions
 class GrandPriceWidget extends StatefulWidget {
   String grandPriceImageURL;
   AlignmentGeometry? alignmentGeometry;

@@ -4,7 +4,7 @@ import 'dart:developer' as debug;
 
 import '../store/store_info_widget.dart';
 
-// store_draws_crud -> view_store_draws
+// Branch : competition_resources_crud ->  view_competitions
 class NoCompetitionWidget extends StoreInfoWidget {
   NoCompetitionWidget({
     super.key,

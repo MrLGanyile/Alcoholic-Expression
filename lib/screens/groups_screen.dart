@@ -8,7 +8,7 @@ import '../main.dart';
 import 'single_group_widget.dart';
 import 'dart:developer' as debug;
 
-// groups_crud -> view_groups
+// Branch : group_resources_crud ->  view_groups
 class GroupsScreen extends StatefulWidget {
   GroupsScreen({
     super.key,

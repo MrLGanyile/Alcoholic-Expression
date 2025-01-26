@@ -1,7 +1,7 @@
 import 'supported_suburb_township.dart';
 
 // Collection Name /supported_areas/{supportedAreaId}
-// Branch : location_models_creation
+// Branch : lsupported_locations_resources_crud ->  create_supported_locations_front_end
 class SupportedArea {
   String areaId;
   SupportedSuburbOrTownship suburbOrTownship;

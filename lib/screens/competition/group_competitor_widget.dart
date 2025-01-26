@@ -7,7 +7,7 @@ import '../../controllers/store_controller.dart';
 import '../../models/users/group.dart';
 import 'dart:developer' as debug;
 
-// competitions_crud -> view_currently_playing_competition
+// Branch : competition_resources_crud ->  view_competitions
 class GroupCompetitorWidget extends StatelessWidget {
   Group group;
 

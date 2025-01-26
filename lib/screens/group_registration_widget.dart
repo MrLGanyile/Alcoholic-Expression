@@ -9,7 +9,7 @@ import '../controllers/location_controller.dart';
 import '../controllers/share_dao_functions.dart';
 import '../controllers/user_controller.dart';
 import '../main.dart';
-import '../models/Utilities/converter.dart';
+import '../models/locations/converter.dart';
 import '../models/locations/supported_area.dart';
 import '../models/users/alcoholic.dart';
 import 'page_navigation.dart';
@@ -18,6 +18,7 @@ import 'dart:math';
 
 import 'verification_screen.dart';
 
+// Branch : group_resources_crud ->  create_group_resources_front_end
 class GroupRegistrationWidget extends StatefulWidget {
   String adminPhoneNumber;
 
@@ -541,12 +542,11 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
         child: InkWell(
           onTap: () async {
             await userController.createGroup(
-              File(
-                  'C:\\Users\\Lwandile-Ganyile\\Documents\\Lwandile Ganyile\\Alcoholic-Expression\\Storage Duplicate\\groups_specific_locations\\0612345678.jpg'),
+              userController.groupImageFile!,
               'Goal Creators',
               'Mpompini',
               Converter.toSectionName(dropDowButton.value!),
-              File('assets/0612345678.jpg'),
+              userController.leaderProfileImageFile!,
               leaderPhoneNumber!,
               leaderUsername!,
               [
@@ -556,12 +556,9 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
               ], // Phone Numbers
               [leaderUsername!, user1Username!, user2Username!], // Usernames
               [
-                File(
-                    'C:\\Users\\Lwandile-Ganyile\\Documents\\Lwandile Ganyile\\Alcoholic-Expression\\Storage Duplicate\\alcoholics\\profile_images\\0612345678.jpg'),
-                File(
-                    'C:\\Users\\Lwandile-Ganyile\\Documents\\Lwandile Ganyile\\Alcoholic-Expression\\Storage Duplicate\\alcoholics\\profile_images\\0712345678.jpg'),
-                File(
-                    'C:\\Users\\Lwandile-Ganyile\\Documents\\Lwandile Ganyile\\Alcoholic-Expression\\Storage Duplicate\\alcoholics\\profile_images\\0812345678.jpg')
+                userController.leaderProfileImageFile!,
+                userController.member1ProfileImageFile!,
+                userController.member2ProfileImageFile!,
               ], // Profile Images
             );
             debug.log('Done Saving Group.');
