@@ -1,21 +1,24 @@
 import 'dart:io';
 
-import 'package:alco/screens/single_member_form_widget.dart';
+import 'package:alco/controllers/store_controller.dart';
+import 'package:alco/screens/users/single_member_form_widget.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../controllers/location_controller.dart';
-import '../controllers/share_dao_functions.dart';
-import '../controllers/user_controller.dart';
-import '../main.dart';
-import '../models/locations/converter.dart';
-import '../models/locations/supported_area.dart';
-import '../models/users/alcoholic.dart';
-import 'page_navigation.dart';
+import '../../controllers/location_controller.dart';
+import '../../controllers/share_dao_functions.dart';
+import '../../controllers/user_controller.dart';
+import '../../main.dart';
+import '../../models/locations/converter.dart';
+import '../../models/locations/supported_area.dart';
+import '../../models/users/alcoholic.dart';
+import '../utils/my_route_generator.dart';
+import '../utils/page_navigation.dart';
 import 'dart:developer' as debug;
 import 'dart:math';
 
+import 'groups_screen.dart';
 import 'verification_screen.dart';
 
 // Branch : group_resources_crud ->  create_group_resources_front_end
@@ -30,54 +33,29 @@ class GroupRegistrationWidget extends StatefulWidget {
 
 class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
   TextEditingController groupNameEditingController = TextEditingController();
+
   TextEditingController groupSpecificAreaEditingController =
       TextEditingController();
-  TextEditingController groupSectionNameEditingController =
-      TextEditingController();
-
-  String? groupName;
-  String? groupImageURL;
-  String? groupSpecificArea;
-  String? groupSectionName;
 
   TextEditingController leaderUsernameEditingController =
       TextEditingController();
   TextEditingController leaderPhoneNumberEditingController =
       TextEditingController();
-  bool hasLeader = false;
-  String? leaderImageURL;
-  String? leaderPhoneNumber;
-  String? leaderUsername;
 
   TextEditingController username1EditingController = TextEditingController();
   TextEditingController phoneNumber1EditingController = TextEditingController();
-  bool hasUser1 = false;
-  String? user1ImageURL;
-  String? user1PhoneNumber;
-  String? user1Username;
 
   TextEditingController username2EditingController = TextEditingController();
   TextEditingController phoneNumber2EditingController = TextEditingController();
-  bool hasUser2 = false;
-  String? user2ImageURL;
-  String? user2PhoneNumber;
-  String? user2Username;
 
   TextEditingController username3EditingController = TextEditingController();
   TextEditingController phoneNumber3EditingController = TextEditingController();
-  bool hasUser3 = false;
-  String? user3ImageURL;
-  String? user3PhoneNumber;
-  String? user3Username;
 
   TextEditingController username4EditingController = TextEditingController();
   TextEditingController phoneNumber4EditingController = TextEditingController();
-  bool hasUser4 = false;
-  String? user4ImageURL;
-  String? user4PhoneNumber;
-  String? user4Username;
 
   UserController userController = UserController.instance;
+  StoreController storeController = StoreController.storeController;
 
   late Stream<List<SupportedArea>> supportedAreasStream;
   late List<String> items;
@@ -118,102 +96,64 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
         ),
       );
 
-  bool isValidInput() {
-    bool hasGroup = groupName != null &&
-        groupSectionName != null &&
-        groupSpecificArea != null &&
-        groupImageURL != null;
+  bool isValidInputWithoutImages() {
+    bool hasGroup = groupNameEditingController.text.isNotEmpty &&
+        dropDowButton.value != null &&
+        groupSpecificAreaEditingController.text.isNotEmpty;
 
     if (hasGroup == false) {
       return false;
     }
 
-    if (hasUser(1) &&
-        containsNumbersOnly(user1PhoneNumber!) &&
-        user1Username != null) {
-      hasUser1 = true;
+    if (hasUserWithoutImages(0) &&
+        hasUserWithoutImages(1) &&
+        hasUserWithoutImages(2) &&
+        hasUserWithoutImages(3) &&
+        hasUserWithoutImages(4)) {
       return true;
     }
 
-    if (hasUser(1) &&
-        containsNumbersOnly(user1PhoneNumber!) &&
-        user1Username != null &&
-        hasUser(2) &&
-        containsNumbersOnly(user2PhoneNumber!) &&
-        user2Username != null) {
-      hasUser2 = true;
+    if (hasUserWithoutImages(0) &&
+        hasUserWithoutImages(1) &&
+        hasUserWithoutImages(2) &&
+        hasUserWithoutImages(3)) {
+      return true;
     }
 
-    if (hasUser(1) &&
-        containsNumbersOnly(user1PhoneNumber!) &&
-        user1Username != null &&
-        hasUser(2) &&
-        containsNumbersOnly(user2PhoneNumber!) &&
-        user2Username != null &&
-        hasUser(3) &&
-        containsNumbersOnly(user3PhoneNumber!) &&
-        user3Username != null) {
-      hasUser3 = true;
+    if (hasUserWithoutImages(0) &&
+        hasUserWithoutImages(1) &&
+        hasUserWithoutImages(2)) {
+      return true;
     }
 
-    if (hasUser(1) &&
-        containsNumbersOnly(user1PhoneNumber!) &&
-        user1Username != null &&
-        hasUser(2) &&
-        containsNumbersOnly(user2PhoneNumber!) &&
-        user2Username != null &&
-        hasUser(3) &&
-        containsNumbersOnly(user3PhoneNumber!) &&
-        user3Username != null &&
-        hasUser(4) &&
-        containsNumbersOnly(user4PhoneNumber!) &&
-        user4Username != null) {
-      hasUser4 = true;
+    if (hasUserWithoutImages(0) && hasUserWithoutImages(1)) {
+      return true;
     }
 
-    if (hasUser(1) &&
-        containsNumbersOnly(user1PhoneNumber!) &&
-        user1Username != null &&
-        hasUser(2) &&
-        containsNumbersOnly(user2PhoneNumber!) &&
-        user2Username != null &&
-        hasUser(3) &&
-        containsNumbersOnly(user3PhoneNumber!) &&
-        user3Username != null &&
-        hasUser(4) &&
-        containsNumbersOnly(user4PhoneNumber!) &&
-        user4Username != null &&
-        hasUser(0) &&
-        containsNumbersOnly(leaderPhoneNumber!) &&
-        leaderUsername != null) {
-      hasLeader = true;
+    if (hasUserWithoutImages(0)) {
+      return true;
     }
 
-    return hasUser1 || hasUser2 || hasUser3 || hasUser4 || hasLeader;
+    return false;
   }
 
-  bool hasUser(int memberIndex) {
+  bool hasUserWithoutImages(int memberIndex) {
     switch (memberIndex) {
       case 1:
-        return user1ImageURL != null &&
-            user1PhoneNumber != null &&
-            user1Username != null;
+        return phoneNumber1EditingController.text.isNotEmpty &&
+            username1EditingController.text.isNotEmpty;
       case 2:
-        return user2ImageURL != null &&
-            user2PhoneNumber != null &&
-            user2Username != null;
+        return phoneNumber2EditingController.text.isNotEmpty &&
+            username2EditingController.text.isNotEmpty;
       case 3:
-        return user3ImageURL != null &&
-            user3PhoneNumber != null &&
-            user3Username != null;
+        return phoneNumber3EditingController.text.isNotEmpty &&
+            username3EditingController.text.isNotEmpty;
       case 4:
-        return user4ImageURL != null &&
-            user4PhoneNumber != null &&
-            user4Username != null;
+        return phoneNumber4EditingController.text.isNotEmpty &&
+            username4EditingController.text.isNotEmpty;
       default:
-        return leaderImageURL != null &&
-            leaderPhoneNumber != null &&
-            leaderUsername != null;
+        return leaderPhoneNumberEditingController.text.isNotEmpty &&
+            leaderUsernameEditingController.text.isNotEmpty;
     }
   }
 
@@ -238,105 +178,35 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
   bool isValidPhoneNumber(int memberIndex) {
     switch (memberIndex) {
       case 1:
-        return user1PhoneNumber!.length == 10 &&
-            (user1PhoneNumber!.startsWith('06') ||
-                user1PhoneNumber!.startsWith('07') ||
-                user1PhoneNumber!.startsWith('08')) &&
-            containsNumbersOnly(user1PhoneNumber!);
+        return username1EditingController.text.length == 10 &&
+            (username1EditingController.text.startsWith('06') ||
+                username1EditingController.text.startsWith('07') ||
+                username1EditingController.text.startsWith('08')) &&
+            containsNumbersOnly(username1EditingController.text);
       case 2:
-        return user2PhoneNumber!.length == 10 &&
-            (user2PhoneNumber!.startsWith('06') ||
-                user2PhoneNumber!.startsWith('07') ||
-                user2PhoneNumber!.startsWith('08')) &&
-            containsNumbersOnly(user2PhoneNumber!);
+        return username2EditingController.text.length == 10 &&
+            (username2EditingController.text.startsWith('06') ||
+                username2EditingController.text.startsWith('07') ||
+                username2EditingController.text.startsWith('08')) &&
+            containsNumbersOnly(username2EditingController.text);
       case 3:
-        return user3PhoneNumber!.length == 10 &&
-            (user3PhoneNumber!.startsWith('06') ||
-                user3PhoneNumber!.startsWith('07') ||
-                user3PhoneNumber!.startsWith('08')) &&
-            containsNumbersOnly(user3PhoneNumber!);
+        return username3EditingController.text.length == 10 &&
+            (username3EditingController.text.startsWith('06') ||
+                username3EditingController.text.startsWith('07') ||
+                username3EditingController.text.startsWith('08')) &&
+            containsNumbersOnly(username3EditingController.text);
       case 4:
-        return user4PhoneNumber!.length == 10 &&
-            (user4PhoneNumber!.startsWith('06') ||
-                user4PhoneNumber!.startsWith('07') ||
-                user4PhoneNumber!.startsWith('08')) &&
-            containsNumbersOnly(user4PhoneNumber!);
+        return username4EditingController.text.length == 10 &&
+            (username4EditingController.text.startsWith('06') ||
+                username4EditingController.text.startsWith('07') ||
+                username4EditingController.text.startsWith('08')) &&
+            containsNumbersOnly(username4EditingController.text);
       default:
-        return leaderPhoneNumber!.length == 10 &&
-            (leaderPhoneNumber!.startsWith('06') ||
-                leaderPhoneNumber!.startsWith('07') ||
-                leaderPhoneNumber!.startsWith('08')) &&
-            containsNumbersOnly(leaderPhoneNumber!);
-    }
-  }
-
-  void updateGroupName(String groupName) {
-    setState(() {
-      this.groupName = groupName;
-    });
-  }
-
-  void updateGroupImageURL(String groupImageURL) {
-    setState(() {
-      this.groupImageURL = groupImageURL;
-    });
-  }
-
-  void updateGroupSpecificArea(String groupSpecificArea) {
-    setState(() {
-      this.groupSpecificArea = groupSpecificArea;
-    });
-  }
-
-  void updatePhoneNumber(int memberIndex, String phoneNumber) {
-    switch (memberIndex) {
-      case 1:
-        user1PhoneNumber = phoneNumber;
-        break;
-      case 2:
-        user2PhoneNumber = phoneNumber;
-        break;
-      case 3:
-        user3PhoneNumber = phoneNumber;
-        break;
-      case 4:
-        user4PhoneNumber = phoneNumber;
-        break;
-      default:
-        leaderPhoneNumber = phoneNumber;
-    }
-  }
-
-  void updateProfileImageURL(int memberIndex, String profileImageURL) {
-    switch (memberIndex) {
-      case 1:
-        break;
-      case 2:
-        break;
-      case 3:
-        break;
-      case 4:
-        break;
-      default:
-    }
-  }
-
-  void updateUsername(int memberIndex, String username) {
-    switch (memberIndex) {
-      case 1:
-        user1Username = username;
-        break;
-      case 2:
-        user2Username = username;
-        break;
-      case 3:
-        user3Username = username;
-        break;
-      case 4:
-        user4Username = username;
-        break;
-      default:
-        leaderUsername = username;
+        return leaderPhoneNumberEditingController.text.length == 10 &&
+            (leaderPhoneNumberEditingController.text.startsWith('06') ||
+                leaderPhoneNumberEditingController.text.startsWith('07') ||
+                leaderPhoneNumberEditingController.text.startsWith('08')) &&
+            containsNumbersOnly(leaderPhoneNumberEditingController.text);
     }
   }
 
@@ -358,12 +228,9 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
           ),
           // Group Members
           SingleMemberFormWidget(
-            controller1: leaderUsernameEditingController,
-            controller2: leaderPhoneNumberEditingController,
+            userNameController: leaderUsernameEditingController,
+            phoneNumberController: leaderPhoneNumberEditingController,
             memberIndex: 0,
-            onPhoneNumberChanged: updatePhoneNumber,
-            onProfileImageURLChanged: updateProfileImageURL,
-            onUsernameChanged: updateUsername,
           ),
           // Group Name
           userSpecificLocationOrGroupName(false),
@@ -418,36 +285,24 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
           ),
 
           SingleMemberFormWidget(
-            controller1: username1EditingController,
-            controller2: phoneNumber1EditingController,
+            userNameController: username1EditingController,
+            phoneNumberController: phoneNumber1EditingController,
             memberIndex: 1,
-            onPhoneNumberChanged: updatePhoneNumber,
-            onProfileImageURLChanged: updateProfileImageURL,
-            onUsernameChanged: updateUsername,
           ),
           SingleMemberFormWidget(
-            controller1: username2EditingController,
-            controller2: phoneNumber2EditingController,
+            userNameController: username2EditingController,
+            phoneNumberController: phoneNumber2EditingController,
             memberIndex: 2,
-            onPhoneNumberChanged: updatePhoneNumber,
-            onProfileImageURLChanged: updateProfileImageURL,
-            onUsernameChanged: updateUsername,
           ),
           SingleMemberFormWidget(
-            controller1: username3EditingController,
-            controller2: phoneNumber3EditingController,
+            userNameController: username3EditingController,
+            phoneNumberController: phoneNumber3EditingController,
             memberIndex: 3,
-            onPhoneNumberChanged: updatePhoneNumber,
-            onProfileImageURLChanged: updateProfileImageURL,
-            onUsernameChanged: updateUsername,
           ),
           SingleMemberFormWidget(
-            controller1: username4EditingController,
-            controller2: phoneNumber4EditingController,
+            userNameController: username4EditingController,
+            phoneNumberController: phoneNumber4EditingController,
             memberIndex: 4,
-            onPhoneNumberChanged: updatePhoneNumber,
-            onProfileImageURLChanged: updateProfileImageURL,
-            onUsernameChanged: updateUsername,
           ),
           signInButton(),
         ]),
@@ -458,29 +313,17 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
   AspectRatio retrieveGroupImage(BuildContext context) {
     return AspectRatio(
       aspectRatio: 5 / 2,
-      child: groupImageURL != null
-          ? Container(
-              //margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width/8) ,
-              decoration: BoxDecoration(
-                color: Colors.orange,
-                borderRadius: BorderRadius.circular(10),
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: NetworkImage(groupImageURL!),
-                ),
-              ),
-            )
-          : Container(
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(Radius.circular(10)),
-                color: MyApplication.logoColor1,
-              ),
-              child: const Text(
-                'Group Image Area',
-                style: TextStyle(color: Colors.black, fontSize: 16),
-              ),
-            ),
+      child: Container(
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          color: MyApplication.logoColor1,
+        ),
+        child: const Text(
+          'Group Image Area',
+          style: TextStyle(color: Colors.black, fontSize: 16),
+        ),
+      ),
     );
   }
 
@@ -499,31 +342,20 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
                 iconSize: MediaQuery.of(context).size.width * 0.15,
                 icon: Icon(Icons.camera_alt, color: MyApplication.logoColor1),
                 onPressed: () async {
-                  userController.captureGroupProfileImageWithCamera();
-
-                  if (userController.groupImageFile != null &&
-                      leaderPhoneNumber != null) {
-                    groupImageURL = await uploadResource(
-                        userController.groupImageFile!,
-                        '/group_specific_locations/$leaderPhoneNumber');
-
-                    updateGroupImageURL(groupImageURL!);
-                  }
+                  userController.captureGroupImageWithCamera(
+                      groupNameEditingController.text,
+                      Converter.toSectionName(dropDowButton.value!),
+                      groupSpecificAreaEditingController.text);
                 }),
             IconButton(
                 color: Colors.white,
                 iconSize: MediaQuery.of(context).size.width * 0.15,
                 icon: Icon(Icons.upload, color: MyApplication.logoColor1),
                 onPressed: () async {
-                  userController.chooseGroupImageFromGallery();
-
-                  if (userController.groupImageFile != null &&
-                      leaderPhoneNumber != null) {
-                    groupImageURL = await uploadResource(
-                        userController.groupImageFile!,
-                        '/group_specific_locations/$leaderPhoneNumber');
-                    updateGroupImageURL(groupImageURL!);
-                  }
+                  /*userController.captureGroupImageWithCamera(
+                      groupNameEditingController.text,
+                      Converter.toSectionName(dropDowButton.value!),
+                      groupSpecificAreaEditingController.text); */
                 }),
           ]),
         ),
@@ -541,37 +373,22 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
             )),
         child: InkWell(
           onTap: () async {
-            await userController.createGroup(
-              userController.groupImageFile!,
-              'Goal Creators',
-              'Mpompini',
-              Converter.toSectionName(dropDowButton.value!),
-              userController.leaderProfileImageFile!,
-              leaderPhoneNumber!,
-              leaderUsername!,
-              [
-                leaderPhoneNumber!,
-                user1PhoneNumber!,
-                user2PhoneNumber!
-              ], // Phone Numbers
-              [leaderUsername!, user1Username!, user2Username!], // Usernames
-              [
-                userController.leaderProfileImageFile!,
-                userController.member1ProfileImageFile!,
-                userController.member2ProfileImageFile!,
-              ], // Profile Images
-            );
-            debug.log('Done Saving Group.');
-            /*GroupSavingStatus groupSavingStatus = userController.saveGroup(
-              File(
-                  'C:\\Users\\Lwandile-Ganyile\\Documents\\Lwandile Ganyile\\Alcoholic-Expression\\Storage Duplicate\\groups_specific_locations\\+27657635413.jpg'),
-              'Goal Creators',
-              'Mpompini',
-              Converter.toSectionName(dropDowButton.value!),
-            ); */
+            if (isValidInputWithoutImages()) {
+              final result = await userController.createGroup();
+
+              // Does not go to the next screen.
+              if (result == GroupSavingStatus.saved) {
+                Navigator.of(
+                        context) /*
+                .pushNamed(
+                  MyRouteGenerator.id,
+                );*/
+                    .push(CustomPageRoute(child: const GroupsScreen()));
+              }
+            }
 
             // Create Alcoholic Now
-            if (isValidInput()) {
+            if (isValidInputWithoutImages()) {
               /*
               final auth = FirebaseAuth.instance;
               await auth.verifyPhoneNumber(
@@ -598,9 +415,9 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
                   if (hasUser1) {
                     userController.saveAlcoholic(
                         userController.member1ProfileImageFile!,
-                        user1PhoneNumber!,
+                        username1EditingController.text!,
                         Converter.toSectionName(dropDowButton.value!),
-                        user1PhoneNumber!,
+                        username1EditingController.text!,
                         user1Username!);
                   }
 
@@ -608,9 +425,9 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
                   if (hasUser2) {
                     userController.saveAlcoholic(
                         userController.member2ProfileImageFile!,
-                        user1PhoneNumber!,
+                        username1EditingController.text!,
                         Converter.toSectionName(dropDowButton.value!),
-                        user2PhoneNumber!,
+                        username2EditingController.text!,
                         user2Username!);
                   }
 
@@ -618,9 +435,9 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
                   if (hasUser3) {
                     userController.saveAlcoholic(
                         userController.member3ProfileImageFile!,
-                        user1PhoneNumber!,
+                        username1EditingController.text!,
                         Converter.toSectionName(dropDowButton.value!),
-                        user3PhoneNumber!,
+                        username3EditingController.text!,
                         user3Username!);
                   }
 
@@ -628,9 +445,9 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
                   if (hasUser4) {
                     userController.saveAlcoholic(
                         userController.member4ProfileImageFile!,
-                        user4PhoneNumber!,
+                        username4EditingController.text!,
                         Converter.toSectionName(dropDowButton.value!),
-                        user4PhoneNumber!,
+                        username4EditingController.text!,
                         user4Username!);
                   }
 
@@ -728,7 +545,6 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
       onChanged: (String? value) {
         setState(() {
           selectedValue = value;
-          groupSectionName = dropDowButton.value;
         });
       },
       buttonStyleData: ButtonStyleData(
@@ -776,7 +592,6 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
   }
 
   Widget userSpecificLocationOrGroupName(bool forSpecificArea) => TextField(
-        onChanged: forSpecificArea ? updateGroupSpecificArea : updateGroupName,
         style: TextStyle(color: MyApplication.logoColor1),
         cursorColor: MyApplication.logoColor1,
         controller: forSpecificArea

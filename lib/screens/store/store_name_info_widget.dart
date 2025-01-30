@@ -247,7 +247,7 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
             } else {
               return StreamBuilder<DocumentSnapshot>(
                   stream: competitionController
-                      .findCompetition(latestStoreDraw.storeDrawId),
+                      .findCompetition(latestStoreDraw.storeDrawId!),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       competition = Competition.fromJson(snapshot.data);

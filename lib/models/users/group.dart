@@ -7,17 +7,34 @@ import '../locations/converter.dart';
 // groups_crud -> group_resources_crud ->  create_group_resources_front_end
 class Group implements Comparable<Group> {
   String groupName;
+  String get name => groupName;
+
   String groupImageURL;
+  String get imageURL => groupImageURL;
+
   SectionName groupSectionName;
+  SectionName get sectionName => groupSectionName;
+
   String groupSpecificArea;
+  String get specificArea => groupSpecificArea;
 
   String groupCreatorPhoneNumber;
+  String get creatorPhoneNumber => groupCreatorPhoneNumber;
+
   String groupCreatorImageURL;
+  String get creatorImageURL => groupCreatorImageURL;
+
   String groupCreatorUsername;
+  String get creatorUsername => groupCreatorUsername;
+
   bool isActive; // A group is active if it has atleast 10 members.
+  bool get active => isActive;
+
   int maxNoOfMembers; // 5
+  int get maximumNoOfMembers => maxNoOfMembers;
 
   List<String> groupMembers;
+  List<String> get members => groupMembers;
 
   Group({
     required this.groupName,

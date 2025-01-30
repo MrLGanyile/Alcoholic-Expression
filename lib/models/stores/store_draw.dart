@@ -7,7 +7,7 @@ import '../locations/section_name.dart';
 
 // Only the latest store draw of a given store can be updated in a way that reflects in front end.
 class StoreDraw implements Comparable<StoreDraw> {
-  String storeDrawId;
+  String? storeDrawId;
   String storeFK;
   DateTime drawDateAndTime;
 
@@ -18,12 +18,14 @@ class StoreDraw implements Comparable<StoreDraw> {
   SectionName sectionName;
   StoreDrawState? storeDrawState;
 
+  int joiningFee;
+
   // Contains A Sub Collection Of Draw Grand Prices
   // Contains A Sub Collection Of Draw Competitors
   // 'timestamp': DateTime.now().millisecondsSinceEpoch,
 
   StoreDraw({
-    required this.storeDrawId,
+    this.storeDrawId = '',
     required this.storeFK,
     required this.drawDateAndTime,
     this.isOpen = true,
@@ -32,6 +34,7 @@ class StoreDraw implements Comparable<StoreDraw> {
     required this.storeImageURL,
     required this.sectionName,
     this.storeDrawState = StoreDrawState.notConvertedToCompetition,
+    this.joiningFee = 0,
   });
 
   Map<String, dynamic> toJson() {
@@ -51,7 +54,7 @@ class StoreDraw implements Comparable<StoreDraw> {
       'storeName': storeName,
       'storeImageURL': storeImageURL,
       'sectionName': sectionName,
-      'storeDrawState': Converter.fromStoreDrawStateToString(storeDrawState!),
+      'joiningFee': joiningFee,
     });
     return map;
   }

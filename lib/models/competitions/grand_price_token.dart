@@ -48,8 +48,8 @@ class GrandPriceToken {
 
   factory GrandPriceToken.fromDrawGrandPrice(DrawGrandPrice drawGrandPrice) {
     return GrandPriceToken(
-        grandPriceTokenId: drawGrandPrice.grandPriceId,
-        grandPricesGridFK: drawGrandPrice.storeDrawFK,
+        grandPriceTokenId: drawGrandPrice.grandPriceId!,
+        grandPricesGridFK: drawGrandPrice.storeDrawFK!,
         tokenIndex: drawGrandPrice.grandPriceIndex,
         //isPointed: false,
         imageURL: '',

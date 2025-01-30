@@ -269,9 +269,9 @@ export const createGroup1 = onCall(async(request)=>{
   };
 });
 
-// Branch : group_resources_crud -> create_group_back_end
+// Branch : group_resources_crud -> create_group_back_end [Done]
 export const createGroup = onCall(async(request)=>{
-  
+
   const group = {
     groupName: request.data.groupName,
     groupImageURL: request.data.groupImageURL,
@@ -281,8 +281,8 @@ export const createGroup = onCall(async(request)=>{
     groupCreatorPhoneNumber: request.data.groupCreatorPhoneNumber,
     groupCreatorImageURL: request.data.groupCreatorImageURL,
     groupCreatorUsername: request.data.groupCreatorUsername,
-    isActive: true, // A group is active if it has atleast 10 members.
-    maxNoOfMembers: 5, // 5
+    isActive: request.data.isActive, // A group is active if it has atleast 10 members.
+    maxNoOfMembers: request.data.maxNoOfMembers, // 5
 
     groupMembers: request.data.groupMembers
   };
@@ -305,240 +305,84 @@ export const createGroup = onCall(async(request)=>{
     // Replace group members alcoholic object with phone numbers as strings.
     group.groupMembers = groupMembersPhoneNumbers;
 
-    await groupReference.set(group);
-    
-  
-
-  // Send back a message that we've successfully written to the db.
-  res.json({result: `All Groups & Alcoholics Are Saved.`});
-
+    return await groupReference.set(group);
 
 });
 
-// Branch : group_resources_crud -> create_group_back_end
-// req.body.param;
-// http://127.0.0.1:5001/alcoholic-expressions/us-central1/create5MembersGroups
-export const create5MembersGroups = onRequest(async(req, res)=>{
-  
-  const group1 = {
-    groupName: 'Izinja',
-    groupImageURL: '/groups_specific_locations/+27621234765.jpg',
-    groupSectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-    groupSpecificArea: 'Ringini',
 
-    groupCreatorPhoneNumber: '+27621234765',
-    groupCreatorImageURL: '/alcoholics/profile_images/+27621234765.jpg',
-    groupCreatorUsername: 'Sanele',
-    isActive: true, // A group is active if it has atleast 10 members.
-    maxNoOfMembers: 5, // 5
+export const creStoreateDraw = onCall(async (request)=>{
 
-    groupMembers: [
-      {
-        phoneNumber: '+27674533329',
-        profileImageURL: '/alcoholics/profile_images/+27674533329.jpg',
-        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        username: 'Popi',
-        groupFK: '+27621234765',
-      },
-      {
-        phoneNumber: '+27674563110',
-        profileImageURL: '/alcoholics/profile_images/+27674563110.jpg',
-        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        username: 'Popi',
-        groupFK: '+27621234765',
-      },
-      {
-        phoneNumber: '+27674511120',
-        profileImageURL: '/alcoholics/profile_images/+27674511120.jpg',
-        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        username: 'Zinhle',
-        groupFK: '+27621234765',
-      },
-      {
-        phoneNumber: '+27621234765',
-        profileImageURL: '/alcoholics/profile_images/+27621234765.jpg',
-        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        username: 'Sanele',
-        groupFK: '+27621234765',
-      },
-      {
-        phoneNumber: '+27638947653',
-        profileImageURL: '/alcoholics/profile_images/+27638947653.jpg',
-        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        username: 'Zee',
-        groupFK: '+27621234765',
-      },
-      
-    ]
-  };
-
-  const group2 = {
-    groupName: 'Faka Phansi',
-    groupImageURL: '/groups_specific_locations/+27638947650.jpg',
-    groupSectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-    groupSpecificArea: 'Emakhontena',
-
-    groupCreatorPhoneNumber: '+27638947650',
-    groupCreatorImageURL: '/alcoholics/profile_images/+27638947650.jpg',
-    groupCreatorUsername: 'Cindy',
-    isActive: true, // A group is active if it has atleast 10 members.
-    maxNoOfMembers: 5, // 5
-
-    groupMembers: [
-      {
-        phoneNumber: '+27638947650',
-        profileImageURL: '/alcoholics/profile_images/+27638947650.jpg',
-        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        username: 'Cindy',
-        groupFK: '+27638947650',
-      },
-      {
-        phoneNumber: '+27657788903',
-        profileImageURL: '/alcoholics/profile_images/+27657788903.jpg',
-        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        username: 'Popayi',
-        groupFK: '+27638947650',
-      },
-    ]
-  };
-
-  const group3 = {
-    groupName: 'Fuseg Go 1',
-    groupImageURL: '/groups_specific_locations/+27642312958.jpg',
-    groupSectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-    groupSpecificArea: 'STOP 9',
-
-    groupCreatorPhoneNumber: '+27642312958',
-    groupCreatorImageURL: '/alcoholics/profile_images/+27642312958.jpg',
-    groupCreatorUsername: 'Izi',
-    isActive: true, // A group is active if it has atleast 10 members.
-    maxNoOfMembers: 5, // 5
-
-    groupMembers: [
-
-      {
-        phoneNumber: '+27642312958',
-        profileImageURL: '/alcoholics/profile_images/+27642312958.jpg',
-        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        username: 'Izi',
-        groupFK: '+27642312958',
-      },
-      {
-        phoneNumber: '+27674563228',
-        profileImageURL: '/alcoholics/profile_images/+27674563228.jpg',
-        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        username: 'Thembani',
-        groupFK: '+27642312958',
-      },
-      {
-        phoneNumber: '+27657635413',
-        profileImageURL: '/alcoholics/profile_images/+27657635413.jpg',
-        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        username: 'Soh',
-        groupFK: '+27642312958',
-      },
-    ]
-  };
-
-  const group4 = {
-    groupName: 'Abomayo',
-    groupImageURL: '/groups_specific_locations/+27656736820.jpg',
-    groupSectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-    groupSpecificArea: 'Green Land',
-
-    groupCreatorPhoneNumber: '+27656736820',
-    groupCreatorImageURL: '/alcoholics/profile_images/+27656736820.jpg',
-    groupCreatorUsername: 'Izi',
-    isActive: true, // A group is active if it has atleast 10 members.
-    maxNoOfMembers: 5, // 5
-
-    groupMembers: [
-      {
-        phoneNumber: '+27656736820',
-        profileImageURL: '/alcoholics/profile_images/+27656736820.jpg',
-        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        username: 'Izi',
-        groupFK: '+27656736820',
-      },
-      {
-        phoneNumber: '+27674511128',
-        profileImageURL: '/alcoholics/profile_images/+27674511128.jpg',
-        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        username: 'Zakhele',
-        groupFK: '+27656736820',
-      },
-      {
-        phoneNumber: '+27674533320',
-        profileImageURL: '/alcoholics/profile_images/+27674533320.jpg',
-        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        username: 'Thula',
-        groupFK: '+27656736820',
-      },
-      {
-        phoneNumber: '+27657635412',
-        profileImageURL: '/alcoholics/profile_images/+27657635412.jpg',
-        sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        username: 'Sihle',
-        groupFK: '+27656736820',
-      },
-    ]
-  };
-
-  const group5 = {
-    groupName: 'Excluded',
-    groupImageURL: '/groups_specific_locations/+27674563119.jpg',
-    groupSectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-    groupSpecificArea: 'Stop Street',
-
-    groupCreatorPhoneNumber: '+27674563119',
-    groupCreatorImageURL: '/alcoholics/profile_images/+27674563119.jpg',
-    groupCreatorUsername: 'Jiro',
-    isActive: true, // A group is active if it has atleast 10 members.
-    maxNoOfMembers: 5, // 5
-
-    groupMembers: [
-      {
-        phoneNumber: '+27674563119',
-        profileImageURL: '/alcoholics/profile_images/+27674563119.jpg',
-        sectionName: 'Nsimbini-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        username: 'Mandla',
-        groupFK: '+27674563119',
-      },
-    ]
-  };
-
-  const groups = [group1, group2, group3, group4, group5];
-
-
-  let groupReference;
-  let groupMembersPhoneNumbers;
-
-  for(let groupIndex = 0; groupIndex < groups.length; groupIndex++){
-    const group = groups[groupIndex];
-    groupReference = getFirestore().collection('groups').doc(group.groupCreatorPhoneNumber);
-    
-    // List of group members phone numbers.
-    groupMembersPhoneNumbers = [];
-
-
-    let alcoholicReference;
-    for(let alcoholicIndex = 0; alcoholicIndex < group.groupMembers.length;alcoholicIndex++){
-      const alcoholic = group.groupMembers[alcoholicIndex];
-      groupMembersPhoneNumbers.push(alcoholic.phoneNumber);
-      alcoholicReference = getFirestore().collection('alcoholics').doc(alcoholic.phoneNumber);
-      
-      await alcoholicReference.set(alcoholic);
-    }
-
-    // Replace group members alcoholic object with phone numbers as strings.
-    group.groupMembers = groupMembersPhoneNumbers;
-
-    await groupReference.set(group);
-    
+  if(request.data.numberOfGrandPrices != request.data.ddrawGrandPrices.length){
+    return;
   }
 
-  // Send back a message that we've successfully written to the db.
-  res.json({result: `All Groups & Alcoholics Are Saved.`});
+  const storeFK = request.data.storeFK;
+  const drawDateAndTime = request.data.drawDateAndTime; // {year:2025, month:2, day: 23, hour: 8, minute: 25}
+  const numberOfGrandPrices = request.data.numberOfGrandPrices;
+  const isOpen = request.data.isOpen;
+  const storeName = request.data.storeName;
+  const storeImageURL = request.data.storeImageURL;
+  const sectionName = request.data.sectionName;
+  const storeDrawState = request.data.storeDrawState;
+  const joiningFee = request.data.joiningFee;
+
+  const storeDrawReference = getFirestore()
+      .collection("/stores/").doc(storeFK)
+      .collection("/store_draws/")
+      .doc();
+
+  const storeDrawId = storeDrawReference.id;
+  
+
+  // Create a single store draw.
+  const storeDraw = {
+    storeDrawId: storeDrawId,
+    storeFK: storeFK,
+    drawDateAndTime: drawDateAndTime,
+    joiningFee: joiningFee,
+    numberOfGrandPrices: numberOfGrandPrices,
+    isOpen: isOpen,
+    storeName: storeName,
+    storeImageURL: storeImageURL,
+    sectionName: sectionName,
+    storeDrawState: storeDrawState,
+  };
+
+  // Save a store draw into the database.
+  await storeDrawReference.set(storeDraw);
+
+  const drawGrandPrices = request.data.drawGrandPrices;
+
+  let drawGrandPrice;
+  let drawGrandPriceReference;
+
+  // Create grand prices for a particular store draw.
+  for (let drawGrandPriceNo = 0; drawGrandPriceNo < storeDraw.numberOfGrandPrices; drawGrandPriceNo++) {
+
+    // Point where to save a store draw grand price.
+    drawGrandPriceReference = getFirestore()
+        .collection("stores").doc(storeFK)
+        .collection("store_draws").doc(storeDrawId)
+        .collection("draw_grand_prices").doc();
+
+    // Create a grand price
+    drawGrandPrice = {
+      grandPriceId: drawGrandPriceReference.id,
+      storeDrawFK: storeDrawId,
+      description: drawGrandPrices[drawGrandPriceNo].description,
+      imageURL: drawGrandPrices[drawGrandPriceNo].imageURL,
+      grandPriceIndex: drawGrandPrices[drawGrandPriceNo].grandPriceIndex,
+    };
+
+    // Save a draw grand price
+    await drawGrandPriceReference.set(drawGrandPrice);
+  }
+
+  const storeNameInfoReference = getFirestore()
+      .collection("/stores_names_info/").doc(storeFK);
+
+  return await storeNameInfoReference.update({latestStoreDrawId: storeDraw.storeDrawId});
+
 });
 
 // declare the function
@@ -2087,102 +1931,6 @@ const groupsLocations = [
 ];
 
 // ========================================Create Groups Data[End]========================================
-
-// http://127.0.0.1:5001/alcoholic-expressions/us-central1/saveFakeAlcoholics
-// If your function should be openly available,set the cors policy to true.
-// region: ["us-west1", "us-east1"]}
-export const saveFakeAlcoholics = onRequest(
-  {cors: false},
-  async (req, res)=>{
-    let alcoholicDocReference;
-    for (let alcoholicIndex = 0; alcoholicIndex < alcoholicsPhoneNumbers.length; alcoholicIndex++) {
-      // Create a document reference in order to associate it id with the stores's id.
-      alcoholicDocReference = getFirestore()
-          .collection("alcoholics").doc(alcoholicsPhoneNumbers[alcoholicIndex]);
-
-      let sectionName;
-
-      if (alcoholicIndex<20) {
-        sectionName = sectionNames[0];
-      }
-      else if (alcoholicIndex<84) {
-        sectionName = sectionNames[19];
-      }
-      else if (alcoholicIndex<104) {
-        sectionName = sectionNames[37];
-      }
-      else {
-        sectionName = sectionNames[40];
-      }
-
-      // Grab all parameters, then use them create a alcoholic object.
-      const alcoholic = {
-        phoneNumber: alcoholicDocReference.id,
-        profileImageURL: alcoholicsImages[alcoholicIndex],
-        sectionName: sectionName,
-        username: alcoholicsUsernames[alcoholicIndex],
-        isFake: "Yes",
-      };
-
-      // Push the new alcoholic into Firestore using the Firebase Admin SDK.
-      await alcoholicDocReference.set(alcoholic);
-    }
-
-
-    // Send back a message that we've successfully written the store
-    res.json({result: `All Alcoholics Are Added And They Leave In Cato Crest.`});
-  });
-
-// http://127.0.0.1:5001/alcoholic-expressions/us-central1/saveFakeGroups
-export const saveFakeGroups = onRequest(async (req, res)=>{
-  for (let groupIndex = 0; groupIndex < groupsMembers.length; groupIndex++) {
-    let sectionName;
-    let groupLocationIndex;
-
-    if (groupIndex<3) {
-      groupLocationIndex = 0;
-      sectionName = groupsLocations[groupLocationIndex][0];
-    }
-    else if (groupIndex<17) {
-      groupLocationIndex = 1;
-      sectionName = groupsLocations[groupLocationIndex][0];
-    }
-    else if (groupIndex<19) {
-      groupLocationIndex = 2;
-      sectionName = groupsLocations[groupLocationIndex][0];
-    }
-    else {
-      groupLocationIndex = 3;
-      sectionName = groupsLocations[groupLocationIndex][0];
-    }
-
-    const creatorPhoneNumber = groupsMembers[groupIndex][0];
-    const groupReference = getFirestore()
-        .collection("groups")
-        .doc(creatorPhoneNumber);
-
-    const group = {
-      groupName: fakeGroupNames[groupIndex],
-      groupImageURL: fakeGroupImages[groupIndex],
-      groupSectionName: sectionName,
-      groupSpecificArea:
-        groupsLocations[groupLocationIndex][1 + Math.floor(Math.random()*4)],
-      groupCreatorImageURL: alcoholicsImages[groupIndex],
-      groupMembers: groupsMembers[groupIndex],
-      groupCreatorUsername: alcoholicsUsernames[groupIndex],
-      groupCreatorPhoneNumber: groupReference.id,
-      isActive: true,
-      maxNoOfMembers: 12,
-      isFake: "Yes",
-    };
-
-    logger.log("Saving group ", groupReference.id);
-    await groupReference.set(group);
-  }
-
-  // Send back a message that we've successfully written the store
-  res.json({result: `All Groups Are Added.`});
-});
 
 // http://127.0.0.1:5001/alcoholic-expressions/us-central1/createFakeStoreOwners
 export const createFakeStoreOwners = onRequest(async (req, res) => {

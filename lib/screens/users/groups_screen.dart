@@ -2,15 +2,16 @@ import 'package:alco/controllers/user_controller.dart';
 
 import '/controllers/competition_controller.dart';
 
-import '../models/users/group.dart';
+import '../../models/users/group.dart';
 import 'package:flutter/material.dart';
-import '../main.dart';
+import '../../main.dart';
 import 'single_group_widget.dart';
 import 'dart:developer' as debug;
 
 // Branch : group_resources_crud ->  view_groups
 class GroupsScreen extends StatefulWidget {
-  GroupsScreen({
+  static const String id = "GroupsScreen";
+  const GroupsScreen({
     super.key,
   });
 

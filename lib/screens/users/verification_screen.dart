@@ -1,5 +1,5 @@
 import 'package:alco/controllers/share_dao_functions.dart';
-import 'package:alco/screens/home_widget.dart';
+import 'package:alco/screens/utils/home_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 
@@ -7,7 +7,7 @@ import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 
 import 'dart:developer' as debug;
 
-import 'page_navigation.dart';
+import '../utils/page_navigation.dart';
 
 // Branch : group_resources_crud ->  create_group_resources_front_end
 class VerificationScreen extends StatefulWidget {

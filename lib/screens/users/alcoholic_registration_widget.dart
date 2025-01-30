@@ -1,5 +1,5 @@
-import 'package:alco/screens/page_navigation.dart';
-import 'package:alco/screens/verification_screen.dart';
+import 'package:alco/screens/utils/page_navigation.dart';
+import 'package:alco/screens/users/verification_screen.dart';
 
 import '/models/locations/supported_area.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -10,11 +10,11 @@ import 'package:flutter/material.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 
-import '../controllers/location_controller.dart';
-import '../controllers/user_controller.dart';
-import '../main.dart';
+import '../../controllers/location_controller.dart';
+import '../../controllers/user_controller.dart';
+import '../../main.dart';
 
-import 'utils/globals.dart';
+import '../utils/globals.dart';
 import 'dart:developer' as debug;
 import 'dart:math';
 

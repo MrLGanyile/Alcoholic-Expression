@@ -1,10 +1,10 @@
 import '/controllers/competition_controller.dart';
 
-import '../models/competitions/won_price_summary.dart';
+import '../../models/competitions/won_price_summary.dart';
 import 'package:flutter/material.dart';
 
-import '../main.dart';
-import 'competition/won_price_summary_widget.dart';
+import '../../main.dart';
+import '../competition/won_price_summary_widget.dart';
 
 import 'dart:developer' as debug;
 import 'package:get/get.dart';

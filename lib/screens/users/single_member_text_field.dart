@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../main.dart';
-
-typedef OnPhoneNumberChanged = Function(int, String);
-typedef OnUsernameChanged = Function(int, String);
+import '../../main.dart';
 
 // Branch : group_resources_crud ->  create_group_resources_front_end
 class SingleMemberTextField extends StatefulWidget {
@@ -11,16 +8,12 @@ class SingleMemberTextField extends StatefulWidget {
   String labelText;
   bool isForUserName;
   int memberIndex;
-  OnPhoneNumberChanged? onPhoneNumberChanged;
-  OnUsernameChanged? onUsernameChanged;
 
   SingleMemberTextField(
       {required this.controller,
       required this.labelText,
       required this.memberIndex,
-      this.isForUserName = true,
-      this.onPhoneNumberChanged,
-      this.onUsernameChanged});
+      this.isForUserName = true});
 
   @override
   State<StatefulWidget> createState() => SingleMemberTextFieldState();
@@ -29,11 +22,7 @@ class SingleMemberTextField extends StatefulWidget {
 class SingleMemberTextFieldState extends State<SingleMemberTextField> {
   @override
   Widget build(BuildContext context) => TextField(
-        onChanged: !widget.isForUserName
-            ? widget.onPhoneNumberChanged!(
-                widget.memberIndex, widget.controller.text)
-            : widget.onUsernameChanged!(
-                widget.memberIndex, widget.controller.text),
+        maxLength: 10,
         style: TextStyle(color: MyApplication.logoColor1),
         cursorColor: MyApplication.logoColor1,
         controller: widget.controller,

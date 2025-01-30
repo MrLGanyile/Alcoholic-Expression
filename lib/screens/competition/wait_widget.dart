@@ -67,7 +67,7 @@ class WaitWidgetState extends State<WaitWidget> {
   void initState() {
     super.initState();
     drawGrandPricesStream = storeController.findDrawGrandPrices(
-        widget.storeDraw.storeFK, widget.storeDraw.storeDrawId);
+        widget.storeDraw.storeFK, widget.storeDraw.storeDrawId!);
   }
 
   Widget remainingTime(int minutes, int seconds) {

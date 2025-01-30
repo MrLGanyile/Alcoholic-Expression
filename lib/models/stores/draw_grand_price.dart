@@ -1,14 +1,14 @@
 // Collection Name /stores/storeId/store_draws/drawId/draw_grand_prices/drawGrandPriceId
 // Branch : competition_resources_crud ->  create_competition_resources_front_end
 class DrawGrandPrice {
-  String grandPriceId;
-  String storeDrawFK;
+  String? grandPriceId;
+  String? storeDrawFK;
   String imageURL;
   String description;
   int grandPriceIndex;
 
   DrawGrandPrice({
-    required this.grandPriceId,
+    this.grandPriceId,
     required this.storeDrawFK,
     required this.imageURL,
     required this.description,
@@ -19,12 +19,9 @@ class DrawGrandPrice {
     Map<String, dynamic> map = {};
 
     map.addAll({
-      'grandPriceId': grandPriceId,
-      'toreDrawFK': storeDrawFK,
       'description': description,
       'imageURL': imageURL,
       'grandPriceIndex': grandPriceIndex,
-      'isFake': "No",
     });
     return map;
   }

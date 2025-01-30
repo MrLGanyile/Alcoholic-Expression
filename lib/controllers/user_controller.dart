@@ -4,6 +4,7 @@ import 'dart:developer' as debug;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -14,6 +15,7 @@ import '../models/users/group.dart';
 import 'share_dao_functions.dart';
 
 enum GroupSavingStatus {
+  incompleteData,
   loginRequired,
   alreadyCreatedGroup,
   saved,
@@ -29,76 +31,193 @@ enum GroupUpdatingStatus {
 
 // Branch : group_resources_crud ->  group_crud_data_access
 class UserController extends GetxController {
+  final firestore = FirebaseFirestore.instance;
+  final functions = FirebaseFunctions.instance;
+  final storage = FirebaseStorage.instance;
+  final auth = FirebaseAuth.instance;
+
   static UserController instance = Get.find();
 
-  late Rx<File?> pickedGroupImageFile;
-  File? get groupImageFile => pickedGroupImageFile.value;
+  late Rx<File?> _groupImageFile;
+  File? get groupImageFile => _groupImageFile.value;
+  late Rx<String?> _groupImageURL;
+  String? get groupImageURL => _groupImageURL.value;
+  late Rx<String?> _groupName;
+  String? get groupName => _groupName.value;
+  late Rx<SectionName?> _groupSectionName;
+  SectionName? get groupSectionName => _groupSectionName.value;
+  late Rx<String?> _groupSpecificArea;
+  String? get groupSpecificArea => _groupSpecificArea.value;
+  late Rx<bool> _isActive; // A group is active if it has atleast 10 members.
+  bool get isActive => _isActive.value;
 
-  late Rx<File?> pickedMember1ProfileImageFile;
-  File? get member1ProfileImageFile => pickedMember1ProfileImageFile.value;
+  late Rx<int> _maxNoOfMembers; // 5
+  int get maxNoOfMembers => _maxNoOfMembers.value;
 
-  late Rx<File?> pickedMember2ProfileImageFile;
-  File? get member2ProfileImageFile => pickedMember2ProfileImageFile.value;
+  late Rx<File?> _member1ProfileImageFile;
+  File? get member1ProfileImageFile => _member1ProfileImageFile.value;
+  late Rx<String?> _member1ImageURL;
+  String? get member1ImageURL => _member1ImageURL.value;
+  late Rx<String?> _member1PhoneNumber;
+  String? get member1PhoneNumber => _member1PhoneNumber.value;
+  late Rx<String?> _member1Username;
+  String? get member1Username => _member1Username.value;
 
-  late Rx<File?> pickedMember3ProfileImageFile;
-  File? get member3ProfileImageFile => pickedMember3ProfileImageFile.value;
+  late Rx<File?> _member2ProfileImageFile;
+  File? get member2ProfileImageFile => _member2ProfileImageFile.value;
+  late Rx<String?> _member2ImageURL;
+  String? get member2ImageURL => _member2ImageURL.value;
+  late Rx<String?> _member2PhoneNumber;
+  String? get member2PhoneNumber => _member2PhoneNumber.value;
+  late Rx<String?> _member2Username;
+  String? get member2Username => _member2Username.value;
 
-  late Rx<File?> pickedMember4ProfileImageFile;
-  File? get member4ProfileImageFile => pickedMember4ProfileImageFile.value;
+  late Rx<File?> _member3ProfileImageFile;
+  File? get member3ProfileImageFile => _member3ProfileImageFile.value;
+  late Rx<String?> _member3ImageURL;
+  String? get member3ImageURL => _member3ImageURL.value;
+  late Rx<String?> _member3PhoneNumber;
+  String? get member3PhoneNumber => _member3PhoneNumber.value;
+  late Rx<String?> _member3Username;
+  String? get member3Username => _member3Username.value;
 
-  late Rx<File?> pickedLeaderProfileImageFile;
-  File? get leaderProfileImageFile => pickedLeaderProfileImageFile.value;
+  late Rx<File?> _member4ProfileImageFile;
+  File? get member4ProfileImageFile => _member4ProfileImageFile.value;
+  late Rx<String?> _member4ImageURL;
+  String? get member4ImageURL => _member4ImageURL.value;
+  late Rx<String?> _member4PhoneNumber;
+  String? get member4PhoneNumber => _member4PhoneNumber.value;
+  late Rx<String?> _member4Username;
+  String? get member4Username => _member4Username.value;
+
+  late Rx<File?> _leaderProfileImageFile;
+  File? get leaderProfileImageFile => _leaderProfileImageFile.value;
+  late Rx<String?> _leaderImageURL;
+  String? get leaderImageURL => _leaderImageURL.value;
+  late Rx<String?> _leaderPhoneNumber;
+  String? get leaderPhoneNumber => _leaderPhoneNumber.value;
+  late Rx<String?> _leaderUsername;
+  String? get leaderUsername => _leaderUsername.value;
 
   // ==========================Alcoholic [Start]==========================
 
-  void chooseMemberProfileImageFromGallery(int memberIndex) async {
-    final pickedImageFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedImageFile != null) {
-      Get.snackbar('Image Status', 'Image File Successfully Captured.');
-    }
+  void chooseMemberProfileImageFromGallery(
+      int memberIndex, String phoneNumber, String username) async {
+    if (phoneNumber.isEmpty) {
+      Get.snackbar(
+          'Error', 'Phone Number Is Required Before Picking An Image.');
+    } else if (username.isEmpty) {
+      Get.snackbar('Error', 'Username Is Required Before Picking An Image.');
+    } else {
+      final pickedImageFile =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
 
-    switch (memberIndex) {
-      case 1:
-        pickedMember1ProfileImageFile = Rx<File?>(File(pickedImageFile!.path));
-        break;
-      case 2:
-        pickedMember2ProfileImageFile = Rx<File?>(File(pickedImageFile!.path));
-        break;
-      case 3:
-        pickedMember3ProfileImageFile = Rx<File?>(File(pickedImageFile!.path));
-        break;
-      case 4:
-        pickedMember4ProfileImageFile = Rx<File?>(File(pickedImageFile!.path));
-        break;
-      default:
-        pickedLeaderProfileImageFile = Rx<File?>(File(pickedImageFile!.path));
+      if (pickedImageFile != null) {
+        switch (memberIndex) {
+          case 1:
+            _member1ProfileImageFile = Rx<File?>(File(pickedImageFile.path));
+            _member1ImageURL = Rx<String?>(await uploadResource(
+                _member1ProfileImageFile.value!,
+                '/alcoholics/profile_images/$phoneNumber'));
+            _member1PhoneNumber = Rx<String?>(phoneNumber);
+            _member1Username = Rx<String?>(username);
+            break;
+          case 2:
+            _member2ProfileImageFile = Rx<File?>(File(pickedImageFile.path));
+            _member2ImageURL = Rx<String?>(await uploadResource(
+                _member2ProfileImageFile.value!,
+                '/alcoholics/profile_images/$phoneNumber'));
+            _member2PhoneNumber = Rx<String?>(phoneNumber);
+            _member2Username = Rx<String?>(username);
+            break;
+          case 3:
+            _member3ProfileImageFile = Rx<File?>(File(pickedImageFile.path));
+            _member3ImageURL = Rx<String?>(await uploadResource(
+                _member3ProfileImageFile.value!,
+                '/alcoholics/profile_images/$phoneNumber'));
+            _member3PhoneNumber = Rx<String?>(phoneNumber);
+            _member3Username = Rx<String?>(username);
+            break;
+          case 4:
+            _member4ProfileImageFile = Rx<File?>(File(pickedImageFile.path));
+            _member4ImageURL = Rx<String?>(await uploadResource(
+                _member4ProfileImageFile.value!,
+                '/alcoholics/profile_images/$phoneNumber'));
+            _member4PhoneNumber = Rx<String?>(phoneNumber);
+            _member4Username = Rx<String?>(username);
+            break;
+          default:
+            _leaderProfileImageFile = Rx<File?>(File(pickedImageFile.path));
+            _leaderImageURL = Rx<String?>(await uploadResource(
+                _leaderProfileImageFile.value!,
+                '/alcoholics/profile_images/$phoneNumber'));
+            _leaderPhoneNumber = Rx<String?>(phoneNumber);
+            _leaderUsername = Rx<String?>(username);
+        }
+        Get.snackbar('Image Status', 'Image File Successfully Picked.');
+      } else {
+        Get.snackbar('Error', 'Image Wasn\'t Picked.');
+      }
     }
   }
 
-  void captureMemberProfileImageFromCamera(int memberIndex) async {
-    final pickedImageFile =
-        await ImagePicker().pickImage(source: ImageSource.camera);
+  void captureMemberProfileImageFromCamera(
+      int memberIndex, String phoneNumber, String username) async {
+    if (phoneNumber.isEmpty) {
+      Get.snackbar(
+          'Error', 'Phone Number Is Required Before Capturing An Image.');
+    } else if (username.isEmpty) {
+      Get.snackbar('Error', 'Username Is Required Before Capturing An Image.');
+    } else {
+      final pickedImageFile =
+          await ImagePicker().pickImage(source: ImageSource.camera);
 
-    if (pickedImageFile != null) {
-      Get.snackbar('Image Status', 'Image File Successfully Captured.');
-    }
-
-    switch (memberIndex) {
-      case 1:
-        pickedMember1ProfileImageFile = Rx<File?>(File(pickedImageFile!.path));
-        break;
-      case 2:
-        pickedMember2ProfileImageFile = Rx<File?>(File(pickedImageFile!.path));
-        break;
-      case 3:
-        pickedMember3ProfileImageFile = Rx<File?>(File(pickedImageFile!.path));
-        break;
-      case 4:
-        pickedMember4ProfileImageFile = Rx<File?>(File(pickedImageFile!.path));
-        break;
-      default:
-        pickedLeaderProfileImageFile = Rx<File?>(File(pickedImageFile!.path));
+      if (pickedImageFile != null) {
+        switch (memberIndex) {
+          case 1:
+            _member1ProfileImageFile = Rx<File?>(File(pickedImageFile.path));
+            _member1ImageURL = Rx<String?>(await uploadResource(
+                _member1ProfileImageFile.value!,
+                '/alcoholics/profile_images/$phoneNumber'));
+            _member1PhoneNumber = Rx<String?>(phoneNumber);
+            _member1Username = Rx<String?>(username);
+            break;
+          case 2:
+            _member2ProfileImageFile = Rx<File?>(File(pickedImageFile.path));
+            _member2ImageURL = Rx<String?>(await uploadResource(
+                _member2ProfileImageFile.value!,
+                '/alcoholics/profile_images/$phoneNumber'));
+            _member2PhoneNumber = Rx<String?>(phoneNumber);
+            _member2Username = Rx<String?>(username);
+            break;
+          case 3:
+            _member3ProfileImageFile = Rx<File?>(File(pickedImageFile.path));
+            _member3ImageURL = Rx<String?>(await uploadResource(
+                _member3ProfileImageFile.value!,
+                '/alcoholics/profile_images/$phoneNumber'));
+            _member3PhoneNumber = Rx<String?>(phoneNumber);
+            _member3Username = Rx<String?>(username);
+            break;
+          case 4:
+            _member4ProfileImageFile = Rx<File?>(File(pickedImageFile.path));
+            _member4ImageURL = Rx<String?>(await uploadResource(
+                _member4ProfileImageFile.value!,
+                '/alcoholics/profile_images/$phoneNumber'));
+            _member4PhoneNumber = Rx<String?>(phoneNumber);
+            _member4Username = Rx<String?>(username);
+            break;
+          default:
+            _leaderProfileImageFile = Rx<File?>(File(pickedImageFile.path));
+            _leaderImageURL = Rx<String?>(await uploadResource(
+                _leaderProfileImageFile.value!,
+                '/alcoholics/profile_images/$phoneNumber'));
+            _leaderPhoneNumber = Rx<String?>(phoneNumber);
+            _leaderUsername = Rx<String?>(username);
+        }
+        Get.snackbar('Image Status', 'Image File Successfully Captured.');
+      } else {
+        Get.snackbar('Error', 'Image Wasn\'t Captured.');
+      }
     }
   }
 
@@ -120,7 +239,7 @@ class UserController extends GetxController {
           sectionName: sectionName);
 
       // 3. Save alcoholic object
-      await FirebaseFirestore.instance
+      await firestore
           .collection('alcoholics')
           .doc(phoneNumber)
           .set(alcoholic.toJson());
@@ -136,34 +255,89 @@ class UserController extends GetxController {
 
   // ==========================Group [Start]==========================
 
-  void chooseGroupImageFromGallery() async {
-    final pickedImageFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-
-    if (pickedImageFile != null) {
-      Get.snackbar('Image Status', 'Image File Successfully Picked.');
+  void setMaxNoOfMembers(int noOfMembers) {
+    if (noOfMembers >= 3) {
+      _maxNoOfMembers = Rx<int>(noOfMembers);
     }
-
-    // Share the chosen image file on Getx State Management.
-    pickedGroupImageFile = Rx<File?>(File(pickedImageFile!.path));
   }
 
-  void captureGroupProfileImageWithCamera() async {
-    final pickedImageFile =
-        await ImagePicker().pickImage(source: ImageSource.camera);
+  void setIsActive(bool isActive) {
+    _isActive = Rx<bool>(isActive);
+  }
 
-    if (pickedImageFile != null) {
-      Get.snackbar('Image Status', 'Image File Successfully Captured.');
+  void chooseGroupImageFromGallery(
+    String groupName,
+    SectionName sectionName,
+    String groupSpecificArea,
+  ) async {
+    if (groupName.isEmpty) {
+      Get.snackbar('Error', 'Group Name Is Missing.');
+    } else if (groupSpecificArea.isEmpty) {
+      Get.snackbar('Error', 'Group Specific Area Is Missing.');
+    } else if (_leaderPhoneNumber.value == null) {
+      Get.snackbar('Error', 'Group Leaders\'s Phone Number Is Missing.');
+    } else {
+      final pickedImageFile =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
+
+      if (pickedImageFile != null) {
+        debug.log('Image Chosen Using Gallery');
+        // Share the chosen image file on Getx State Management.
+        _groupImageFile = Rx<File?>(File(pickedImageFile.path));
+
+        _groupImageURL = Rx<String?>(await uploadResource(
+            _groupImageFile.value!,
+            '/groups_specific_locations/${_leaderPhoneNumber.value}'));
+        _groupName = Rx<String?>(groupName);
+        _groupSectionName = Rx<SectionName?>(sectionName);
+        _groupSpecificArea = Rx<String?>(groupSpecificArea);
+
+        Get.snackbar('Image Status', 'Image File Successfully Picked.');
+      } else {
+        Get.snackbar('Error', 'Image Wasn\'t Picked.');
+      }
     }
+  }
 
-    // Share the chosen image file on Getx State Management.
-    pickedGroupImageFile = Rx<File?>(File(pickedImageFile!.path));
+  void captureGroupImageWithCamera(
+    String groupName,
+    SectionName sectionName,
+    String groupSpecificArea,
+  ) async {
+    if (groupName.isEmpty) {
+      debug.log('Group Name Is Empty.');
+      Get.snackbar('Error', 'Group Name Is Missing.');
+    } else if (groupSpecificArea.isEmpty) {
+      debug.log('Group Specific Area Is Empty.');
+      Get.snackbar('Error', 'Group Specific Area Is Missing.');
+    } else if (_leaderPhoneNumber.value == null) {
+      debug.log('Group Leader\'s Phone Number Is Empty Is Empty.');
+      Get.snackbar('Error', 'Group Leaders\'s Phone Number Is Missing.');
+    } else {
+      final pickedImageFile =
+          await ImagePicker().pickImage(source: ImageSource.camera);
+
+      if (pickedImageFile != null) {
+        // Share the chosen image file on Getx State Management.
+        _groupImageFile = Rx<File?>(File(pickedImageFile.path));
+
+        _groupImageURL = Rx<String?>(await uploadResource(
+            _groupImageFile.value!,
+            '/groups_specific_locations/${_leaderPhoneNumber.value}'));
+        _groupName = Rx<String>(groupName);
+        _groupSectionName = Rx<SectionName?>(sectionName);
+        _groupSpecificArea = Rx<String>(groupSpecificArea);
+
+        Get.snackbar('Image Status', 'Image File Successfully Picked.');
+      } else {
+        Get.snackbar('Error', 'Image Wasn\'t Picked.');
+      }
+    }
   }
 
   // Works as expected.
   Future<void> createGroup1() async {
-    final httpCallable =
-        FirebaseFunctions.instance.httpsCallable('createGroup1');
+    final httpCallable = functions.httpsCallable('createGroup1');
 
     const data = {
       'param1': 1,
@@ -184,142 +358,246 @@ class UserController extends GetxController {
             phoneNumber.startsWith('08'));
   }
 
-  bool allValidPhoneNumbers(List<String> phoneNumbers) {
-    for (int phoneIndex = 0; phoneIndex < phoneNumbers.length; phoneIndex++) {
-      if (!isValidPhoneNumber(phoneNumbers[phoneIndex])) return false;
+  bool hasMember(int memberIndex) {
+    switch (memberIndex) {
+      case 1:
+        return member1ProfileImageFile != null &&
+            _member1ImageURL.value != null &&
+            _member1PhoneNumber.value != null &&
+            _member1Username.value != null;
+      case 2:
+        return member2ProfileImageFile != null &&
+            _member2ImageURL.value != null &&
+            _member2PhoneNumber.value != null &&
+            _member2Username.value != null;
+      case 3:
+        return member3ProfileImageFile != null &&
+            _member3ImageURL.value != null &&
+            _member3PhoneNumber.value != null &&
+            _member3Username.value != null;
+      case 4:
+        return member4ProfileImageFile != null &&
+            _member4ImageURL.value != null &&
+            _member4PhoneNumber.value != null &&
+            _member4Username.value != null;
+      default:
+        return leaderProfileImageFile != null &&
+            _leaderImageURL.value != null &&
+            _leaderPhoneNumber.value != null &&
+            _leaderUsername.value != null;
     }
-    return true;
   }
 
-  Future<void> createGroup(
-    File groupImage,
-    String groupName,
-    String groupSpecificArea,
-    SectionName sectionName,
-    File groupCreatorImage,
-    String groupCreatorPhoneNumber,
-    String groupCreatorUsername,
-    List<String> phoneNumbers,
-    List<String> usernames,
-    List<File> profileImages,
-  ) async {
-    if (groupName.isNotEmpty &&
-        groupSpecificArea.isNotEmpty &&
-        isValidPhoneNumber(groupCreatorPhoneNumber) &&
-        allValidPhoneNumbers(phoneNumbers) &&
-        phoneNumbers.contains(groupCreatorPhoneNumber) &&
-        phoneNumbers.isNotEmpty &&
-        groupCreatorUsername.isNotEmpty &&
-        usernames.contains(groupCreatorUsername) &&
-        phoneNumbers.length == usernames.length &&
-        phoneNumbers.length == profileImages.length) {
-      String groupImageURL = await uploadResource(
-          groupImage, '/groups_specific_locations/$groupCreatorPhoneNumber');
+  int countMember() {
+    int count = 0;
 
-      String groupCreatorImageURL = await uploadResource(
-          groupCreatorImage, '/alcoholics/$groupCreatorPhoneNumber');
+    if (leaderPhoneNumber != null &&
+        leaderUsername != null &&
+        leaderProfileImageFile != null) {
+      count++;
+    }
 
-      String groupSectionName = Converter.asString(sectionName);
+    if (member1PhoneNumber != null &&
+        member1Username != null &&
+        member1ProfileImageFile != null) {
+      count++;
+    }
 
-      List<Map<String, dynamic>> members = [];
-      for (int alcoholicIndex = 0;
-          alcoholicIndex < phoneNumbers.length;
-          alcoholicIndex++) {
-        String groupMemberImageURL = await uploadResource(
-            profileImages[alcoholicIndex],
-            '/alcoholics/${phoneNumbers[alcoholicIndex]}');
-        members.add({
-          'phoneNumber': phoneNumbers[alcoholicIndex],
-          'userName': usernames[alcoholicIndex],
-          'profileImage': groupMemberImageURL
-        });
-      }
+    if (member2PhoneNumber != null &&
+        member2Username != null &&
+        member2ProfileImageFile != null) {
+      count++;
+    }
 
-      final group = {
-        'groupName': groupName,
-        'groupImageURL': groupImageURL,
-        'groupSectionName': groupSectionName,
-        'groupSpecificArea': groupSpecificArea,
-        'groupCreatorPhoneNumber': groupCreatorPhoneNumber,
-        'groupCreatorImageURL': groupCreatorImageURL,
-        'groupCreatorUsername': groupCreatorUsername,
-        'groupMembers': members
-      };
+    if (member3PhoneNumber != null &&
+        member3Username != null &&
+        member3ProfileImageFile != null) {
+      count++;
+    }
 
-      final httpCallable =
-          FirebaseFunctions.instance.httpsCallable('createGroup');
-      await httpCallable.call(group);
+    if (member4PhoneNumber != null &&
+        member4Username != null &&
+        member4ProfileImageFile != null) {
+      count++;
+    }
+
+    return count;
+  }
+
+  bool allValidPhoneNumbers() {
+    switch (countMember()) {
+      case 1:
+        return isValidPhoneNumber(leaderPhoneNumber!);
+
+      case 2:
+        return isValidPhoneNumber(leaderPhoneNumber!) &&
+            isValidPhoneNumber(member1PhoneNumber!);
+      case 3:
+        return isValidPhoneNumber(leaderPhoneNumber!) &&
+            isValidPhoneNumber(member1PhoneNumber!) &&
+            isValidPhoneNumber(member2PhoneNumber!);
+      case 4:
+        return isValidPhoneNumber(leaderPhoneNumber!) &&
+            isValidPhoneNumber(member1PhoneNumber!) &&
+            isValidPhoneNumber(member2PhoneNumber!) &&
+            isValidPhoneNumber(member3PhoneNumber!);
+      default:
+        return isValidPhoneNumber(leaderPhoneNumber!) &&
+            isValidPhoneNumber(member1PhoneNumber!) &&
+            isValidPhoneNumber(member2PhoneNumber!) &&
+            isValidPhoneNumber(member3PhoneNumber!) &&
+            isValidPhoneNumber(member4PhoneNumber!);
     }
   }
 
   // groups_crud -> create_group
-  GroupSavingStatus saveGroup(
-    File groupImage,
-    String groupName,
-    String groupSpecificArea,
-    SectionName sectionName,
-  ) {
-    GroupSavingStatus groupSavingStatus = GroupSavingStatus.loginRequired;
+  Future<GroupSavingStatus> createGroup() async {
+    if (_groupImageFile.value != null &&
+        _groupImageURL.value != null &&
+        _groupName.value != null &&
+        _groupSectionName.value != null &&
+        _groupSpecificArea.value != null) {
+      String groupSectionName = Converter.asString(_groupSectionName.value!);
 
-    if (FirebaseAuth.instance.currentUser != null) {
-      String phoneNumber = FirebaseAuth.instance.currentUser!.phoneNumber!;
+      List<Map<String, dynamic>> members = [];
 
-      FirebaseFirestore.instance
-          .collection('alcoholics')
-          .doc(phoneNumber)
-          .snapshots()
-          .map((alcoholicSnapshot) {
-        if (alcoholicSnapshot.exists) {
-          Alcoholic alcoholic = Alcoholic.fromJson(alcoholicSnapshot.data());
+      Alcoholic alcoholic;
 
-          FirebaseFirestore.instance
-              .collection('groups')
-              .doc(alcoholic.phoneNumber)
-              .snapshots()
-              .map((groupSnapshot) async {
-            if (!groupSnapshot.exists) {
-              try {
-                // 'gs://alcoholic-expressions.appspot.com/groups_specific_locations/+27625446322.jpg'
-                // 1. Create download URL & save group image in firebase storage.
-                String groupImageURL = await uploadResource(groupImage,
-                    '/groups_specific_locations/${alcoholic.phoneNumber}');
+      if (hasMember(0)) {
+        alcoholic = Alcoholic(
+          phoneNumber: _leaderPhoneNumber.value,
+          username: _leaderUsername.value!,
+          profileImageURL: _leaderImageURL.value,
+          sectionName: _groupSectionName.value!,
+          groupFK: _leaderPhoneNumber.value,
+        );
+        members.add(alcoholic.toJson());
 
+        if (hasMember(1)) {
+          alcoholic = Alcoholic(
+            phoneNumber: _member1PhoneNumber.value,
+            username: _member1Username.value!,
+            profileImageURL: member1ImageURL,
+            sectionName: _groupSectionName.value!,
+            groupFK: _leaderPhoneNumber.value,
+          );
+          members.add(alcoholic.toJson());
+
+          if (hasMember(2)) {
+            alcoholic = Alcoholic(
+              phoneNumber: _member2PhoneNumber.value,
+              username: _member2Username.value!,
+              profileImageURL: member2ImageURL,
+              sectionName: _groupSectionName.value!,
+              groupFK: _leaderPhoneNumber.value,
+            );
+            members.add(alcoholic.toJson());
+
+            if (hasMember(3)) {
+              alcoholic = Alcoholic(
+                phoneNumber: _member3PhoneNumber.value,
+                username: _member3Username.value!,
+                profileImageURL: member3ImageURL,
+                sectionName: _groupSectionName.value!,
+                groupFK: _leaderPhoneNumber.value,
+              );
+              members.add(alcoholic.toJson());
+
+              if (hasMember(4)) {
+                alcoholic = Alcoholic(
+                  phoneNumber: _member4PhoneNumber.value,
+                  username: _member4Username.value!,
+                  profileImageURL: member4ImageURL,
+                  sectionName: _groupSectionName.value!,
+                  groupFK: _leaderPhoneNumber.value,
+                );
+                members.add(alcoholic.toJson());
+
+                Map<String, dynamic> registrationGroup = {
+                  'groupName': _groupName.value,
+                  'groupImageURL': _groupImageURL.value,
+                  'groupSectionName': groupSectionName,
+                  'groupSpecificArea': _groupSpecificArea.value,
+                  'groupCreatorPhoneNumber': _leaderPhoneNumber.value,
+                  'groupCreatorImageURL': _leaderImageURL.value,
+                  'groupCreatorUsername': _leaderUsername.value,
+                  'isActive': false,
+                  'maxNoOfMembers': 5,
+                  'groupMembers': members
+                };
+
+                // Saving With A Cloud Function.
+                /*final httpCallable =
+                    functions.httpsCallable('createGroup');
+                await httpCallable.call(group);*/
+
+                // Saving Without A Cloud Function.
+                for (int alcoholicIndex = 0;
+                    alcoholicIndex < members.length;
+                    alcoholicIndex++) {
+                  Alcoholic alcoholic =
+                      Alcoholic.fromJson(members[alcoholicIndex]);
+                  await firestore
+                      .collection('alcoholics')
+                      .doc(alcoholic.phoneNumber)
+                      .set(alcoholic.toJson());
+                }
+
+                List<String> phoneNumbers = [];
+
+                for (int i = 0; i < members.length; i++) {
+                  phoneNumbers.add(members[i]['phoneNumber']);
+                }
                 Group group = Group(
-                    groupName: groupName,
-                    groupImageURL: groupImageURL,
-                    groupSectionName: alcoholic.sectionName,
-                    groupSpecificArea: groupSpecificArea,
-                    groupCreatorPhoneNumber: alcoholic.phoneNumber,
-                    groupCreatorImageURL: alcoholic.profileImageURL,
-                    groupCreatorUsername: alcoholic.username,
-                    groupMembers: [alcoholic.phoneNumber],
-                    maxNoOfMembers: 5);
+                    groupName: registrationGroup['groupName'],
+                    groupImageURL: registrationGroup['groupImageURL'],
+                    groupSectionName: Converter.toSectionName(
+                        registrationGroup['groupSectionName']),
+                    groupSpecificArea: registrationGroup['groupSpecificArea'],
+                    groupCreatorPhoneNumber:
+                        registrationGroup['groupCreatorPhoneNumber'],
+                    groupCreatorImageURL:
+                        registrationGroup['groupCreatorImageURL'],
+                    groupCreatorUsername:
+                        registrationGroup['groupCreatorUsername'],
+                    groupMembers: phoneNumbers,
+                    maxNoOfMembers: registrationGroup['maxNoOfMembers']);
 
-                await FirebaseFirestore.instance
+                await firestore
                     .collection('groups')
-                    .doc(group.groupCreatorPhoneNumber)
+                    .doc(group.creatorPhoneNumber)
                     .set(group.toJson());
-                showProgressBar = false;
-                groupSavingStatus = GroupSavingStatus.saved;
-              } catch (error) {
-                Get.snackbar("Saving Error", "Group Couldn'\t Be Saved.");
-                debug.log(error.toString());
-                showProgressBar = false;
+                Get.snackbar('Group Status', 'Saved Group Successfully .');
+                return GroupSavingStatus.saved;
+              } else {
+                Get.snackbar('Error', 'Forth Member Info Is Missing .');
+                return GroupSavingStatus.incompleteData;
               }
             } else {
-              groupSavingStatus = GroupSavingStatus.alreadyCreatedGroup;
+              Get.snackbar('Error', 'Third Member Info Is Missing .');
+              return GroupSavingStatus.incompleteData;
             }
-          });
+          } else {
+            Get.snackbar('Error', 'Second Member Info Is Missing .');
+            return GroupSavingStatus.incompleteData;
+          }
+        } else {
+          Get.snackbar('Error', 'First Member Info Is Missing .');
+          return GroupSavingStatus.incompleteData;
         }
-      });
+      } else {
+        Get.snackbar('Error', 'Leader Info Is Missing .');
+        return GroupSavingStatus.incompleteData;
+      }
+    } else {
+      Get.snackbar('Error', 'Group Info Is Missing .');
+      return GroupSavingStatus.incompleteData;
     }
-
-    return groupSavingStatus;
   }
 
   // groups_crud -> view_groups
   Stream<List<Group>> readAllGroups() {
-    Stream<List<Group>> stream = FirebaseFirestore.instance
+    Stream<List<Group>> stream = firestore
         .collection('groups')
         .snapshots()
         .map((snapshot) => snapshot.docs.map((doc) {
@@ -332,7 +610,7 @@ class UserController extends GetxController {
 
   // groups_crud -> view_groups
   Stream<List<Group>> readGroups(SectionName sectionName) {
-    Stream<List<Group>> stream = FirebaseFirestore.instance
+    Stream<List<Group>> stream = firestore
         .collection('groups')
         .where("groupSectionName", isEqualTo: Converter.asString(sectionName))
         .snapshots()
@@ -346,10 +624,7 @@ class UserController extends GetxController {
 
   // To Remove - Branches groups_crud -> view_groups
   Future<List<Group>> readFutureAllGroups() async {
-    return FirebaseFirestore.instance
-        .collection('groups')
-        .snapshots()
-        .map(((doc) {
+    return firestore.collection('groups').snapshots().map(((doc) {
       Group group = Group.fromJson(doc);
       return group;
     })).toList();
@@ -360,9 +635,9 @@ class UserController extends GetxController {
     GroupUpdatingStatus groupUpdatingStatus = GroupUpdatingStatus.loginRequired;
 
     // The user is currently logged in.
-    if (FirebaseAuth.instance.currentUser != null) {
-      String phoneNumber = FirebaseAuth.instance.currentUser!.phoneNumber!;
-      FirebaseFirestore.instance
+    if (auth.currentUser != null) {
+      String phoneNumber = auth.currentUser!.phoneNumber!;
+      firestore
           .collection('alcoholics')
           .doc(phoneNumber)
           .snapshots()
@@ -373,7 +648,7 @@ class UserController extends GetxController {
 
           // Currently logged in user belong to some group.
           if (alcoholic.groupFK != null) {
-            FirebaseFirestore.instance
+            firestore
                 .collection('groups')
                 .doc(alcoholic.groupFK!)
                 .snapshots()
@@ -385,7 +660,7 @@ class UserController extends GetxController {
                 // The current user is not a create of the from group.
                 if (fromGroup.groupCreatorPhoneNumber.compareTo(phoneNumber) !=
                     0) {
-                  FirebaseFirestore.instance
+                  firestore
                       .collection('groups')
                       .doc(to)
                       .snapshots()
@@ -397,8 +672,7 @@ class UserController extends GetxController {
                     if (toGroup.groupMembers.length < toGroup.maxNoOfMembers) {
                       /* Perform a transaction [remove member from 'from' group, 
                       add member to 'to' group, update member groupFK].*/
-                      FirebaseFirestore.instance
-                          .runTransaction((transaction) async {
+                      firestore.runTransaction((transaction) async {
                         if (fromGroup.removeMember(alcoholic.phoneNumber) &&
                             toGroup.addMember(alcoholic.phoneNumber)) {
                           transaction.update(fromGroupSnapshot.reference,
@@ -434,7 +708,7 @@ class UserController extends GetxController {
 
           // Currently logged in user do not belong to some group.
           else {
-            FirebaseFirestore.instance
+            firestore
                 .collection('groups')
                 .doc(to)
                 .snapshots()
@@ -446,7 +720,7 @@ class UserController extends GetxController {
               if (toGroup.groupMembers.length < toGroup.maxNoOfMembers) {
                 /* Perform a transaction [ add member to 'to' group, 
                 update member groupFK].*/
-                FirebaseFirestore.instance.runTransaction((transaction) async {
+                firestore.runTransaction((transaction) async {
                   if (toGroup.addMember(alcoholic.phoneNumber)) {
                     transaction.update(toGroupSnapshot.reference,
                         {'groupMembers': toGroup.groupMembers});

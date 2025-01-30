@@ -10,10 +10,11 @@ import 'controllers/location_controller.dart';
 import 'controllers/store_controller.dart';
 import '/controllers/user_controller.dart';
 
-import 'firebase_options.dart';
-import 'screens/alcoholic_registration_widget.dart';
-import 'screens/group_registration_widget.dart';
-import 'screens/start_screen.dart';
+import 'screens/store/store_draw_registration_widget.dart';
+import 'screens/utils/firebase_options.dart';
+import 'screens/users/alcoholic_registration_widget.dart';
+import 'screens/users/group_registration_widget.dart';
+import 'screens/utils/start_screen.dart';
 
 import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
 
@@ -22,6 +23,7 @@ import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
 // Mlu NERD 0842457343
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform)
       .then((value) {
     Get.put(StoreController());
@@ -129,7 +131,8 @@ class _MyApplicationState extends State<MyApplication> {
         secondaryHeaderColor: const Color.fromARGB(115, 231, 195, 214),
       ),
 
-      home: GroupRegistrationWidget(adminPhoneNumber: '+27661813561'),
+      home: StoreDrawRegistrationWidget(),
+      // home: GroupRegistrationWidget(adminPhoneNumber: '+27661813561'),
       // home: VerificationScreen(phoneNumber: '+27661813561', pin: '12312'),
       // home: StartScreen(),
       // home: const AlcoholicRegistrationWidget(),

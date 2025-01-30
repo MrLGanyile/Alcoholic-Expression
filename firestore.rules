@@ -52,45 +52,45 @@ service cloud.firestore {
     // Branch : group_resources_crud_storage_security_rules
     // Note: Has Model Named {Alcoholic}
     match /alcoholics/{alcoholicPhoneNumber}{
-      allow create: if request.auth!=null &&
+      allow create: if true; //request.auth!=null &&
 
-      exists(/databases/$(database)/documents/admins/
-      $(request.auth.uid))==false &&
+      //exists(/databases/$(database)/documents/admins/
+      //$(request.auth.uid))==false &&
 
       // Phone number is provided and matches the document id provided.
-      request.resource.data.phoneNumber != null &&
-      request.resource.data.phoneNumber != '' &&
-      request.resource.data.phoneNumber == alcoholicPhoneNumber &&
+      //request.resource.data.phoneNumber != null &&
+      //request.resource.data.phoneNumber != '' &&
+      //request.resource.data.phoneNumber == alcoholicPhoneNumber &&
 
       // New user isn't already an alcoholic nor is he a store owner.
-      exists(/databases/$(database)/documents/alcoholics/
-      $(request.auth.uid))==false &&
+      //exists(/databases/$(database)/documents/alcoholics/
+      //$(request.auth.uid))==false &&
 
-      request.resource.data.profileImageURL != null &&
-      request.resource.data.profileImageURL != '' &&
+      //request.resource.data.profileImageURL != null &&
+      //request.resource.data.profileImageURL != '' &&
 
-      request.resource.data.sectionName != null &&
-      request.resource.data.sectionName in 
-      [
+      //request.resource.data.sectionName != null &&
+      //request.resource.data.sectionName in 
+      //[
         
-        'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        'Cato Manor-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        'Dunbar-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        'Masxha-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        'Bonela-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        'Sherwood-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        'Richview-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        'Nsimbini-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        'Manor Gardens-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        //'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        //'Cato Manor-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        //'Dunbar-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        //'Masxha-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        //'Bonela-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        //'Sherwood-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        //'Richview-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        //'Nsimbini-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        //'Manor Gardens-Mayville-Durban-Kwa Zulu Natal-South Africa',
         
-        'MUT-Umlazi-Durban-Kwa Zulu Natal-South Africa',
-        'Haward College Campus-UKZN-Durban-Kwa Zulu Natal-South Africa',
-        'Westville Campus-UKZN-Durban-Kwa Zulu Natal-South Africa',
-        'Edgewood Campus-UKZN-Pinetown-Kwa Zulu Natal-South Africa',
-        'Steve Biko Campus-DUT-Durban-Kwa Zulu Natal-South Africa',
+        //'MUT-Umlazi-Durban-Kwa Zulu Natal-South Africa',
+        //'Haward College Campus-UKZN-Durban-Kwa Zulu Natal-South Africa',
+        //'Westville Campus-UKZN-Durban-Kwa Zulu Natal-South Africa',
+        //'Edgewood Campus-UKZN-Pinetown-Kwa Zulu Natal-South Africa',
+        //'Steve Biko Campus-DUT-Durban-Kwa Zulu Natal-South Africa',
         
 
-      ];
+      //];
 
       allow read;
 
@@ -102,58 +102,58 @@ service cloud.firestore {
     // Note: Has Model Named {Group}
     match /groups/{groupId}{
 
-      allow create: if request.auth != null &&
+      allow create: if true; //request.auth != null &&
 
       // Make sure a user is an alcoholic.
-      exists(/databases/$(database)/documents/alcoholics/
-      $(request.auth.uid)) &&
+      //exists(/databases/$(database)/documents/alcoholics/
+      //$(request.auth.uid)) &&
 
       // Make sure users do not create more than one group.
-      exists(/databases/$(database)/documents/groups/
-      $(request.auth.uid)) == false && 
+      //exists(/databases/$(database)/documents/groups/
+      //$(request.auth.uid)) == false && 
 
-      request.resource.data.groupName != null &&
-      request.resource.data.groupName.size() >= 3 &&
+      //request.resource.data.groupName != null &&
+      //request.resource.data.groupName.size() >= 3 &&
 
-      request.resource.data.groupImageURL!= null &&
-      request.resource.data.groupImageURL != '' &&
+      //request.resource.data.groupImageURL!= null &&
+      //request.resource.data.groupImageURL != '' &&
 
-      request.resource.data.groupSectionName in  
-      [
-        'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        'Cato Manor-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        'Dunbar-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        'Masxha-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        'Bonela-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        'Sherwood-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        'Richview-Mayville-Durban-Kwa Zulu Natal-South Africa',
-        'Nsimbini-Mayville-Durban-Kwa Zulu Natal-South Africa',
+      //request.resource.data.groupSectionName in  
+      //[
+        //'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        //'Cato Manor-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        //'Dunbar-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        //'Masxha-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        //'Bonela-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        //'Sherwood-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        //'Richview-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        //'Nsimbini-Mayville-Durban-Kwa Zulu Natal-South Africa',
 
-        'MUT-Umlazi-Durban-Kwa Zulu Natal-South Africa',
-        'Haward College Campus-UKZN-Durban-Kwa Zulu Natal-South Africa',
-        'Westville Campus-UKZN-Durban-Kwa Zulu Natal-South Africa',
-        'Edgewood Campus-UKZN-Pinetown-Kwa Zulu Natal-South Africa',
-        'Steve Biko Campus-DUT-Durban-Kwa Zulu Natal-South Africa',
-      ] &&
+        //'MUT-Umlazi-Durban-Kwa Zulu Natal-South Africa',
+        //'Haward College Campus-UKZN-Durban-Kwa Zulu Natal-South Africa',
+        //'Westville Campus-UKZN-Durban-Kwa Zulu Natal-South Africa',
+        //'Edgewood Campus-UKZN-Pinetown-Kwa Zulu Natal-South Africa',
+        //'Steve Biko Campus-DUT-Durban-Kwa Zulu Natal-South Africa',
+      //] &&
 
-      request.resource.data.groupSpecificArea != null &&
-      request.resource.data.groupSpecificArea != '' &&
+      //request.resource.data.groupSpecificArea != null &&
+      //request.resource.data.groupSpecificArea != '' &&
       
-      request.resource.data.groupCreatorPhoneNumber != null &&
-      request.resource.data.groupCreatorPhoneNumber == request.auth.uid &&
+      //request.resource.data.groupCreatorPhoneNumber != null &&
+      //request.resource.data.groupCreatorPhoneNumber == request.auth.uid &&
 
-      request.resource.data.groupCreatorUsername != null &&
-      request.resource.data.groupCreatorUsername != '' &&
+      //request.resource.data.groupCreatorUsername != null &&
+      //request.resource.data.groupCreatorUsername != '' &&
 
-      request.resource.data.groupCreatorImageURL != null &&
-      request.resource.data.groupCreatorImageURL != '' &&
+      //request.resource.data.groupCreatorImageURL != null &&
+      //request.resource.data.groupCreatorImageURL != '' &&
       
-      request.resource.data.groupMembers != null &&
-      request.resource.data.groupMembers.size() == 1 &&
+      //request.resource.data.groupMembers != null &&
+      //request.resource.data.groupMembers.size() == 1 &&
 
-      request.resource.data.isActive==false &&
+      //request.resource.data.isActive==false &&
       
-      request.resource.data.maxNoOfMembers == 5;
+      //request.resource.data.maxNoOfMembers == 5;
 
       // Anybody can view groups.
       allow read;

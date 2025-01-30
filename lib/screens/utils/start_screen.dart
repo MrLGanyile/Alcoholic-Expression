@@ -1,9 +1,9 @@
 import '/screens/store/stores_widget.dart';
 import 'package:flutter/material.dart';
 
-import '../main.dart';
+import '../../main.dart';
 
-import 'groups_screen.dart';
+import '../users/groups_screen.dart';
 import 'home_widget.dart';
 
 class StartScreen extends StatefulWidget {
