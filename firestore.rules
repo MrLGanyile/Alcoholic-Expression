@@ -257,5 +257,12 @@ service cloud.firestore {
       }
 
     }
+
+    // Branch : store_resources_crud ->  store_resources_crud_storage_security_rules
+    // Note: Has Model Named {StoreNameInfo}
+    match /stores_names_info/{storeNameInfoId}{
+      allow read: if true;
+      allow create, update, delete: if false; // Called By A Cloud Function Only.
+    }
   }
 }
