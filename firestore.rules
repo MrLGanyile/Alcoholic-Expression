@@ -276,5 +276,61 @@ service cloud.firestore {
       allow create, update, delete: if false; // Called By A Cloud Function Only.
     
     }
+
+    // Branch : competition_resources_crud ->  competition_resources_crud_firestore_security_rules
+    // All competitions should take the same amount of time to finish.
+    // Note: Has Model Named {Competition}
+    match /competitions/{competitionId}{
+      
+      // get - Invoked whenever one needs to view the competition.
+      allow get: if true; 
+      allow list: if false;
+      allow update;
+      
+      // create - Automatically invoked when a competition is created(Screen 10.2.1).
+      allow create: if request.auth.uid != null &&
+      get(/databases/$(database)/documents/users/
+      $(request.auth.uid)).data.isOwner == true;
+      
+      // Branch : competition_resources_crud ->  competition_resources_crud_firestore_security_rules
+      // Note: Has Model Named {GrandPricesGrid}
+      match /grand_prices_grids/{grandPriceGridId}{
+
+        allow write: if false;
+        allow get: if true; 
+        allow list: if false;
+
+        // Branch : competition_resources_crud ->  competition_resources_crud_firestore_security_rules
+        // Note: Has Model Named {GrandPriceToken}
+        match /grand_prices_tokens/{grandPriceTokenId}{
+          allow write: if false;
+          allow read: if true;
+        }
+      
+      }
+
+      // Branch : competition_resources_crud ->  competition_resources_crud_firestore_security_rules
+      // Note: Has Model Named {GroupCompetitorsGrid}
+      match /group_competitors_grids/{competitorGridId}{
+        
+        allow write: if false;
+        allow get: if true; 
+        allow list: if false;
+
+        // Branch : competition_resources_crud ->  competition_resources_crud_firestore_security_rules
+        // Note: Has Model Named {GroupCompetitorToken}
+        match /group_competitors_tokens/{competitorTokenId}{
+          allow write: if false;
+          allow get: if false;
+          allow list: if true;
+        }
+      }
+    }
+
+    // Branch : competition_resources_crud ->  competition_resources_crud_firestore_security_rules
+    match /count_down_clocks/{competitionCountDownId}{
+      allow read;
+      allow write: if false;
+    }
   }
 }  
