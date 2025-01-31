@@ -808,6 +808,175 @@ describe('Our Alcoholic App',()=>{
 
   //================================Store Owner Id Images[End]==================================
 
+  //================================Alcoholic Images[Start]==================================
+
+  // Branch : group_resources_crud ->  group_resources_crud_storage_security_unit_testing
+  // Testing /alcoholics/profile_images/{profileImageId}
+  it('Offline User : Do not allow not logged in users to upload a profile image.', async()=>{
+    
+    await assertFails(
+      noUser.storage().ref()
+     .child('/alcoholics/profile_images/'+ someId)
+      .put(file5MB).then()
+    );
+  }); 
+
+  // Branch : group_resources_crud ->  group_resources_crud_storage_security_unit_testing
+  // Testing /alcoholics/profile_images/{profileImageId}
+  it('Online User : Do not allow logged in users to upload profile images having a different profile image doc id compared to their uid.', async()=>{
+
+    await assertFails(
+      myUser.storage().ref()
+      .child('/alcoholics/profile_images/'+someId)
+      .put(file5MB).then()
+    );
+  }); 
+
+  // Branch : group_resources_crud ->  group_resources_crud_storage_security_unit_testing
+  // Testing /alcoholics/profile_images/{profileImageId}
+  it('Online User : Do not allow logged in users to upload profile images if they have already registered as alcoholics or store owners.', async()=>{
+
+    await assertFails(
+      myUser.storage().ref()
+      .child('/alcoholics/profile_images/'+myUserData.phoneNumber)
+      .put(file5MB).then()
+    );
+  }); 
+
+  // Branch : group_resources_crud ->  group_resources_crud_storage_security_unit_testing
+  // Testing /alcoholics/profile_images/{profileImageId}
+  it('Online User : Allow logged in users to upload profile images if they are not alcoholics already.', async()=>{
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('alcoholics')
+      .doc(myUserData.phoneNumber).delete();
+    });
+
+    await assertSucceeds(
+      myUser.storage().ref()
+      .child('/alcoholics/profile_images/'+myUserData.phoneNumber)
+      .put(file5MB).then()
+    );
+  }); 
+
+
+  // Branch : group_resources_crud ->  group_resources_crud_storage_security_unit_testing
+  // Testing /alcoholics/profile_images/{profileImageId}
+  it('Store Owner : Do not allow store owners to upload an alcoholic image.', async()=>{
+    
+    await assertFails(
+      storeOwnerUser.storage().ref()
+      .child('/alcoholics/profile_images/'+storeOwnerData.storeOwnerId)
+      .put(file5MB).then()
+    );
+  });
+
+
+
+
+
+  // Branch : group_resources_crud ->  group_resources_crud_storage_security_unit_testing
+  // Testing /store_owners/profile_images/{profileImageId}
+  it('Offline User : Allow not logged in users to view alcoholic profile images.', async()=>{
+    
+    const storage = noUser.storage();
+      const storageRef = storage.ref(
+        '/alcoholics/profile_images/' + theirUserData.phoneNumber
+      );
+
+    await assertSucceeds(storageRef.getDownloadURL());
+  }); 
+
+  // Branch : group_resources_crud ->  group_resources_crud_storage_security_unit_testing
+  // Testing /store_owners/profile_images/{profileImageId}
+  it('Online User : Allow logged in users to view alcoholic profile images.', async()=>{
+
+    const storage = myUser.storage();
+      const storageRef = storage.ref(
+        '/alcoholics/profile_images/' + theirUserData.phoneNumber
+      );
+
+    await assertSucceeds(storageRef.getDownloadURL());
+  }); 
+
+  // Branch : group_resources_crud ->  group_resources_crud_storage_security_unit_testing
+  // Testing /store_owners/profile_images/{profileImageId}
+  it('Store Owner : Allow store owners to view alcoholic profile images.', async()=>{
+
+    const storage = storeOwnerUser.storage();
+      const storageRef = storage.ref(
+        '/alcoholics/profile_images/' + theirUserData.phoneNumber
+      );
+
+    await assertSucceeds(storageRef.getDownloadURL());
+  });
+
+
+
+
+
+  // Branch : group_resources_crud ->  group_resources_crud_storage_security_unit_testing
+  // Testing /store_owners/store_owners_ids/{storeOwnerIdentityDocumentId}
+  it('Offline User : Do not allow not logged in users to delete alcoholics profiles.', async()=>{
+
+    const storage = noUser.storage();
+      const storageRef = storage.ref(
+        '/alcoholics/profile_images/' + theirUserData.phoneNumber,
+      );
+
+    await assertFails(storageRef.delete());
+  }); 
+
+  // Branch : group_resources_crud ->  group_resources_crud_storage_security_unit_testing
+  // Testing /store_owners/store_owners_ids/{storeOwnerIdentityDocumentId}
+  it('Online User : Do not allow logged in users to delete alcoholics profiles.', async()=>{
+
+    const storage = myUser.storage();
+      const storageRef = storage.ref(
+       '/alcoholics/profile_images/' + theirUserData.phoneNumber,
+      );
+
+    await assertFails(storageRef.delete());
+  }); 
+
+  // Branch : group_resources_crud ->  group_resources_crud_storage_security_unit_testing
+  // Testing /store_owners/store_owners_ids/{storeOwnerIdentityDocumentId}
+  it('Store Owner : Do not allow store owners to delete alcoholics profiles.', async()=>{
+
+    const storage = storeOwnerUser.storage();
+      const storageRef = storage.ref(
+        '/alcoholics/profile_images/' + theirUserData.phoneNumber,
+      );
+
+    await assertFails(storageRef.delete());
+  });
+
+  //================================Alcoholic Images[End]==================================
 
 });
+
+/*
+await testEnv.withSecurityRulesDisabled(async context => {
+      const storage = context.storage();
+      const storageRef = storage.ref(
+        `courses/course1/files/sample.txt`,
+      );
+      const firestore = context.firestore();
+      const firestoreRef = firestore.doc(`courses/course1`);
+
+      await Promise.all([
+        storageRef.put(sample()),
+        firestoreRef.set({
+          editors: { user1: { exists: true } },
+        }),
+      ]);
+    });
+
+    const ref = testEnv
+      .authenticatedContext('user1')
+      .storage()
+      .ref('courses/course1/files/sample.txt');
+
+    await assertSucceeds(ref.getDownloadURL());
+*/
 
