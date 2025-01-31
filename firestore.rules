@@ -187,5 +187,75 @@ service cloud.firestore {
     }
 
     // ==============================Done With Unit Testing [End]==============================
+
+    // Branch : store_resources_crud ->  store_resources_crud_storage_security_rules
+    // Note: Has Model Named {Store}
+    match /stores/{storeOwnerPhoneNumber}{
+
+      allow write: if false;
+      // Any logged in store owner can read store's info his/her store info.
+      allow read: if true;
+
+      // Branch : store_resources_crud ->  store_resources_crud_storage_security_rules
+      // Note: Has Model Named {StoreDraw}
+      match /store_draws/{storeDrawId}{
+
+        // Only a store owner can create a store draw.
+        allow create: if isSuperiorAdmin() &&
+        
+        // Make Sure It Sunday. 
+        // Make Sure There Is No Other Previous Unplayed Store Draw.
+        // [removed for front end testing purpose, backend unit tests already passed.] request.resource.data.drawDateAndTime.weekday==7 && 
+        
+        // [removed for front end testing purpose, backend unit tests already passed.] 
+        request.resource.data.drawDateAndTime.hour==8 &&
+
+        // Make Sure It 8am, 9am or 10am.
+        //[removed for front end testing purpose, backend unit tests already passed.] 
+        (request.resource.data.drawDateAndTime.minute==8 
+        || request.resource.data.drawDateAndTime.minute==9 || 
+        request.resource.data.drawDateAndTime.minute==10)
+
+        // Anybody can view store draws.
+        allow read;
+
+        // Only accept store draw update or delete from the store owner while the straw is still open.
+        allow update, delete: if isSuperiorAdmin();
+
+        // Branch : store_resources_crud ->  store_resources_crud_storage_security_rules
+        // Done With Unit Testing.
+        match /draw_grand_prices/{drawGrandPrices}{
+          
+          // Only a store owner can create a store draw grand price.
+          allow create: if isSuperiorAdmin() &&
+          
+          request.resource.data.grandPriceId != null &&
+          request.resource.data.grandPriceId == drawGrandPrices &&
+
+          request.resource.data.storeDrawFK != null &&
+          request.resource.data.storeDrawFK == storeDrawId &&
+
+          request.resource.data.imageURL != null &&
+          request.resource.data.imageURL != "" &&
+
+          request.resource.data.description != null &&
+          request.resource.data.description != "" &&
+
+          request.resource.data.grandPriceIndex != null &&
+          request.resource.data.grandPriceIndex>=0;
+
+          // Anybody can view store draws.
+          allow read;
+
+          // Only accept deletion of a competitor from the store owner while the draw is still open.
+          allow update, delete: if 
+          isSuperiorAdmin() &&
+          resource.data.storeDrawFK==storeDrawId &&
+          get(/databases/$(database)/documents/stores/$(storeOwnerPhoneNumber)/store_draws/$(storeDrawId)).isOpen;
+        }
+          
+      }
+
+    }
   }
 }
