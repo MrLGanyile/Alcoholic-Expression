@@ -93,7 +93,7 @@ class DrawGrandPriceCreationWidgetState
               iconSize: MediaQuery.of(context).size.width * 0.15,
               icon: Icon(Icons.camera_alt, color: MyApplication.logoColor1),
               onPressed: () async {
-                storeController.captureGrandPriceProfileImageFromCamera(
+                storeController.captureGrandPriceImageFromCamera(
                     widget.grandPriceIndex,
                     widget.descriptionController.text,
                     widget.dateTime.year,
@@ -114,7 +114,7 @@ class DrawGrandPriceCreationWidgetState
                 iconSize: MediaQuery.of(context).size.width * 0.15,
                 icon: Icon(Icons.upload, color: MyApplication.logoColor1),
                 onPressed: () async {
-                  storeController.chooseGrandPriceProfileImageFromGallery(
+                  storeController.chooseGrandPriceImageFromGallery(
                       widget.grandPriceIndex,
                       widget.descriptionController.text,
                       widget.dateTime.year,

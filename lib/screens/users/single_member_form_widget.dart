@@ -1,5 +1,6 @@
 import 'package:alco/main.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../controllers/share_dao_functions.dart';
 import '../../controllers/user_controller.dart';
@@ -58,7 +59,9 @@ class SingleMemberFormWidgetState extends State<SingleMemberFormWidget> {
             memberIndex: widget.memberIndex,
             isForUserName: false,
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 5),
+          pickedMemberImage(),
+          const SizedBox(height: 5),
           singleUserImagePicker(),
         ]),
       );
@@ -113,4 +116,85 @@ class SingleMemberFormWidgetState extends State<SingleMemberFormWidget> {
           ),
         ],
       );
+
+  Widget pickedMemberImage() {
+    switch (widget.memberIndex) {
+      case 1:
+        return GetBuilder<UserController>(builder: (_) {
+          return userController.member1ImageURL!.isEmpty
+              ? const SizedBox.shrink()
+              : CircleAvatar(
+                  radius: MediaQuery.of(context).size.width / 8,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                            image:
+                                // Get.find<UserController>().member1ImageURL!
+                                NetworkImage(userController.member1ImageURL!))),
+                  ),
+                );
+        });
+      case 2:
+        return GetBuilder<UserController>(builder: (_) {
+          return userController.member2ImageURL!.isEmpty
+              ? const SizedBox.shrink()
+              : CircleAvatar(
+                  radius: MediaQuery.of(context).size.width / 8,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                            image:
+                                NetworkImage(userController.member2ImageURL!))),
+                  ),
+                );
+        });
+      case 3:
+        return GetBuilder<UserController>(builder: (_) {
+          return userController.member3ImageURL!.isEmpty
+              ? const SizedBox.shrink()
+              : CircleAvatar(
+                  radius: MediaQuery.of(context).size.width / 8,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                            image:
+                                NetworkImage(userController.member3ImageURL!))),
+                  ),
+                );
+        });
+      case 4:
+        return GetBuilder<UserController>(builder: (_) {
+          return userController.member4ImageURL!.isEmpty
+              ? const SizedBox.shrink()
+              : CircleAvatar(
+                  radius: MediaQuery.of(context).size.width / 8,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                            image:
+                                NetworkImage(userController.member4ImageURL!))),
+                  ),
+                );
+        });
+      default:
+        return GetBuilder<UserController>(builder: (_) {
+          return userController.leaderImageURL!.isEmpty
+              ? const SizedBox.shrink()
+              : CircleAvatar(
+                  radius: MediaQuery.of(context).size.width / 8,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                            image:
+                                NetworkImage(userController.leaderImageURL!))),
+                  ),
+                );
+        });
+    }
+  }
 }

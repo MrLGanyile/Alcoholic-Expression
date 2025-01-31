@@ -132,7 +132,7 @@ class _MyApplicationState extends State<MyApplication> {
       ),
 
       home: StoreDrawRegistrationWidget(),
-      // home: GroupRegistrationWidget(adminPhoneNumber: '+27661813561'),
+      // home: GroupRegistrationWidget(),
       // home: VerificationScreen(phoneNumber: '+27661813561', pin: '12312'),
       // home: StartScreen(),
       // home: const AlcoholicRegistrationWidget(),

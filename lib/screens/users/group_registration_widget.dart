@@ -5,6 +5,7 @@ import 'package:alco/screens/users/single_member_form_widget.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../controllers/location_controller.dart';
 import '../../controllers/share_dao_functions.dart';
@@ -21,17 +22,7 @@ import 'dart:math';
 import 'groups_screen.dart';
 import 'verification_screen.dart';
 
-// Branch : group_resources_crud ->  create_group_resources_front_end
-class GroupRegistrationWidget extends StatefulWidget {
-  String adminPhoneNumber;
-
-  GroupRegistrationWidget({required this.adminPhoneNumber});
-
-  @override
-  State<StatefulWidget> createState() => GroupRegistrationWidgetState();
-}
-
-class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
+class GroupRegistrationWidget extends StatelessWidget {
   TextEditingController groupNameEditingController = TextEditingController();
 
   TextEditingController groupSpecificAreaEditingController =
@@ -57,20 +48,13 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
   UserController userController = UserController.instance;
   StoreController storeController = StoreController.storeController;
 
-  late Stream<List<SupportedArea>> supportedAreasStream;
+  late Stream<List<SupportedArea>> supportedAreasStream =
+      locationController.readAllSupportedAreas();
   late List<String> items;
   LocationController locationController = LocationController.locationController;
   late DropdownButton2<String> dropDowButton;
-  String? selectedValue;
 
-  GroupRegistrationWidgetState();
-
-  @override
-  void initState() {
-    super.initState();
-
-    supportedAreasStream = locationController.readAllSupportedAreas();
-  }
+  GroupRegistrationWidget();
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -85,14 +69,14 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
             iconSize: 20,
             color: MyApplication.logoColor2,
             onPressed: (() {
-              Navigator.pop(context);
+              Get.back();
             }),
           ),
           elevation: 0,
         ),
         body: Container(
           color: Colors.black,
-          child: buildRecruit(),
+          child: buildRecruit(context),
         ),
       );
 
@@ -210,7 +194,7 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
     }
   }
 
-  Widget buildRecruit() {
+  Widget buildRecruit(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       child: SingleChildScrollView(
@@ -251,7 +235,9 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
                   dbItems.add(snapshot.data![areaIndex].toString());
                 }
                 items = dbItems;
-                return pickAreaName();
+                return GetBuilder<UserController>(builder: (_) {
+                  return pickAreaName(context);
+                });
               } else if (snapshot.hasError) {
                 debug.log(
                     "Error Fetching Supported Areas Data - ${snapshot.error}");
@@ -278,7 +264,7 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
           ),
 
           // Group Image
-          groupPicking(),
+          groupPicking(context),
 
           const SizedBox(
             height: 10,
@@ -304,7 +290,7 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
             phoneNumberController: phoneNumber4EditingController,
             memberIndex: 4,
           ),
-          signInButton(),
+          signInButton(context),
         ]),
       ),
     );
@@ -312,22 +298,37 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
 
   AspectRatio retrieveGroupImage(BuildContext context) {
     return AspectRatio(
-      aspectRatio: 5 / 2,
-      child: Container(
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          color: MyApplication.logoColor1,
-        ),
-        child: const Text(
-          'Group Image Area',
-          style: TextStyle(color: Colors.black, fontSize: 16),
-        ),
-      ),
-    );
+        aspectRatio: 5 / 2,
+        child: GetBuilder<UserController>(
+          builder: (_) {
+            return userController.groupImageURL!.isEmpty
+                ? Container(
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      color: MyApplication.logoColor1,
+                    ),
+                    child: const Text(
+                      'Group Image Area',
+                      style: TextStyle(color: Colors.black, fontSize: 16),
+                    ),
+                  )
+                : Container(
+                    //margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width/8) ,
+                    decoration: BoxDecoration(
+                      color: Colors.orange,
+                      borderRadius: BorderRadius.circular(20),
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: NetworkImage(userController.groupImageURL!),
+                      ),
+                    ),
+                  );
+          },
+        ));
   }
 
-  Widget groupPicking() {
+  Widget groupPicking(BuildContext context) {
     return Row(
       children: [
         Expanded(
@@ -352,10 +353,10 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
                 iconSize: MediaQuery.of(context).size.width * 0.15,
                 icon: Icon(Icons.upload, color: MyApplication.logoColor1),
                 onPressed: () async {
-                  /*userController.captureGroupImageWithCamera(
+                  userController.chooseGroupImageFromGallery(
                       groupNameEditingController.text,
                       Converter.toSectionName(dropDowButton.value!),
-                      groupSpecificAreaEditingController.text); */
+                      groupSpecificAreaEditingController.text);
                 }),
           ]),
         ),
@@ -363,7 +364,7 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
     );
   }
 
-  Widget signInButton() => Container(
+  Widget signInButton(BuildContext context) => Container(
         width: MediaQuery.of(context).size.width,
         height: 45,
         decoration: BoxDecoration(
@@ -378,12 +379,7 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
 
               // Does not go to the next screen.
               if (result == GroupSavingStatus.saved) {
-                Navigator.of(
-                        context) /*
-                .pushNamed(
-                  MyRouteGenerator.id,
-                );*/
-                    .push(CustomPageRoute(child: const GroupsScreen()));
+                Get.to(() => const GroupsScreen());
               }
             }
 
@@ -502,7 +498,7 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
         ),
       );
 
-  Widget pickAreaName() {
+  Widget pickAreaName(BuildContext context) {
     dropDowButton = DropdownButton2<String>(
       isExpanded: true,
       hint: Row(
@@ -541,11 +537,9 @@ class GroupRegistrationWidgetState extends State<GroupRegistrationWidget> {
                 ),
               ))
           .toList(),
-      value: selectedValue,
+      value: userController.chosenSectionName,
       onChanged: (String? value) {
-        setState(() {
-          selectedValue = value;
-        });
+        userController.setChosenSectionName(value!);
       },
       buttonStyleData: ButtonStyleData(
         height: 60,

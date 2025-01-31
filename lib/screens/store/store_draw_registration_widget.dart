@@ -2,6 +2,7 @@ import 'package:alco/controllers/store_controller.dart';
 import 'package:alco/screens/store/draw_grand_price_creation_widget.dart';
 import 'package:alco/screens/utils/start_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../controllers/user_controller.dart';
 import '../../main.dart';
@@ -30,75 +31,6 @@ class StoreDrawRegistrationWidgetState
 
   DateTime drawDate = DateTime(2025, 2, 2, 8, 5);
 
-  bool hasGrandPrice(int grandPriceIndex) {
-    switch (grandPriceIndex) {
-      case 0:
-        return storeController.drawGrandPrice1ImageFile != null &&
-            description1EditingController.text.isNotEmpty;
-      case 1:
-        return storeController.drawGrandPrice2ImageFile != null &&
-            description2EditingController.text.isNotEmpty;
-      case 2:
-        return storeController.drawGrandPrice3ImageFile != null &&
-            description3EditingController.text.isNotEmpty;
-      case 3:
-        return storeController.drawGrandPrice4ImageFile != null &&
-            description4EditingController.text.isNotEmpty;
-      default:
-        return storeController.drawGrandPrice5ImageFile != null &&
-            description5EditingController.text.isNotEmpty;
-    }
-  }
-
-  bool hasDrawGrandPriceWithoutImages(int memberIndex) {
-    switch (memberIndex) {
-      case 1:
-        return description1EditingController.text.isNotEmpty;
-      case 2:
-        return description2EditingController.text.isNotEmpty;
-      case 3:
-        return description3EditingController.text.isNotEmpty;
-      case 4:
-        return description4EditingController.text.isNotEmpty;
-      default:
-        return description5EditingController.text.isNotEmpty;
-    }
-  }
-
-  bool isValidInputWithoutImages() {
-    if (hasDrawGrandPriceWithoutImages(0) &&
-        hasDrawGrandPriceWithoutImages(1) &&
-        hasDrawGrandPriceWithoutImages(2) &&
-        hasDrawGrandPriceWithoutImages(3) &&
-        hasDrawGrandPriceWithoutImages(4)) {
-      return true;
-    }
-
-    if (hasDrawGrandPriceWithoutImages(0) &&
-        hasDrawGrandPriceWithoutImages(1) &&
-        hasDrawGrandPriceWithoutImages(2) &&
-        hasDrawGrandPriceWithoutImages(3)) {
-      return true;
-    }
-
-    if (hasDrawGrandPriceWithoutImages(0) &&
-        hasDrawGrandPriceWithoutImages(1) &&
-        hasDrawGrandPriceWithoutImages(2)) {
-      return true;
-    }
-
-    if (hasDrawGrandPriceWithoutImages(0) &&
-        hasDrawGrandPriceWithoutImages(1)) {
-      return true;
-    }
-
-    if (hasDrawGrandPriceWithoutImages(0)) {
-      return true;
-    }
-
-    return false;
-  }
-
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
@@ -112,7 +44,8 @@ class StoreDrawRegistrationWidgetState
             iconSize: 20,
             color: MyApplication.logoColor2,
             onPressed: (() {
-              Navigator.pop(context);
+              //Navigator.pop(context);
+              Get.back();
             }),
           ),
           elevation: 0,
@@ -184,9 +117,29 @@ class StoreDrawRegistrationWidgetState
         ),
       );
 
+  bool hasPickedAllPrices() {
+    return storeController.drawGrandPrice1ImageFile != null &&
+        storeController.grandPrice1ImageURL!.isNotEmpty &&
+        storeController.description1!.isNotEmpty &&
+        storeController.drawGrandPrice2ImageFile != null &&
+        storeController.grandPrice2ImageURL!.isNotEmpty &&
+        storeController.description2!.isNotEmpty &&
+        storeController.drawGrandPrice3ImageFile != null &&
+        storeController.grandPrice3ImageURL!.isNotEmpty &&
+        storeController.description3!.isNotEmpty &&
+        storeController.drawGrandPrice4ImageFile != null &&
+        storeController.grandPrice4ImageURL!.isNotEmpty &&
+        storeController.description4!.isNotEmpty &&
+        storeController.drawGrandPrice5ImageFile != null &&
+        storeController.grandPrice5ImageURL!.isNotEmpty &&
+        storeController.description5!.isNotEmpty;
+  }
+
   Widget signInButton() => Container(
         width: MediaQuery.of(context).size.width,
         height: 45,
+        //width: double.maxFinite, visible width
+        //height: double.maxFinite visible height
         decoration: BoxDecoration(
             color: MyApplication.logoColor1,
             borderRadius: const BorderRadius.all(
@@ -194,23 +147,18 @@ class StoreDrawRegistrationWidgetState
             )),
         child: InkWell(
           onTap: () async {
-            if (isValidInputWithoutImages()) {
+            if (hasPickedAllPrices()) {
               final result = await storeController.createStoreDraw();
 
               // Does not go to the next screen.
               if (result == StoreDrawSavingStatus.saved) {
-                Navigator.of(
-                        context) /*
-                .pushNamed(
-                  MyRouteGenerator.id,
-                );*/
-                    .push(CustomPageRoute(child: StartScreen()));
+                Get.to(() => StartScreen());
               }
             }
           },
           child: const Center(
             child: Text(
-              'Create Group',
+              'Create Draw',
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.black,

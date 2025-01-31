@@ -40,13 +40,15 @@ class UserController extends GetxController {
 
   late Rx<File?> _groupImageFile;
   File? get groupImageFile => _groupImageFile.value;
-  late Rx<String?> _groupImageURL;
+  late Rx<String?> _groupImageURL = Rx('');
   String? get groupImageURL => _groupImageURL.value;
-  late Rx<String?> _groupName;
+  late Rx<String?> _groupName = Rx('');
   String? get groupName => _groupName.value;
   late Rx<SectionName?> _groupSectionName;
   SectionName? get groupSectionName => _groupSectionName.value;
-  late Rx<String?> _groupSpecificArea;
+  late Rx<String?> _chosenSectionName = Rx<String?>('');
+  String? get chosenSectionName => _chosenSectionName.value;
+  late Rx<String?> _groupSpecificArea = Rx('');
   String? get groupSpecificArea => _groupSpecificArea.value;
   late Rx<bool> _isActive; // A group is active if it has atleast 10 members.
   bool get isActive => _isActive.value;
@@ -56,47 +58,47 @@ class UserController extends GetxController {
 
   late Rx<File?> _member1ProfileImageFile;
   File? get member1ProfileImageFile => _member1ProfileImageFile.value;
-  late Rx<String?> _member1ImageURL;
+  late Rx<String?> _member1ImageURL = Rx('');
   String? get member1ImageURL => _member1ImageURL.value;
-  late Rx<String?> _member1PhoneNumber;
+  late Rx<String?> _member1PhoneNumber = Rx('');
   String? get member1PhoneNumber => _member1PhoneNumber.value;
-  late Rx<String?> _member1Username;
+  late Rx<String?> _member1Username = Rx('');
   String? get member1Username => _member1Username.value;
 
   late Rx<File?> _member2ProfileImageFile;
   File? get member2ProfileImageFile => _member2ProfileImageFile.value;
-  late Rx<String?> _member2ImageURL;
+  late Rx<String?> _member2ImageURL = Rx('');
   String? get member2ImageURL => _member2ImageURL.value;
-  late Rx<String?> _member2PhoneNumber;
+  late Rx<String?> _member2PhoneNumber = Rx('');
   String? get member2PhoneNumber => _member2PhoneNumber.value;
-  late Rx<String?> _member2Username;
+  late Rx<String?> _member2Username = Rx('');
   String? get member2Username => _member2Username.value;
 
   late Rx<File?> _member3ProfileImageFile;
   File? get member3ProfileImageFile => _member3ProfileImageFile.value;
-  late Rx<String?> _member3ImageURL;
+  late Rx<String?> _member3ImageURL = Rx('');
   String? get member3ImageURL => _member3ImageURL.value;
-  late Rx<String?> _member3PhoneNumber;
+  late Rx<String?> _member3PhoneNumber = Rx('');
   String? get member3PhoneNumber => _member3PhoneNumber.value;
-  late Rx<String?> _member3Username;
+  late Rx<String?> _member3Username = Rx('');
   String? get member3Username => _member3Username.value;
 
   late Rx<File?> _member4ProfileImageFile;
   File? get member4ProfileImageFile => _member4ProfileImageFile.value;
-  late Rx<String?> _member4ImageURL;
+  late Rx<String?> _member4ImageURL = Rx('');
   String? get member4ImageURL => _member4ImageURL.value;
-  late Rx<String?> _member4PhoneNumber;
+  late Rx<String?> _member4PhoneNumber = Rx('');
   String? get member4PhoneNumber => _member4PhoneNumber.value;
-  late Rx<String?> _member4Username;
+  late Rx<String?> _member4Username = Rx('');
   String? get member4Username => _member4Username.value;
 
   late Rx<File?> _leaderProfileImageFile;
   File? get leaderProfileImageFile => _leaderProfileImageFile.value;
-  late Rx<String?> _leaderImageURL;
+  late Rx<String?> _leaderImageURL = Rx('');
   String? get leaderImageURL => _leaderImageURL.value;
-  late Rx<String?> _leaderPhoneNumber;
+  late Rx<String?> _leaderPhoneNumber = Rx('');
   String? get leaderPhoneNumber => _leaderPhoneNumber.value;
-  late Rx<String?> _leaderUsername;
+  late Rx<String?> _leaderUsername = Rx('');
   String? get leaderUsername => _leaderUsername.value;
 
   // ==========================Alcoholic [Start]==========================
@@ -155,6 +157,7 @@ class UserController extends GetxController {
             _leaderUsername = Rx<String?>(username);
         }
         Get.snackbar('Image Status', 'Image File Successfully Picked.');
+        update();
       } else {
         Get.snackbar('Error', 'Image Wasn\'t Picked.');
       }
@@ -215,6 +218,7 @@ class UserController extends GetxController {
             _leaderUsername = Rx<String?>(username);
         }
         Get.snackbar('Image Status', 'Image File Successfully Captured.');
+        update();
       } else {
         Get.snackbar('Error', 'Image Wasn\'t Captured.');
       }
@@ -254,6 +258,11 @@ class UserController extends GetxController {
   // ==========================Alcoholic [End]==========================
 
   // ==========================Group [Start]==========================
+
+  void setChosenSectionName(String chosenSectionName) {
+    _chosenSectionName = Rx<String?>(chosenSectionName);
+    update();
+  }
 
   void setMaxNoOfMembers(int noOfMembers) {
     if (noOfMembers >= 3) {
@@ -295,6 +304,7 @@ class UserController extends GetxController {
         Get.snackbar('Image Status', 'Image File Successfully Picked.');
       } else {
         Get.snackbar('Error', 'Image Wasn\'t Picked.');
+        update();
       }
     }
   }
@@ -329,6 +339,7 @@ class UserController extends GetxController {
         _groupSpecificArea = Rx<String>(groupSpecificArea);
 
         Get.snackbar('Image Status', 'Image File Successfully Picked.');
+        update();
       } else {
         Get.snackbar('Error', 'Image Wasn\'t Picked.');
       }
@@ -568,6 +579,7 @@ class UserController extends GetxController {
                     .doc(group.creatorPhoneNumber)
                     .set(group.toJson());
                 Get.snackbar('Group Status', 'Saved Group Successfully .');
+
                 return GroupSavingStatus.saved;
               } else {
                 Get.snackbar('Error', 'Forth Member Info Is Missing .');

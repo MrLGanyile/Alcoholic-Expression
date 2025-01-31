@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../main.dart';
 
@@ -22,6 +23,8 @@ class SingleMemberTextField extends StatefulWidget {
 class SingleMemberTextFieldState extends State<SingleMemberTextField> {
   @override
   Widget build(BuildContext context) => TextField(
+        keyboardType:
+            widget.isForUserName ? TextInputType.name : TextInputType.number,
         maxLength: 10,
         style: TextStyle(color: MyApplication.logoColor1),
         cursorColor: MyApplication.logoColor1,

@@ -201,14 +201,8 @@ class StoreController extends GetxController {
     }
   }
 
-  void chooseGrandPriceProfileImageFromGallery(
-      int grandPriceIndex,
-      String description,
-      int year,
-      int month,
-      int day,
-      int hour,
-      int minute) async {
+  void chooseGrandPriceImageFromGallery(int grandPriceIndex, String description,
+      int year, int month, int day, int hour, int minute) async {
     if (description.isEmpty) {
       Get.snackbar('Error', 'Description Missing.');
     } else {
@@ -254,18 +248,13 @@ class StoreController extends GetxController {
             _description5 = Rx<String?>(description);
         }
         Get.snackbar('Image Status', 'Image File Successfully Chosen.');
+        update();
       }
     }
   }
 
-  void captureGrandPriceProfileImageFromCamera(
-      int grandPriceIndex,
-      String description,
-      int year,
-      int month,
-      int day,
-      int hour,
-      int minute) async {
+  void captureGrandPriceImageFromCamera(int grandPriceIndex, String description,
+      int year, int month, int day, int hour, int minute) async {
     if (description.isEmpty) {
       Get.snackbar('Error', 'Description Missing.');
     } else {
@@ -311,6 +300,7 @@ class StoreController extends GetxController {
             _description5 = Rx<String?>(description);
         }
         Get.snackbar('Image Status', 'Image File Successfully Captured.');
+        update();
       }
     }
   }
