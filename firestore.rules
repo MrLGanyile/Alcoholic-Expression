@@ -9,7 +9,16 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
-    / Branch : group_resources_crud_storage_security_rules
+    function isSuperiorAdmin(){
+      return request.auth != null &&
+      exists(/databases/$(database)/documents/admins/
+      $(request.auth.uid)) && get(/databases/$(database)/documents/admins/
+      $(request.auth.uid)).data.isSuperiorAdmin;
+    }
+
+    // ==============================Done With Unit Testing [Start]==============================
+
+    // Branch : group_resources_crud_storage_security_rules
     // Note: Has Model Named {Alcoholic}
     match /alcoholics/{alcoholicPhoneNumber}{
       allow create: if true; //request.auth!=null &&
@@ -162,5 +171,21 @@ service cloud.firestore {
 
       allow delete: if false;
     }
+
+    // Note: Has Model Named {Admin}
+    match /admins/{adminPhoneNumber}{
+      allow create: if isSuperiorAdmin() && 
+      request.resource.data.isSuperiorAdmin == false;
+
+      allow read: if isSuperiorAdmin() || 
+      (request.auth != null && request.auth.uid == resource.data.phoneNumber);
+
+      allow delete: if isSuperiorAdmin() && 
+      resource.data.isSuperiorAdmin == false;
+
+      allow update: if false; 
+    }
+
+    // ==============================Done With Unit Testing [End]==============================
   }
 }
