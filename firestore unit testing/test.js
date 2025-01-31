@@ -1481,4 +1481,1362 @@ describe('Our Alcoholic App',()=>{
   //================admin_crud ->  admin_crud_firestore_unit_testing================
   //================================Admin [End]===================================
 
+  /*
+
+  //===================================Store [Start]==========================================
+
+  // Testing /stores/{storeOwnerPhoneNumber} 
+  it('Offline User : Do not allow not logged in users to register a store.', async()=>{
+
+    const doc = noUser.firestore().collection('stores').doc(someId);
+    await assertFails(doc.set({data:' some data'}));
+  }); // Working As Expected.
+
+  // Testing /stores/{storeOwnerPhoneNumber} 
+  it('Online User : Do not allow logged in users to register a store.', async()=>{
+
+    const doc = myUser.firestore().collection('stores').doc(someId);
+    await assertFails(doc.set({data:''}));
+  }); // Working As Expected.
+
+  
+  // Testing /stores/{storeOwnerPhoneNumber} 
+  it('Store Owner : Do not allow store owners to create a store if they provide incomplete data[1].', async()=>{
+
+    const store = {
+      storeName: null,
+      sectionName: 'Dunbar-Mayville-Durban-Kwa Zulu Natal-South Africa',
+      imageURL: '../../image.jpg',
+      storeOwnerPhoneNumber: someId,
+    };
+
+    const doc = storeOwnerUser.firestore().collection('stores').doc(someId);
+    await assertFails(doc.set(store));
+  }); // Working As Expected.
+
+   // Testing /stores/{storeOwnerPhoneNumber} 
+  it('Store Owner : Do not allow store owners to create a store if they provide incomplete data[2].', async()=>{
+
+    const store = {
+        storeName: '',
+        sectionName: 'Dunbar-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        imageURL: '../../image.jpg',
+        storeOwnerPhoneNumber: someId,
+      };
+  
+      const doc = storeOwnerUser.firestore().collection('stores').doc(someId);
+      await assertFails(doc.set(store));
+  }); // Working As Expected.
+
+    // Testing /stores/{storeOwnerPhoneNumber} 
+  it('Store Owner : Do not allow store owners to create a store if they provide incomplete data[3].', async()=>{
+
+    const store = {
+      storeName: 'MOdos',
+      sectionName: null,
+      imageURL: '../../image.jpg',
+      storeOwnerPhoneNumber: someId,
+    };
+
+    const doc = storeOwnerUser.firestore().collection('stores').doc(someId);
+    await assertFails(doc.set(store));
+  }); // Working As Expected.
+
+    // Testing /stores/{storeOwnerPhoneNumber} 
+  it('Store Owner : Do not allow store owners to create a store if they provide incomplete data[4].', async()=>{
+
+    const store = {
+      storeName: 'MOdos',
+      sectionName: '',
+      imageURL: '../../image.jpg',
+      storeOwnerPhoneNumber: someId,
+    };
+
+    const doc = storeOwnerUser.firestore().collection('stores').doc(someId);
+    await assertFails(doc.set(store));
+  }); // Working As Expected.
+
+  // Testing /stores/{storeOwnerPhoneNumber} 
+  it('Store Owner : Do not allow store owners to create a store if they provide incorrect data[5].', async()=>{
+
+      const store = {
+        storeName: 'MOdos',
+        sectionName: 'Nsimbini-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        imageURL: '../../image.jpg',
+        storeOwnerPhoneNumber: someId,
+      };
+  
+      const doc = storeOwnerUser.firestore().collection('stores').doc(someId);
+      await assertFails(doc.set(store));
+    }); // Working As Expected.
+
+  // Testing /stores/{storeOwnerPhoneNumber} 
+  it('Store Owner : Do not allow store owners to create a store if they provide incomplete data[6].', async()=>{
+
+      const store = {
+        storeName: 'MOdos',
+        sectionName: 'Dunbar-Mayville-Durban-Kwa Zulu Natal-South Africa',
+        imageURL: null,
+        storeOwnerPhoneNumber: someId,
+      };
+  
+      const doc = storeOwnerUser.firestore().collection('stores').doc(someId);
+      await assertFails(doc.set(store));
+  }); // Working As Expected.
+
+  // Testing /stores/{storeOwnerPhoneNumber} 
+  it('Store Owner : Do not allow store owners to creat e a store if they provide incomplete data[7].', async()=>{
+
+    const store = {
+      storeName: 'MOdos',
+      sectionName: 'Dunbar-Mayville-Durban-Kwa Zulu Natal-South Africa',
+      imageURL: '',
+      storeOwnerPhoneNumber: someId
+    };
+
+    const doc = storeOwnerUser.firestore().collection('stores').doc(someId);
+    await assertFails(doc.set(store));
+  }); // Working As Expected.
+
+  // Testing /stores/{storeOwnerPhoneNumber} 
+  it('Store Owner : Do not allow store owners to create a store if they are not admins.', async()=>{
+
+    const store = {
+      storeName: 'MOdos',
+      sectionName: 'Dunbar-Mayville-Durban-Kwa Zulu Natal-South Africa',
+      imageURL: '../../image.jpg',
+      storeOwnerPhoneNumber: someId
+    };
+
+    const doc = theirStoreOwnerUser.firestore().collection('stores').doc(someId);
+    await assertFails(doc.set(store));
+  }); // Working As Expected.
+
+  // Testing /stores/{storeOwnerPhoneNumber} 
+  it('Store Owner : Allow store owners to create a store.', async()=>{
+
+    const store = {
+      storeName: 'MOdos',
+      sectionName: 'Dunbar-Mayville-Durban-Kwa Zulu Natal-South Africa',
+      imageURL: '../../image.jpg',
+      storeOwnerPhoneNumber: someId
+    };
+
+    const doc = storeOwnerUser.firestore().collection('stores').doc(someId);
+    await assertSucceeds(doc.set(store));
+  }); // Working As Expected.
+
+  // Testing /stores/{storeOwnerPhoneNumber} 
+  
+  
+
+
+
+  // Testing /stores/{storeOwnerPhoneNumber} 
+  it('Offline User : Allow not logged in users to view stores.', async()=>{
+
+    const doc = noUser.firestore().collection('stores').doc(someId);
+    await assertSucceeds(doc.get());
+  }); // Working As Expected.
+
+
+  // Testing /stores/{storeOwnerPhoneNumber} 
+  it('Online User : Allow logged in users to view stores.', async()=>{
+
+    const doc = myUser.firestore().collection('stores').doc(someId);
+    await assertSucceeds(doc.get());
+  }); // Working As Expected.
+
+  // Testing /stores/{storeOwnerPhoneNumber} 
+  it('Store Owner : Allow store owners to view stores.', async()=>{
+
+    const doc = storeOwnerUser.firestore().collection('stores').doc(someId);
+    await assertSucceeds(doc.get());
+  }); // Working As Expected.
+  
+
+  
+
+  // Testing /stores/{storeOwnerPhoneNumber} 
+  it('Offline User : Do not allow not logged in users to update any store.', async()=>{
+
+    // The store is already created during initialization.
+    const doc = noUser.firestore().collection('stores').doc(storeData.storeOwnerPhoneNumber);
+    await assertFails(doc.update({storeName:'new data'}));
+  }); // Working As Expected.
+
+  // Testing /stores/{storeOwnerPhoneNumber} 
+  it('Store Owner : Do not allow store owners to update a store they do not own.', async()=>{
+
+    // The store is already created during initialization.
+    const doc = theirStoreOwnerUser.firestore().collection('stores').doc(storeData.storeOwnerPhoneNumber);
+    await assertFails(doc.update({storeName:'new data'}));
+  }); // Working As Expected.
+
+  // Testing /stores/{storeOwnerPhoneNumber} 
+  it('Store Owner : Allow store owners to update a store they own.', async()=>{
+
+    // The store is already created during initialization.
+    const doc = storeOwnerUser.firestore().collection('stores').doc(storeData.storeOwnerPhoneNumber);
+    await assertSucceeds(doc.update({storeName:'new data'}));
+  }); // Working As Expected.
+
+
+
+  // Testing /stores/{storeOwnerPhoneNumber} 
+  it('Offline User : Do not allow not logged in users to delete a store.', async()=>{
+
+    const doc = noUser.firestore().collection('stores').doc(someId);
+    await assertFails(doc.delete());
+  }); // Working As Expected.
+  
+  // Testing /stores/{storeOwnerPhoneNumber}
+  it('Online User : Do not allow logged in users to delete a store.', async()=>{
+
+    const doc = myUser.firestore().collection('stores').doc(someId);
+    await assertFails(doc.delete());
+  }); // Working As Expected.
+  
+  // Testing /stores/{storeOwnerPhoneNumber}
+  it('Store Owner : Do not allow store owners to delete a store they do not own.', async()=>{
+
+    const doc = theirStoreOwnerUser.firestore().collection('stores').doc(storeData.storeOwnerPhoneNumber);
+    await assertFails(doc.delete());
+  }); // Working As Expected.
+
+  // Testing /stores/{storeOwnerPhoneNumber}
+  it('Store Owner : Allow store owners to delete a store they own.', async()=>{
+
+    const doc = theirStoreOwnerUser.firestore().collection('stores').doc(theirStoreData.storeOwnerPhoneNumber);
+    await assertSucceeds(doc.delete());
+  }); // Working As Expected.
+
+  // Testing /stores/{storeOwnerPhoneNumber}
+  it('Store Owner[Admin] : Allow store owners who are admins to delete any store.', async()=>{
+
+    const doc = storeOwnerUser.firestore().collection('stores').doc(theirStoreData.storeOwnerPhoneNumber);
+    await assertSucceeds(doc.delete());
+  }); // Working As Expected.
+  //===================================Store [End]==========================================
+
+
+  //=====================Store Draw [Start]============================
+  // Testing /stores/storeId/store_draws/{storeDrawId} 
+  it('Offline User : Do not allow not logged in users to create a store draw.', async()=>{
+
+    const storeDraw = {
+      storeDrawId: 'store_draw_000',
+      storeFK:storeData.storeOwnerPhoneNumber,
+      drawDateAndTime: {
+        weekday: 7, // Sunday
+        hour: 8, // 8am
+        minute: 0, 
+        second: 0,
+      },
+      joiningFee: 10,
+      numberOfCompetitorsSoFar: 0,
+      isOpen: true,
+      numberOfGrandPrices: 4,
+      storeName: storeData.storeName,
+      storeImageURL: storeData.imageURL,
+      sectionName: storeData.sectionName,
+    }
+    const doc = noUser.firestore().collection('stores')
+    .doc(storeDraw.storeFK).collection('store_draws')
+    .doc(storeDraw.storeDrawId);
+    await assertFails(doc.set(storeDraw));
+  }); // Working As Expected.
+  
+  // Testing /stores/storeId/store_draws/{storeDrawId} 
+  it('Online User : Do not allow logged in users to create a store draw.', async()=>{
+    
+    const storeDraw = {
+      storeDrawId: 'store_draw_000',
+      storeFK:storeData.storeOwnerPhoneNumber,
+      drawDateAndTime: {
+        weekday: 7, // Sunday
+        hour: 8, // 8am
+        minute: 0, 
+        second: 0,
+      },
+      joiningFee: 10,
+      numberOfCompetitorsSoFar: 0,
+      isOpen: true,
+      numberOfGrandPrices: 4,
+      storeName: storeData.storeName,
+      storeImageURL: storeData.imageURL,
+      sectionName: storeData.sectionName,
+    }
+    const doc = myUser.firestore().collection('stores')
+    .doc(storeDraw.storeFK).collection('store_draws')
+    .doc(storeDraw.storeDrawId);
+    await assertFails(doc.set(storeDraw));
+  }); // Working As Expected.
+  
+  // Testing /stores/storeId/store_draws/{storeDrawId}  
+  it('Store Owner : Do not allow store owners to create a store draw on a store they do not own.', async()=>{
+
+    const storeDraw = {
+      storeDrawId: 'store_draw_000',
+      storeFK:theirStoreData.storeOwnerPhoneNumber,
+      drawDateAndTime: {
+        weekday: 7, // Sunday
+        hour: 8, // 8am
+        minute: 0, 
+        second: 0,
+      },
+      joiningFee: 10,
+      numberOfCompetitorsSoFar: 0,
+      isOpen: true,
+      numberOfGrandPrices: 4,
+      storeName: theirStoreData.storeName,
+      storeImageURL: theirStoreData.imageURL,
+      sectionName: theirStoreData.sectionName,
+    }
+    const doc = storeOwnerUser.firestore().collection('stores')
+    .doc(storeDraw.storeFK).collection('store_draws')
+    .doc(storeDraw.storeDrawId);
+    await assertFails(doc.set(storeDraw));
+  }); // Working As Expected.
+
+  // Testing /stores/storeId/store_draws/{storeDrawId}  
+  it('Store Owner : Do not allow store owners to create a store draw not within the acceptable day/time.', async()=>{
+
+    const storeDraw = {
+      storeDrawId: 'store_draw_000',
+      storeFK:theirStoreData.storeOwnerPhoneNumber,
+      drawDateAndTime: {
+        weekday: 7, // Sunday
+        hour: 14, // Not acceptable
+        minute: 0, 
+        second: 0,
+      },
+      joiningFee: 10,
+      numberOfCompetitorsSoFar: 0,
+      isOpen: true,
+      numberOfGrandPrices: 4,
+      storeName: theirStoreData.storeName,
+      storeImageURL: theirStoreData.imageURL,
+      sectionName: theirStoreData.sectionName,
+    }
+    const doc = theirStoreOwnerUser.firestore().collection('stores')
+    .doc(storeDraw.storeFK).collection('store_draws')
+    .doc(storeDraw.storeDrawId);
+    await assertFails(doc.set(storeDraw));
+  }); // Working As Expected.
+
+  // Testing /stores/storeId/store_draws/{storeDrawId}  
+  it('Store Owner : Allow store owners to create a store draw on a store they own.', async()=>{
+
+    const storeDraw = {
+      storeDrawId: 'store_draw_000',
+      storeFK:storeData.storeOwnerPhoneNumber,
+      drawDateAndTime: {
+        weekday: 7, // Sunday
+        hour: 8, // 8am
+        minute: 0, 
+        second: 0,
+      },
+      joiningFee: 10,
+      numberOfCompetitorsSoFar: 0,
+      isOpen: true,
+      numberOfGrandPrices: 4,
+      storeName: storeData.storeName,
+      storeImageURL: storeData.imageURL,
+      sectionName: storeData.sectionName,
+    }
+    const doc = storeOwnerUser.firestore().collection('stores')
+    .doc(storeDraw.storeFK).collection('store_draws')
+    .doc(storeDraw.storeDrawId);
+    await assertSucceeds(doc.set(storeDraw));
+  }); // Working As Expected.
+
+
+
+
+  // Testing /stores/storeId/store_draws/{storeDrawId}  
+  it('Offline User : Allow not logged in users to view any store draw.', async()=>{
+
+    const doc = noUser.firestore().collection('stores').doc(someId)
+    .collection('store_draws').doc(someId);
+    await assertSucceeds(doc.get());
+  }); // Working As Expected.
+  
+  // Testing /stores/storeId/store_draws/{storeDrawId}  
+  it('Online User : Allow logged in users to view any store draw.', async()=>{
+
+    const doc = myUser.firestore().collection('stores').doc(someId)
+    .collection('store_draws').doc(someId);
+    await assertSucceeds(doc.get());
+  }); // Working As Expected.
+  
+  // Testing /stores/storeId/store_draws/{storeDrawId}    
+  it('Store Owner : Allow store owners to view any store draw.', async()=>{
+
+    const doc = storeOwnerUser.firestore().collection('stores').doc(someId)
+    .collection('store_draws').doc(someId);
+    await assertSucceeds(doc.get());
+  }); // Working As Expected.
+
+
+
+  // Testing /stores/storeId/store_draws/{storeDrawId}  
+  it('Offline User : Do not allow not logged in users to update a store draw.', async()=>{
+
+    const storeDraw = {
+      storeDrawId: 'draw_bxb',
+      storeFK: storeData.storeOwnerPhoneNumber,
+      drawDateAndTime: Date.now(),
+      joiningFee: 5,
+      numberOfCompetitorsSoFar: 30,
+      isOpen: true,
+      numberOfGrandPrices: 2,
+      storeName: storeData.storeName,
+      storeImageURL: storeData.imageURL,
+      sectionName: storeData.sectionName,
+    }
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('stores')
+      .doc(storeDraw.storeFK).collection('store_draws')
+      .doc(storeDraw.storeDrawId).set(storeDraw);
+    });
+
+    const doc = noUser.firestore().collection('stores')
+    .doc(storeDraw.storeFK).collection('store_draws')
+    .doc(storeDraw.storeDrawId);
+    await assertFails(doc.update({numberOfCompetitorsSoFar:5}));
+  }); // Working As Expected.
+  
+  // Testing/stores/storeId/store_draws/{storeDrawId}  
+  it('Online User : Do not allow logged in users to update a store draw.', async()=>{
+
+    const storeDraw = {
+      storeDrawId: 'draw_bxb',
+      storeFK: storeData.storeOwnerPhoneNumber,
+      drawDateAndTime: Date.now(),
+      joiningFee: 5,
+      numberOfCompetitorsSoFar: 30,
+      isOpen: true,
+      numberOfGrandPrices: 2,
+      storeName: storeData.storeName,
+      storeImageURL: storeData.imageURL,
+      sectionName: storeData.sectionName,
+    }
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('stores')
+      .doc(storeDraw.storeFK).collection('store_draws')
+      .doc(storeDraw.storeDrawId).set(storeDraw);
+    });
+
+    const doc = myUser.firestore().collection('stores')
+    .doc(storeDraw.storeFK).collection('store_draws')
+    .doc(storeDraw.storeDrawId);
+    await assertFails(doc.update({numberOfCompetitorsSoFar:5}));
+  }); // Working As Expected.
+  
+  // Testing/stores/storeId/store_draws/{storeDrawId}  
+  it('Store Owner : Do not allow store owners to update a store draw belonging to a store they do not own.', async()=>{
+
+    const storeDraw = {
+      storeDrawId: 'draw_bxb',
+      storeFK: storeData.storeOwnerPhoneNumber,
+      drawDateAndTime: Date.now(),
+      joiningFee: 5,
+      numberOfCompetitorsSoFar: 30,
+      isOpen: true,
+      numberOfGrandPrices: 2,
+      storeName: storeData.storeName,
+      storeImageURL: storeData.imageURL,
+      sectionName: storeData.sectionName,
+    }
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('stores')
+      .doc(storeDraw.storeFK).collection('store_draws')
+      .doc(storeDraw.storeDrawId).set(storeDraw);
+    });
+
+    const doc = theirStoreOwnerUser.firestore().collection('stores')
+    .doc(storeDraw.storeFK).collection('store_draws')
+    .doc(storeDraw.storeDrawId);
+    await assertFails(doc.update({numberOfCompetitorsSoFar:5}));
+  });
+
+  // Testing/stores/storeId/store_draws/{storeDrawId}  
+  it('Store Owner : Allow store owners to update a store draw belonging to a store they own.', async()=>{
+
+    const storeDraw = {
+      storeDrawId: 'draw_bxb',
+      storeFK: storeData.storeOwnerPhoneNumber,
+      drawDateAndTime: Date.now(),
+      joiningFee: 5,
+      numberOfCompetitorsSoFar: 30,
+      isOpen: true,
+      numberOfGrandPrices: 2,
+      storeName: storeData.storeName,
+      storeImageURL: storeData.imageURL,
+      sectionName: storeData.sectionName,
+    }
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('stores')
+      .doc(storeDraw.storeFK).collection('store_draws')
+      .doc(storeDraw.storeDrawId).set(storeDraw);
+    });
+
+    const doc = storeOwnerUser.firestore().collection('stores')
+    .doc(storeDraw.storeFK).collection('store_draws')
+    .doc(storeDraw.storeDrawId);
+    await assertSucceeds(doc.update({numberOfCompetitorsSoFar:5}));
+  }); // Working As Expected.
+
+
+
+
+  // Testing /stores/storeId/store_draws/{storeDrawId}  
+  it('Offline User : Do not allow not logged in users to delete a store draw.', async()=>{
+
+    const storeDraw = {
+      storeDrawId: 'draw_bxb',
+      storeFK: storeData.storeOwnerPhoneNumber,
+      drawDateAndTime: Date.now(),
+      joiningFee: 5,
+      numberOfCompetitorsSoFar: 30,
+      isOpen: true,
+      numberOfGrandPrices: 2,
+      storeName: storeData.storeName,
+      storeImageURL: storeData.imageURL,
+      sectionName: storeData.sectionName,
+    }
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('stores')
+      .doc(storeDraw.storeFK).collection('store_draws')
+      .doc(storeDraw.storeDrawId).set(storeDraw);
+    });
+
+    const doc = noUser.firestore().collection('stores')
+    .doc(storeDraw.storeFK).collection('store_draws')
+    .doc(storeDraw.storeDrawId);
+    await assertFails(doc.delete());
+  }); // Working As Expected.
+  
+  // Testing/stores/storeId/store_draws/{storeDrawId}  
+  it('Online User : Do not allow logged in users to delete a store draw.', async()=>{
+
+    const storeDraw = {
+      storeDrawId: 'draw_bxb',
+      storeFK: storeData.storeOwnerPhoneNumber,
+      drawDateAndTime: Date.now(),
+      joiningFee: 5,
+      numberOfCompetitorsSoFar: 30,
+      isOpen: true,
+      numberOfGrandPrices: 2,
+      storeName: storeData.storeName,
+      storeImageURL: storeData.imageURL,
+      sectionName: storeData.sectionName,
+    }
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('stores')
+      .doc(storeDraw.storeFK).collection('store_draws')
+      .doc(storeDraw.storeDrawId).set(storeDraw);
+    });
+
+    const doc = myUser.firestore().collection('stores')
+    .doc(storeDraw.storeFK).collection('store_draws')
+    .doc(storeDraw.storeDrawId);
+    await assertFails(doc.delete());
+  }); // Working As Expected.
+  
+  // Testing/stores/storeId/store_draws/{storeDrawId}  
+  it('Store Owner : Do not allow store owners to delete a store draw belonging to a store they do not own.', async()=>{
+
+    const storeDraw = {
+      storeDrawId: 'draw_bxb',
+      storeFK: storeData.storeOwnerPhoneNumber,
+      drawDateAndTime: Date.now(),
+      joiningFee: 5,
+      numberOfCompetitorsSoFar: 30,
+      isOpen: true,
+      numberOfGrandPrices: 2,
+      storeName: storeData.storeName,
+      storeImageURL: storeData.imageURL,
+      sectionName: storeData.sectionName,
+    }
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('stores')
+      .doc(storeDraw.storeFK).collection('store_draws')
+      .doc(storeDraw.storeDrawId).set(storeDraw);
+    });
+
+    const doc = theirStoreOwnerUser.firestore().collection('stores')
+    .doc(storeDraw.storeFK).collection('store_draws')
+    .doc(storeDraw.storeDrawId);
+    await assertFails(doc.delete());
+  });
+
+  // Testing/stores/storeId/store_draws/{storeDrawId}  
+  it('Store Owner : Allow store owners to delete a store draw belonging to a store they own.', async()=>{
+
+    const storeDraw = {
+      storeDrawId: 'draw_bxb',
+      storeFK: storeData.storeOwnerPhoneNumber,
+      drawDateAndTime: Date.now(),
+      joiningFee: 5,
+      numberOfCompetitorsSoFar: 30,
+      isOpen: true,
+      numberOfGrandPrices: 2,
+      storeName: storeData.storeName,
+      storeImageURL: storeData.imageURL,
+      sectionName: storeData.sectionName,
+    }
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('stores')
+      .doc(storeDraw.storeFK).collection('store_draws')
+      .doc(storeDraw.storeDrawId).set(storeDraw);
+    });
+
+    const doc = storeOwnerUser.firestore().collection('stores')
+    .doc(storeDraw.storeFK).collection('store_draws')
+    .doc(storeDraw.storeDrawId);
+    await assertSucceeds(doc.delete());
+  }); // Working As Expected.
+
+  //=====================Store Draw [End]============================
+
+  //=====================Store Draw Grand Price [Start]============================
+
+  // Testing /stores/storeId/store_draws/storeDrawId/draw_grand_prices/{grandPriceId}
+  it('Offline User : Do not allow not logged in users to create store draw grand prices.', async()=>{
+
+    const doc = noUser.firestore().collection('stores')
+    .doc(someId).collection('draw_grand_prices').doc(someId);
+    await assertFails(doc.set({data:'some data'}));
+  }); // Working As Expected.
+  
+  // Testing /stores/storeId/store_draws/storeDrawId/draw_grand_prices/{grandPriceId}
+  it('Online User : Do not allow logged in users to create store draw grand prices.', async()=>{
+
+    const doc = myUser.firestore().collection('stores')
+    .doc(someId).collection('draw_grand_prices').doc(someId);
+    await assertFails(doc.set({data:'some data'}));
+  }); // Working As Expected.
+  
+  // Testing /stores/storeId/store_draws/storeDrawId/draw_grand_prices/{grandPriceId}
+  it('Store Owner : Do not allow store owners to create store draw grand prices for a store they do not own.', async()=>{
+
+    const storeDraw = {
+      storeDrawId: 'draw_123',
+      storeFK: theirStoreData.storeOwnerPhoneNumber,
+    }
+
+    const drawGrandPrice = {
+      grandPriceId: 'some-gp-id',
+      storeDrawFK: storeDraw.storeDrawId,
+      imageURL: '../image.jpg',
+      description: '###',
+      grandPriceIndex:0,
+    }
+    const doc = storeOwnerUser.firestore().collection('stores')
+    .doc(storeDraw.storeFK).collection('store_draws')
+    .doc(storeDraw.storeDrawId)
+    .collection('draw_grand_prices')
+    .doc(drawGrandPrice.grandPriceId);
+    await assertFails(doc.set(drawGrandPrice));
+  }); // Working As Expected.
+
+  // Testing /stores/storeId/store_draws/storeDrawId/draw_grand_prices/{grandPriceId}
+  it('Store Owner : Do not allow store owners to create store draw grand prices with missing/incorrect info[1].', async()=>{
+
+    const storeDraw = {
+      storeDrawId: 'draw_123',
+      storeFK: storeData.storeOwnerPhoneNumber,
+    }
+
+    const drawGrandPrice = {
+      grandPriceId: 'some-gp-id',
+      storeDrawFK: null,
+      imageURL: '../image.jpg',
+      description: '###',
+      grandPriceIndex:0,
+    }
+    const doc = storeOwnerUser.firestore().collection('stores')
+    .doc(storeDraw.storeFK).collection('store_draws')
+    .doc(storeDraw.storeDrawId)
+    .collection('draw_grand_prices')
+    .doc(drawGrandPrice.grandPriceId);
+    await assertFails(doc.set(drawGrandPrice));
+  }); // Working As Expected.
+
+  // Testing /stores/storeId/store_draws/storeDrawId/draw_grand_prices/{grandPriceId}
+  it('Store Owner : Do not allow store owners to create store draw grand prices with missing/incorrect info[2].', async()=>{
+
+    const storeDraw = {
+      storeDrawId: 'draw_123',
+      storeFK: storeData.storeOwnerPhoneNumber,
+    }
+
+    const drawGrandPrice = {
+      grandPriceId: 'some-gp-id',
+      storeDrawFK: '',
+      imageURL: '../image.jpg',
+      description: '###',
+      grandPriceIndex:0,
+    }
+    const doc = storeOwnerUser.firestore().collection('stores')
+    .doc(storeDraw.storeFK).collection('store_draws')
+    .doc(storeDraw.storeDrawId)
+    .collection('draw_grand_prices')
+    .doc(drawGrandPrice.grandPriceId);
+    await assertFails(doc.set(drawGrandPrice));
+  }); // Working As Expected.
+
+  // Testing /stores/storeId/store_draws/storeDrawId/draw_grand_prices/{grandPriceId}
+  it('Store Owner : Do not allow store owners to create store draw grand prices with missing/incorrect info[3].', async()=>{
+
+    const storeDraw = {
+      storeDrawId: 'draw_123',
+      storeFK: storeData.storeOwnerPhoneNumber,
+    }
+
+    const drawGrandPrice = {
+      grandPriceId: 'some-gp-id',
+      storeDrawFK: storeDraw.storeDrawId,
+      imageURL: null,
+      description: '###',
+      grandPriceIndex:0,
+    }
+    const doc = storeOwnerUser.firestore().collection('stores')
+    .doc(storeDraw.storeFK).collection('store_draws')
+    .doc(storeDraw.storeDrawId)
+    .collection('draw_grand_prices')
+    .doc(drawGrandPrice.grandPriceId);
+    await assertFails(doc.set(drawGrandPrice));
+  }); // Working As Expected.
+
+  // Testing /stores/storeId/store_draws/storeDrawId/draw_grand_prices/{grandPriceId}
+  it('Store Owner : Do not allow store owners to create store draw grand prices with missing/incorrect info[4].', async()=>{
+
+    const storeDraw = {
+      storeDrawId: 'draw_123',
+      storeFK: storeData.storeOwnerPhoneNumber,
+    }
+
+    const drawGrandPrice = {
+      grandPriceId: 'some-gp-id',
+      storeDrawFK: storeDraw.storeDrawId,
+      imageURL: '',
+      description: '###',
+      grandPriceIndex:0,
+    }
+    const doc = storeOwnerUser.firestore().collection('stores')
+    .doc(storeDraw.storeFK).collection('store_draws')
+    .doc(storeDraw.storeDrawId)
+    .collection('draw_grand_prices')
+    .doc(drawGrandPrice.grandPriceId);
+    await assertFails(doc.set(drawGrandPrice));
+  }); // Working As Expected.
+
+  // Testing /stores/storeId/store_draws/storeDrawId/draw_grand_prices/{grandPriceId}
+  it('Store Owner : Do not allow store owners to create store draw grand prices with missing/incorrect info[5].', async()=>{
+
+    const storeDraw = {
+      storeDrawId: 'draw_123',
+      storeFK: storeData.storeOwnerPhoneNumber,
+    }
+
+    const drawGrandPrice = {
+      grandPriceId: 'some-gp-id',
+      storeDrawFK: storeDraw.storeDrawId,
+      imageURL: '../image.jpg',
+      description: null,
+      grandPriceIndex:0,
+    }
+    const doc = storeOwnerUser.firestore().collection('stores')
+    .doc(storeDraw.storeFK).collection('store_draws')
+    .doc(storeDraw.storeDrawId)
+    .collection('draw_grand_prices')
+    .doc(drawGrandPrice.grandPriceId);
+    await assertFails(doc.set(drawGrandPrice));
+  }); // Working As Expected.
+
+  // Testing /stores/storeId/store_draws/storeDrawId/draw_grand_prices/{grandPriceId}
+  it('Store Owner : Do not allow store owners to create store draw grand prices with missing/incorrect info[6].', async()=>{
+
+    const storeDraw = {
+      storeDrawId: 'draw_123',
+      storeFK: storeData.storeOwnerPhoneNumber,
+    }
+
+    const drawGrandPrice = {
+      grandPriceId: 'some-gp-id',
+      storeDrawFK: storeDraw.storeDrawId,
+      imageURL: '../image.jpg',
+      description: '',
+      grandPriceIndex:0,
+    }
+    const doc = storeOwnerUser.firestore().collection('stores')
+    .doc(storeDraw.storeFK).collection('store_draws')
+    .doc(storeDraw.storeDrawId)
+    .collection('draw_grand_prices')
+    .doc(drawGrandPrice.grandPriceId);
+    await assertFails(doc.set(drawGrandPrice));
+  }); // Working As Expected.
+
+  // Testing /stores/storeId/store_draws/storeDrawId/draw_grand_prices/{grandPriceId}
+  it('Store Owner : Do not allow store owners to create store draw grand prices with missing/incorrect info[7].', async()=>{
+
+    const storeDraw = {
+      storeDrawId: 'draw_123',
+      storeFK: storeData.storeOwnerPhoneNumber,
+    }
+
+    const drawGrandPrice = {
+      grandPriceId: 'some-gp-id',
+      storeDrawFK: storeDraw.storeDrawId,
+      imageURL: '../image.jpg',
+      description: '###',
+      grandPriceIndex:null,
+    }
+    const doc = storeOwnerUser.firestore().collection('stores')
+    .doc(storeDraw.storeFK).collection('store_draws')
+    .doc(storeDraw.storeDrawId)
+    .collection('draw_grand_prices')
+    .doc(drawGrandPrice.grandPriceId);
+    await assertFails(doc.set(drawGrandPrice));
+  }); // Working As Expected.
+
+  // Testing /stores/storeId/store_draws/storeDrawId/draw_grand_prices/{grandPriceId}
+  it('Store Owner : Do not allow store owners to create store draw grand prices with missing/incorrect info[1].', async()=>{
+
+    const storeDraw = {
+      storeDrawId: 'draw_123',
+      storeFK: storeData.storeOwnerPhoneNumber,
+    }
+
+    const drawGrandPrice = {
+      grandPriceId: 'some-gp-id',
+      storeDrawFK: storeDraw.storeDrawId,
+      imageURL: '../image.jpg',
+      description: '###',
+      grandPriceIndex:-1,
+    }
+    const doc = storeOwnerUser.firestore().collection('stores')
+    .doc(storeDraw.storeFK).collection('store_draws')
+    .doc(storeDraw.storeDrawId)
+    .collection('draw_grand_prices')
+    .doc(drawGrandPrice.grandPriceId);
+    await assertFails(doc.set(drawGrandPrice));
+  }); // Working As Expected.
+
+  // Testing /stores/storeId/store_draws/storeDrawId/draw_grand_prices/{grandPriceId}
+  it('Store Owner : Allow store owners to create store draw grand prices on stores they own.', async()=>{
+
+    const storeDraw = {
+      storeDrawId: 'draw_123',
+      storeFK: storeData.storeOwnerPhoneNumber,
+    }
+
+    const drawGrandPrice = {
+      grandPriceId: 'some-gp-id',
+      storeDrawFK: storeDraw.storeDrawId,
+      imageURL: '../image.jpg',
+      description: '###',
+      grandPriceIndex:0,
+    }
+    const doc = storeOwnerUser.firestore().collection('stores')
+    .doc(storeDraw.storeFK).collection('store_draws')
+    .doc(storeDraw.storeDrawId)
+    .collection('draw_grand_prices')
+    .doc(drawGrandPrice.grandPriceId);
+    await assertSucceeds(doc.set(drawGrandPrice));
+  }); // Working As Expected.
+
+
+
+
+  // Testing /stores/storeId/store_draws/storeDrawId/draw_grand_prices/{grandPriceId}
+  it('Offline User : Allow not logged in users to view any store draw grand prices.', async()=>{
+
+    const doc = noUser.firestore().collection('stores')
+    .doc(someId).collection('store_draws').doc(someId)
+    .collection('draw_grand_prices').doc(someId);
+    await assertSucceeds(doc.get());
+  }); // Working As Expected.
+  
+  // Testing /stores/storeId/store_draws/storeDrawId/draw_grand_prices/{grandPriceId}
+  it('Online User : Allow logged in users to view any store draw grand prices.', async()=>{
+
+    const doc = myUser.firestore().collection('stores')
+    .doc(someId).collection('store_draws').doc(someId)
+    .collection('draw_grand_prices').doc(someId);
+    await assertSucceeds(doc.get());
+  }); // Working As Expected.
+  
+  // Testing /stores/storeId/store_draws/storeDrawId/draw_grand_prices/{grandPriceId}  
+  it('Store Owner : Allow store owners to view any store draw grand prices.', async()=>{
+
+    const doc = storeOwnerUser.firestore().collection('stores')
+    .doc(someId).collection('store_draws').doc(someId)
+    .collection('draw_grand_prices').doc(someId);
+    await assertSucceeds(doc.get());
+  }); // Working As Expected.
+
+
+
+
+  // Testing /stores/storeId/store_draws/storeDrawId/draw_grand_prices/{grandPriceId}
+  it('Offline User : Do not allow not logged in users to update store draw grand prices.', async()=>{
+
+    const storeDraw = {
+      storeDrawId: 'draw_123',
+      storeFK: storeData.storeOwnerPhoneNumber,
+      isOpen: true,
+    }
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('stores')
+      .doc(storeDraw.storeFK).collection('store_draws')
+      .doc(storeDraw.storeDrawId).set(storeDraw);
+    });
+
+    const drawGrandPrice = {
+      grandPriceId: 'some-gp-id',
+      storeDrawFK: storeDraw.storeDrawId,
+      imageURL: '../image.jpg',
+      description: '###',
+      grandPriceIndex:0,
+    }
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('stores')
+      .doc(storeDraw.storeFK).collection('store_draws')
+      .doc(drawGrandPrice.storeDrawFK).collection('draw_grand_prices')
+      .doc(drawGrandPrice.grandPriceId).set(drawGrandPrice);
+    });
+
+    const doc = noUser.firestore().collection('stores')
+    .doc(storeDraw.storeFK).collection('store_draws')
+    .doc(drawGrandPrice.storeDrawFK).collection('draw_grand_prices')
+    .doc(drawGrandPrice.grandPriceId);
+    await assertFails(doc.update({description:'new description'}));
+  }); // Working As Expected.
+  
+  // Testing /stores/storeId/store_draws/storeDrawId/draw_grand_prices/{grandPriceId}
+  it('Online User : Do not allow logged in users to update store draw grand prices.', async()=>{
+
+    const storeDraw = {
+      storeDrawId: 'draw_123',
+      storeFK: storeData.storeOwnerPhoneNumber,
+      isOpen: true,
+    }
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('stores')
+      .doc(storeDraw.storeFK).collection('store_draws')
+      .doc(storeDraw.storeDrawId).set(storeDraw);
+    });
+
+    const drawGrandPrice = {
+      grandPriceId: 'some-gp-id',
+      storeDrawFK: storeDraw.storeDrawId,
+      imageURL: '../image.jpg',
+      description: '###',
+      grandPriceIndex:0,
+    }
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('stores')
+      .doc(storeDraw.storeFK).collection('store_draws')
+      .doc(drawGrandPrice.storeDrawFK).collection('draw_grand_prices')
+      .doc(drawGrandPrice.grandPriceId).set(drawGrandPrice);
+    });
+
+    const doc = myUser.firestore().collection('stores')
+    .doc(storeDraw.storeFK).collection('store_draws')
+    .doc(drawGrandPrice.storeDrawFK).collection('draw_grand_prices')
+    .doc(drawGrandPrice.grandPriceId);
+    await assertFails(doc.update({description:'new description'}));
+  }); // Working As Expected.
+  
+  // Testing /stores/storeId/store_draws/storeDrawId/draw_grand_prices/{grandPriceId}
+  it('Store Owner : Do not allow store owners to update store draw grand prices belonging to a store they do not own.', async()=>{
+
+    const storeDraw = {
+      storeDrawId: 'draw_123',
+      storeFK: theirStoreData.storeOwnerPhoneNumber,
+      isOpen: true,
+    }
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('stores')
+      .doc(storeDraw.storeFK).collection('store_draws')
+      .doc(storeDraw.storeDrawId).set(storeDraw);
+    });
+
+    const drawGrandPrice = {
+      grandPriceId: 'some-gp-id',
+      storeDrawFK: storeDraw.storeDrawId,
+      imageURL: '../image.jpg',
+      description: '###',
+      grandPriceIndex:0,
+    }
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('stores')
+      .doc(storeDraw.storeFK).collection('store_draws')
+      .doc(drawGrandPrice.storeDrawFK).collection('draw_grand_prices')
+      .doc(drawGrandPrice.grandPriceId).set(drawGrandPrice);
+    });
+
+    const doc = storeOwnerUser.firestore().collection('stores')
+    .doc(storeDraw.storeFK).collection('store_draws')
+    .doc(drawGrandPrice.storeDrawFK).collection('draw_grand_prices')
+    .doc(drawGrandPrice.grandPriceId);
+    await assertFails(doc.update({description:'new description'}));
+  }); // Working As Expected.
+
+  // Testing /stores/storeId/store_draws/storeDrawId/draw_grand_prices/{grandPriceId}
+  it('Store Owner : Do not allow store owners to update store draw grand prices created by another owner.', async()=>{
+
+    const storeDraw = {
+      storeDrawId: 'draw_123',
+      storeFK: storeData.storeOwnerPhoneNumber,
+      isOpen: true,
+    }
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('stores')
+      .doc(storeDraw.storeFK).collection('store_draws')
+      .doc(storeDraw.storeDrawId).set(storeDraw);
+    });
+
+    const drawGrandPrice = {
+      grandPriceId: 'some-gp-id',
+      storeDrawFK: storeDraw.storeDrawId,
+      imageURL: '../image.jpg',
+      description: '###',
+      grandPriceIndex:0,
+    }
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('stores')
+      .doc(storeDraw.storeFK).collection('store_draws')
+      .doc(drawGrandPrice.storeDrawFK).collection('draw_grand_prices')
+      .doc(drawGrandPrice.grandPriceId).set(drawGrandPrice);
+    });
+
+    const doc = theirStoreOwnerUser.firestore().collection('stores')
+    .doc(storeDraw.storeFK).collection('store_draws')
+    .doc(drawGrandPrice.storeDrawFK).collection('draw_grand_prices')
+    .doc(drawGrandPrice.grandPriceId);
+    await assertFails(doc.update({description:'new description'}));
+  }); // Working As Expected.
+
+  // Testing /stores/storeId/store_draws/storeDrawId/draw_grand_prices/{grandPriceId}
+  it('Store Owner : Do not allow store owners to update store draw grand prices created by them on a store they own if it no longer open.', async()=>{
+
+    const storeDraw = {
+      storeDrawId: 'draw_123',
+      storeFK: storeData.storeOwnerPhoneNumber,
+      isOpen: false,
+    }
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('stores')
+      .doc(storeDraw.storeFK).collection('store_draws')
+      .doc(storeDraw.storeDrawId).set(storeDraw);
+    });
+
+    const drawGrandPrice = {
+      grandPriceId: 'some-gp-id',
+      storeDrawFK: storeDraw.storeDrawId,
+      imageURL: '../image.jpg',
+      description: '###',
+      grandPriceIndex:0,
+    }
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('stores')
+      .doc(storeDraw.storeFK).collection('store_draws')
+      .doc(drawGrandPrice.storeDrawFK).collection('draw_grand_prices')
+      .doc(drawGrandPrice.grandPriceId).set(drawGrandPrice);
+    });
+
+    const doc = storeOwnerUser.firestore().collection('stores')
+    .doc(storeDraw.storeFK).collection('store_draws')
+    .doc(drawGrandPrice.storeDrawFK).collection('draw_grand_prices')
+    .doc(drawGrandPrice.grandPriceId);
+    await assertFails(doc.update({description:'new description'}));
+  }); // Working As Expected.
+
+  // Testing /stores/storeId/store_draws/storeDrawId/draw_grand_prices/{grandPriceId}
+  it('Store Owner : Allow store owners to update store draw grand prices created by them on a store they own.', async()=>{
+
+    const storeDraw = {
+      storeDrawId: 'draw_123',
+      storeFK: storeData.storeOwnerPhoneNumber,
+      isOpen: true,
+    }
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('stores')
+      .doc(storeDraw.storeFK).collection('store_draws')
+      .doc(storeDraw.storeDrawId).set(storeDraw);
+    });
+
+    const drawGrandPrice = {
+      grandPriceId: 'some-gp-id',
+      storeDrawFK: storeDraw.storeDrawId,
+      imageURL: '../image.jpg',
+      description: '###',
+      grandPriceIndex:0,
+    }
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('stores')
+      .doc(storeDraw.storeFK).collection('store_draws')
+      .doc(drawGrandPrice.storeDrawFK).collection('draw_grand_prices')
+      .doc(drawGrandPrice.grandPriceId).set(drawGrandPrice);
+    });
+
+    const doc = storeOwnerUser.firestore().collection('stores')
+    .doc(storeDraw.storeFK).collection('store_draws')
+    .doc(drawGrandPrice.storeDrawFK).collection('draw_grand_prices')
+    .doc(drawGrandPrice.grandPriceId);
+    await assertSucceeds(doc.update({description:'new description'}));
+  }); // Working As Expected.
+
+
+
+
+  // Testing /stores/storeId/store_draws/storeDrawId/draw_grand_prices/{grandPriceId}
+  it('Offline User : Do not allow not logged in users to delete store draw grand prices.', async()=>{
+
+    const storeDraw = {
+      storeDrawId: 'draw_123',
+      storeFK: storeData.storeOwnerPhoneNumber,
+      isOpen: true,
+    }
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('stores')
+      .doc(storeDraw.storeFK).collection('store_draws')
+      .doc(storeDraw.storeDrawId).set(storeDraw);
+    });
+
+    const drawGrandPrice = {
+      grandPriceId: 'some-gp-id',
+      storeDrawFK: storeDraw.storeDrawId,
+      imageURL: '../image.jpg',
+      description: '###',
+      grandPriceIndex:0,
+    }
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('stores')
+      .doc(storeDraw.storeFK).collection('store_draws')
+      .doc(drawGrandPrice.storeDrawFK).collection('draw_grand_prices')
+      .doc(drawGrandPrice.grandPriceId).set(drawGrandPrice);
+    });
+
+    const doc = noUser.firestore().collection('stores')
+    .doc(storeDraw.storeFK).collection('store_draws')
+    .doc(drawGrandPrice.storeDrawFK).collection('draw_grand_prices')
+    .doc(drawGrandPrice.grandPriceId);
+    await assertFails(doc.delete());
+  }); // Working As Expected.
+  
+  // Testing /stores/storeId/store_draws/storeDrawId/draw_grand_prices/{grandPriceId}
+  it('Online User : Do not allow logged in users to delete store draw grand prices.', async()=>{
+
+    const storeDraw = {
+      storeDrawId: 'draw_123',
+      storeFK: storeData.storeOwnerPhoneNumber,
+      isOpen: true,
+    }
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('stores')
+      .doc(storeDraw.storeFK).collection('store_draws')
+      .doc(storeDraw.storeDrawId).set(storeDraw);
+    });
+
+    const drawGrandPrice = {
+      grandPriceId: 'some-gp-id',
+      storeDrawFK: storeDraw.storeDrawId,
+      imageURL: '../image.jpg',
+      description: '###',
+      grandPriceIndex:0,
+    }
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('stores')
+      .doc(storeDraw.storeFK).collection('store_draws')
+      .doc(drawGrandPrice.storeDrawFK).collection('draw_grand_prices')
+      .doc(drawGrandPrice.grandPriceId).set(drawGrandPrice);
+    });
+
+    const doc = myUser.firestore().collection('stores')
+    .doc(storeDraw.storeFK).collection('store_draws')
+    .doc(drawGrandPrice.storeDrawFK).collection('draw_grand_prices')
+    .doc(drawGrandPrice.grandPriceId);
+    await assertFails(doc.delete());
+  }); // Working As Expected.
+  
+  // Testing /stores/storeId/store_draws/storeDrawId/draw_grand_prices/{grandPriceId}
+  it('Store Owner : Do not allow store owners to delete store draw grand prices belonging to a store they do not own.', async()=>{
+
+    const storeDraw = {
+      storeDrawId: 'draw_123',
+      storeFK: theirStoreData.storeOwnerPhoneNumber,
+      isOpen: true,
+    }
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('stores')
+      .doc(storeDraw.storeFK).collection('store_draws')
+      .doc(storeDraw.storeDrawId).set(storeDraw);
+    });
+
+    const drawGrandPrice = {
+      grandPriceId: 'some-gp-id',
+      storeDrawFK: storeDraw.storeDrawId,
+      imageURL: '../image.jpg',
+      description: '###',
+      grandPriceIndex:0,
+    }
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('stores')
+      .doc(storeDraw.storeFK).collection('store_draws')
+      .doc(drawGrandPrice.storeDrawFK).collection('draw_grand_prices')
+      .doc(drawGrandPrice.grandPriceId).set(drawGrandPrice);
+    });
+
+    const doc = storeOwnerUser.firestore().collection('stores')
+    .doc(storeDraw.storeFK).collection('store_draws')
+    .doc(drawGrandPrice.storeDrawFK).collection('draw_grand_prices')
+    .doc(drawGrandPrice.grandPriceId);
+    await assertFails(doc.delete());
+  }); // Working As Expected.
+
+  // Testing /stores/storeId/store_draws/storeDrawId/draw_grand_prices/{grandPriceId}
+  it('Store Owner : Do not allow store owners to delete store draw grand prices created by another owner.', async()=>{
+
+    const storeDraw = {
+      storeDrawId: 'draw_123',
+      storeFK: storeData.storeOwnerPhoneNumber,
+      isOpen: true,
+    }
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('stores')
+      .doc(storeDraw.storeFK).collection('store_draws')
+      .doc(storeDraw.storeDrawId).set(storeDraw);
+    });
+
+    const drawGrandPrice = {
+      grandPriceId: 'some-gp-id',
+      storeDrawFK: storeDraw.storeDrawId,
+      imageURL: '../image.jpg',
+      description: '###',
+      grandPriceIndex:0,
+    }
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('stores')
+      .doc(storeDraw.storeFK).collection('store_draws')
+      .doc(drawGrandPrice.storeDrawFK).collection('draw_grand_prices')
+      .doc(drawGrandPrice.grandPriceId).set(drawGrandPrice);
+    });
+
+    const doc = theirStoreOwnerUser.firestore().collection('stores')
+    .doc(storeDraw.storeFK).collection('store_draws')
+    .doc(drawGrandPrice.storeDrawFK).collection('draw_grand_prices')
+    .doc(drawGrandPrice.grandPriceId);
+    await assertFails(doc.delete());
+  }); // Working As Expected.
+
+  // Testing /stores/storeId/store_draws/storeDrawId/draw_grand_prices/{grandPriceId}
+  it('Store Owner : Do not allow store owners to delete store draw grand prices created by them on a store they own if it no longer open.', async()=>{
+
+    const storeDraw = {
+      storeDrawId: 'draw_123',
+      storeFK: storeData.storeOwnerPhoneNumber,
+      isOpen: false,
+    }
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('stores')
+      .doc(storeDraw.storeFK).collection('store_draws')
+      .doc(storeDraw.storeDrawId).set(storeDraw);
+    });
+
+    const drawGrandPrice = {
+      grandPriceId: 'some-gp-id',
+      storeDrawFK: storeDraw.storeDrawId,
+      imageURL: '../image.jpg',
+      description: '###',
+      grandPriceIndex:0,
+    }
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('stores')
+      .doc(storeDraw.storeFK).collection('store_draws')
+      .doc(drawGrandPrice.storeDrawFK).collection('draw_grand_prices')
+      .doc(drawGrandPrice.grandPriceId).set(drawGrandPrice);
+    });
+
+    const doc = storeOwnerUser.firestore().collection('stores')
+    .doc(storeDraw.storeFK).collection('store_draws')
+    .doc(drawGrandPrice.storeDrawFK).collection('draw_grand_prices')
+    .doc(drawGrandPrice.grandPriceId);
+    await assertFails(doc.delete());
+  }); // Working As Expected.
+
+  // Testing /stores/storeId/store_draws/storeDrawId/draw_grand_prices/{grandPriceId}
+  it('Store Owner : Allow store owners to delete store draw grand prices created by them on a store they own.', async()=>{
+
+    const storeDraw = {
+      storeDrawId: 'draw_123',
+      storeFK: storeData.storeOwnerPhoneNumber,
+      isOpen: true,
+    }
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('stores')
+      .doc(storeDraw.storeFK).collection('store_draws')
+      .doc(storeDraw.storeDrawId).set(storeDraw);
+    });
+
+    const drawGrandPrice = {
+      grandPriceId: 'some-gp-id',
+      storeDrawFK: storeDraw.storeDrawId,
+      imageURL: '../image.jpg',
+      description: '###',
+      grandPriceIndex:0,
+    }
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('stores')
+      .doc(storeDraw.storeFK).collection('store_draws')
+      .doc(drawGrandPrice.storeDrawFK).collection('draw_grand_prices')
+      .doc(drawGrandPrice.grandPriceId).set(drawGrandPrice);
+    });
+
+    const doc = storeOwnerUser.firestore().collection('stores')
+    .doc(storeDraw.storeFK).collection('store_draws')
+    .doc(drawGrandPrice.storeDrawFK).collection('draw_grand_prices')
+    .doc(drawGrandPrice.grandPriceId);
+    await assertSucceeds(doc.delete());
+  }); // Working As Expected.
+  //=====================Store Draw Grand Price [End]============================
+  */
+
 });
