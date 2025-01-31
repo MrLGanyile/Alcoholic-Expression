@@ -188,15 +188,6 @@ service cloud.firestore {
 
     // ==============================Done With Unit Testing [End]==============================
 
-    // Branch : won_price_summary_resources_crud -> won_price_summary_crud_firestore_security_rules
-    // Note: Has Model Named {WonPriceSummary}
-    match /won_prices_summaries/{wonPriceSummaryId}{
-      
-      // create - Invoked Whenever Somebody Wins A Competition.
-      allow write: if false;
-
-      // Everybody can see a won price.
-      allow read;
-    }
+   
   }
-}
+}  
