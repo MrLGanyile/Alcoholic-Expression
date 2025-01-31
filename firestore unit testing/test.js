@@ -2837,6 +2837,135 @@ describe('Our Alcoholic App',()=>{
     await assertSucceeds(doc.delete());
   }); // Working As Expected.
   //=====================Store Draw Grand Price [End]============================
+
+  
+
+  //===============================Store Name Info [Start]======================================
+
+  // Testing /stores_names_info/{storeNameInfoId} 
+  it('Offline User : Do not allow not logged in users to create store name info.', async()=>{
+
+    const doc = noUser.firestore().collection('stores_names_info').doc(someId);
+    await assertFails(doc.set({data:'new data'}));
+  }); // Working As Expected.
+
+  // Testing /stores_names_info/{storeNameInfoId} 
+  it('Online User : Do not allow logged in users to create store name info.', async()=>{
+
+    const doc = myUser.firestore().collection('stores_names_info').doc(someId);
+    await assertFails(doc.set({data:'new data'}));
+  }); // Working As Expected.
+
+  // Testing /stores_names_info/{storeNameInfoId} 
+  it('Store Owner : Do not allow store owners to create store name info.', async()=>{
+
+    const doc = storeOwnerUser.firestore().collection('stores_names_info').doc(someId);
+    await assertFails(doc.set({data:'new data'}));
+  }); // Working As Expected.
+
+
+  
+  // Testing /stores_names_info/{storeNameInfoId} 
+  it('Offline User : Allow not logged in users to view store name info.', async()=>{
+
+    const doc = noUser.firestore().collection('stores_names_info').doc(someId);
+    await assertSucceeds(doc.get());
+  }); // Working As Expected.
+
+  // Testing /stores_names_info/{storeNameInfoId} 
+  it('Online User : Allow logged in users to view store name info.', async()=>{
+
+    const doc = myUser.firestore().collection('stores_names_info').doc(myUserData.userId);
+    await assertSucceeds(doc.get());
+  }); // Working As Expected.
+
+  // Testing /stores_names_info/{storeNameInfoId} 
+  it('Store Owner : Allow store owners to view store name info.', async()=>{
+
+    const doc = storeOwnerUser.firestore().collection('stores_names_info').doc(someId);
+    await assertSucceeds(doc.get());
+  }); // Working As Expected.
+  
+
+
+  
+  // Testing /stores_names_info/{storeNameInfoId} 
+  it('Offline User : Do not allow not logged in users to update a store name info.', async()=>{
+
+    const storeNameInfo = {
+      data:'old data',
+      storeNameInfoId: 'abc',
+    };
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('stores_names_info')
+      .doc(storeNameInfo.storeNameInfoId).set(storeNameInfo);
+    });
+
+    const doc = noUser.firestore().collection('stores_names_info').doc(storeNameInfo.storeNameInfoId);
+    await assertFails(doc.update({data:'new data'}));
+  }); // Working As Expected.
+  
+  // Testing /stores_names_info/{storeNameInfoId} 
+  it('Online User : Do not allow logged in users to update a store name info.', async()=>{
+
+    const storeNameInfo= {
+      data:'old data',
+      storeNameInfoId: 'abc',
+    };
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('stores_names_info')
+      .doc(storeNameInfo.storeNameInfoId).set(storeNameInfo);
+    });
+
+    const doc = myUser.firestore().collection('stores_names_info').doc(storeNameInfo.storeNameInfoId);
+    await assertFails(doc.update({data:'new data'}));
+  }); // Working As Expected.
+  
+  // Testing /stores_names_info/{storeNameInfoId} 
+  it('Store Owner : Do not allow store owners to update a store name info.', async()=>{
+
+    const storeNameInfo= {
+      data:'old data',
+      storeNameInfoId: 'abc',
+    };
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('stores_names_info')
+      .doc(storeNameInfo.storeNameInfoId).set(storeNameInfo);
+    });
+
+    const doc = storeOwnerUser.firestore().collection('stores_names_info').doc(storeNameInfo.storeNameInfoId);
+    await assertFails(doc.update({data:'new data'}));
+  }); // Working As Expected.
+
+  
+  
+  
+  // Testing /stores_names_info/{storeNameInfoId} 
+  it('Offline User : Do not allow not logged in users to delete store name info.', async()=>{
+
+    const doc = myUser.firestore().collection('stores_names_info').doc(someId);
+    await assertFails(doc.delete());
+  }); // Working As Expected.
+  
+  // Testing /stores_names_info/{storeNameInfoId} 
+  it('Online User : Do not allow logged in users to delete store name info.', async()=>{
+
+    const doc = myUser.firestore().collection('stores_names_info').doc(someId);
+    await assertFails(doc.delete());
+  }); // Working As Expected.
+  
+  // Testing /stores_names_info/{storeNameInfoId} 
+  it('Store Owner : Do not allow store owners to delete store name info.', async()=>{
+
+    const doc = storeOwnerUser.firestore().collection('stores_names_info').doc(someId);
+    await assertFails(doc.delete());
+  }); // Working As Expected.
+
+  //===============================Store Name Info[End]======================================
+
   */
 
 });
