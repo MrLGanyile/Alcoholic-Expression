@@ -2966,6 +2966,137 @@ describe('Our Alcoholic App',()=>{
 
   //===============================Store Name Info[End]======================================
 
+
+
+  //=====================Won Price Summary [Start]============================
+
+  // Testing /won_prices_summaries/{wonPriceSummaryId} 
+  it('Offline User : Do not allow not logged in users to create a won price summary.', async()=>{
+
+    const doc = noUser.firestore().collection('won_prices_summaries')
+    .doc(someId);
+    await assertFails(doc.set({data:'some data'}));
+  }); // Working As Expected.
+  
+  // Testing /won_prices_summaries/{wonPriceSummaryId} 
+  it('Online User : Do not allow logged in users to create a won price summary.', async()=>{
+
+    const doc = myUser.firestore().collection('won_prices_summaries')
+    .doc(someId);
+    await assertFails(doc.set({data:'some data'}));
+  }); // Working As Expected.
+  
+  // Testing /won_prices_summaries/{wonPriceSummaryId}  
+  it('Store Owner : Do not allow store owners to create a won price summary.', async()=>{
+
+    const doc = storeOwnerUser.firestore().collection('won_prices_summaries')
+    .doc(someId);
+    await assertFails(doc.set({data:'some data'}));
+  }); // Working As Expected.
+
+
+
+  // Testing /won_prices_summaries/{wonPriceSummaryId} 
+  it('Offline User : Allow not logged in users to view any won price summary.', async()=>{
+
+    const doc = noUser.firestore().collection('won_prices_summaries').doc(someId);
+    await assertSucceeds(doc.get());
+  }); // Working As Expected.
+  
+  // Testing /won_prices_summaries/{wonPriceSummaryId} 
+  it('Online User : Allow logged in users to view any won price summary.', async()=>{
+
+    const doc = myUser.firestore().collection('won_prices_summaries').doc(someId);
+    await assertSucceeds(doc.get());
+  }); // Working As Expected.
+  
+  // Testing /won_prices_summaries/{wonPriceSummaryId}  
+  it('Store Owner : Allow store owners to view any won price summary.', async()=>{
+
+    const doc = storeOwnerUser.firestore().collection('won_prices_summaries').doc(someId);
+    await assertSucceeds(doc.get());
+  }); // Working As Expected.
+
+
+
+  // Testing /won_prices_summaries/{wonPriceSummaryId} 
+  it('Offline User : Do not allow not logged in users to update a won price summary.', async()=>{
+
+    const wonPriceSummary = {
+      wonPriceSummaryId : 'info',
+      data: 'old data',
+    }
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('won_prices_summaries')
+      .doc(wonPriceSummary.wonPriceSummaryId).set(wonPriceSummary);
+    });
+
+    const doc = noUser.firestore().collection('won_prices_summaries')
+    .doc(wonPriceSummary.wonPriceSummaryId);
+    await assertFails(doc.update({data:'new data'}));
+  }); // Working As Expected.
+  
+  // Testing /won_prices_summaries/{wonPriceSummaryId} 
+  it('Online User : Do not allow logged in users to update a won price summary.', async()=>{
+
+    const wonPriceSummary = {
+      wonPriceSummaryId : 'info',
+      data: 'old data',
+    }
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('won_prices_summaries')
+      .doc(wonPriceSummary.wonPriceSummaryId).set(wonPriceSummary);
+    });
+
+    const doc = myUser.firestore().collection('won_prices_summaries')
+    .doc(wonPriceSummary.wonPriceSummaryId);
+    await assertFails(doc.update({data:'new data'}));
+  }); // Working As Expected.
+  
+  // Testing /won_prices_summaries/{wonPriceSummaryId}  
+  it('Store Owner : Do not allow store owners to update a won price summary.', async()=>{
+
+    const wonPriceSummary = {
+      wonPriceSummaryId : 'info',
+      data: 'old data',
+    }
+
+    await testEnv.withSecurityRulesDisabled(context=>{
+      return context.firestore().collection('won_prices_summaries')
+      .doc(wonPriceSummary.wonPriceSummaryId).set(wonPriceSummary);
+    });
+
+    const doc = storeOwnerUser.firestore().collection('won_prices_summaries')
+    .doc(wonPriceSummary.wonPriceSummaryId);
+    await assertFails(doc.update({data:'new data'}));
+  }); // Working As Expected.
+
+
+
+  // Testing /won_prices_summaries/{wonPriceSummaryId} 
+  it('Offline User : Do not allow not logged in users to delete a won price summary.', async()=>{
+
+    const doc = noUser.firestore().collection('won_prices_summaries').doc(someId);
+    await assertFails(doc.delete());
+  }); // Working As Expected.
+  
+  // Testing /won_prices_summaries/{wonPriceSummaryId} 
+  it('Online User : Do not allow logged in users to delete a won price summary.', async()=>{
+
+    const doc = myUser.firestore().collection('won_prices_summaries').doc(someId);
+    await assertFails(doc.delete());
+  }); // Working As Expected.
+  
+  // Testing /won_prices_summaries/{wonPriceSummaryId}  
+  it('Store Owner : Do not allow store owners to delete a won price summary.', async()=>{
+
+    const doc = storeOwnerUser.firestore().collection('won_prices_summaries').doc(someId);
+    await assertFails(doc.delete());
+  }); // Working As Expected.
+  //=====================Won Price Summary [End]============================
+
   */
 
 });
