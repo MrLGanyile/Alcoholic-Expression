@@ -9,6 +9,34 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
-    
+    // Branch : supported_locations_resources_crud -> supported_locaitons_resources_crud_firestore_security_rules
+    match /supported_countries/{countryId}{
+      allow write: if false;
+      allow read;
+    }
+
+    // Branch : supported_locations_resources_crud -> supported_locaitons_resources_crud_firestore_security_rules
+    match /supported_provinces_or_states/{provinceOrStateId}{
+      allow write: if false;
+      allow read;
+    }
+
+    // Branch : supported_locations_resources_crud -> supported_locaitons_resources_crud_firestore_security_rules
+    match /supported_cities/{cityId}{
+      allow write: if false;
+      allow read;
+    }
+
+    // Branch : supported_locations_resources_crud -> supported_locaitons_resources_crud_firestore_security_rules
+    match /supported_suburbs_or_townships/{suburbOrTownshipId}{
+      allow write: if false;
+      allow read;
+    }
+
+    // Branch : supported_locations_resources_crud -> supported_locaitons_resources_crud_firestore_security_rules
+    match /supported_areas/{areaId}{
+      allow write: if false;
+      allow read;
+    }
   }
 }
