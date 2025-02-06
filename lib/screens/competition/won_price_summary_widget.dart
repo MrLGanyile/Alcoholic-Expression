@@ -135,7 +135,7 @@ class WonPriceSummaryWidgetState extends State<WonPriceSummaryWidget> {
           children: [
             Expanded(
               child: Text(
-                'Store Home',
+                'Host Home',
                 style: TextStyle(
                     fontSize: MyApplication.infoTextFontSize,
                     fontWeight: FontWeight.bold,
@@ -165,7 +165,7 @@ class WonPriceSummaryWidgetState extends State<WonPriceSummaryWidget> {
           children: [
             Expanded(
               child: Text(
-                'Store Area',
+                'Host Area',
                 style: TextStyle(
                     fontSize: MyApplication.infoTextFontSize,
                     fontWeight: FontWeight.bold,
@@ -425,7 +425,7 @@ class WonPriceSummaryWidgetState extends State<WonPriceSummaryWidget> {
                   color: Colors.lightBlue,
                 ),
                 child: CircleAvatar(
-                  radius: MediaQuery.of(context).size.width / 12,
+                  radius: MediaQuery.of(context).size.width / 8,
                   backgroundImage: NetworkImage(snapshot.data as String),
                 ),
               ),
@@ -451,7 +451,7 @@ class WonPriceSummaryWidgetState extends State<WonPriceSummaryWidget> {
     List<Widget> rowChildren;
     List<Widget> columnChildren;
 
-    if (groupMembersImageReferences.length <= 4) {
+    if (groupMembersImageReferences.length <= 3) {
       rowChildren = [];
       for (int i = 0; i < groupMembersImageReferences.length; i++) {
         rowChildren.add(createGroupParticipant(context, i));
@@ -461,33 +461,10 @@ class WonPriceSummaryWidgetState extends State<WonPriceSummaryWidget> {
         children: rowChildren,
       );
       return row;
-    } else if (groupMembersImageReferences.length <= 8) {
-      columnChildren = [];
-      rowChildren = [];
-      for (int i = 0; i < 4; i++) {
-        rowChildren.add(createGroupParticipant(context, i));
-      }
-      row = Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: rowChildren,
-      );
-      columnChildren.add(row);
-
-      rowChildren = [];
-      for (int i = 4; i < groupMembersImageReferences.length; i++) {
-        rowChildren.add(createGroupParticipant(context, i));
-      }
-      row = Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: rowChildren,
-      );
-      columnChildren.add(row);
-      column = Column(children: columnChildren);
-      return column;
     } else {
       columnChildren = [];
       rowChildren = [];
-      for (int i = 0; i < 4; i++) {
+      for (int i = 0; i < 3; i++) {
         rowChildren.add(createGroupParticipant(context, i));
       }
       row = Row(
@@ -497,16 +474,7 @@ class WonPriceSummaryWidgetState extends State<WonPriceSummaryWidget> {
       columnChildren.add(row);
 
       rowChildren = [];
-      for (int i = 4; i < 8; i++) {
-        rowChildren.add(createGroupParticipant(context, i));
-      }
-      row = Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: rowChildren,
-      );
-      columnChildren.add(row);
-      rowChildren = [];
-      for (int i = 8; i < groupMembersImageReferences.length; i++) {
+      for (int i = 3; i < groupMembersImageReferences.length; i++) {
         rowChildren.add(createGroupParticipant(context, i));
       }
       row = Row(

@@ -1,3 +1,6 @@
+import 'package:alco/screens/users/group_registration_widget.dart';
+import 'package:get/get.dart';
+
 import '/screens/store/stores_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -43,6 +46,18 @@ class _StartScreenState extends State<StartScreen>
 
   @override
   Widget build(BuildContext context) => Scaffold(
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: currentIndex != 2
+            ? const SizedBox.shrink()
+            : FloatingActionButton(
+                onPressed: (() {
+                  Get.to(() => GroupRegistrationWidget());
+                }),
+                backgroundColor: MyApplication.attractiveColor1,
+                child: const Icon(
+                  Icons.add,
+                ),
+              ),
         backgroundColor: MyApplication.scaffoldColor,
         appBar: AppBar(
           backgroundColor: MyApplication.scaffoldColor,
@@ -55,7 +70,7 @@ class _StartScreenState extends State<StartScreen>
           title: Text(
             titles[currentIndex],
             style: TextStyle(
-              fontSize: 20,
+              fontSize: MyApplication.infoTextFontSize,
               color: MyApplication.attractiveColor1,
               fontWeight: FontWeight.bold,
             ),

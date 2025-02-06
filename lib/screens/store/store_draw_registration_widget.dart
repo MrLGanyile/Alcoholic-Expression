@@ -4,11 +4,12 @@ import 'package:alco/screens/utils/start_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../controllers/user_controller.dart';
 import '../../main.dart';
-import '../users/groups_screen.dart';
-import '../utils/page_navigation.dart';
 import 'date_picker.dart';
+
+import 'dart:developer' as debug;
+
+import 'time_picker.dart';
 
 class StoreDrawRegistrationWidget extends StatefulWidget {
   @override
@@ -29,7 +30,11 @@ class StoreDrawRegistrationWidgetState
 
   TextEditingController description5EditingController = TextEditingController();
 
-  DateTime drawDate = DateTime(2025, 2, 2, 8, 5);
+  @override
+  void initState() {
+    super.initState();
+    storeController.initiateHostingStore();
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -56,6 +61,61 @@ class StoreDrawRegistrationWidgetState
         ),
       );
 
+  String displayTime() {
+    if (storeController.drawDateHour! == -1 ||
+        storeController.drawDateMinute == -1) {
+      return 'HH:MM';
+    } else {
+      String time = '';
+
+      if (storeController.drawDateHour! < 10) {
+        time += '0${storeController.drawDateHour!}';
+      } else {
+        time += '${storeController.drawDateHour!}';
+      }
+
+      if (storeController.drawDateMinute! < 10) {
+        time += ':0${storeController.drawDateMinute!}';
+      } else {
+        time += ':${storeController.drawDateMinute!}';
+      }
+
+      if ((storeController.drawDateHour! == 12 &&
+              storeController.drawDateMinute! > 0) ||
+          storeController.drawDateHour! > 12) {
+        time += ' PM';
+      } else {
+        time += ' AM';
+      }
+
+      return time;
+    }
+  }
+
+  String displayDate() {
+    if (storeController.drawDateYear! < 2025 ||
+        storeController.drawDateMonth == -1 ||
+        storeController.drawDateDay == -1) {
+      return 'YYY-MM-DD';
+    } else {
+      String date = '${storeController.drawDateYear}';
+
+      if (storeController.drawDateMonth! < 10) {
+        date += '-0${storeController.drawDateMonth}';
+      } else {
+        date += '-${storeController.drawDateMonth}';
+      }
+
+      if (storeController.drawDateDay! < 10) {
+        date += '-0${storeController.drawDateDay}';
+      } else {
+        date += '-${storeController.drawDateDay}';
+      }
+
+      return date;
+    }
+  }
+
   Widget buildStoreDraw() => Container(
         margin: const EdgeInsets.symmetric(horizontal: 20),
         child: SingleChildScrollView(
@@ -72,42 +132,72 @@ class StoreDrawRegistrationWidgetState
               const SizedBox(
                 height: 10,
               ),
-              DatePicker(),
+              const SizedBox(
+                height: 10,
+              ),
+              GetBuilder<StoreController>(builder: (_) {
+                return Row(
+                  children: [
+                    Expanded(
+                        child: Column(
+                      children: [
+                        DatePicker(),
+                        Text(
+                          displayDate(),
+                          style: TextStyle(
+                              color: MyApplication.logoColor2, fontSize: 14),
+                        ),
+                      ],
+                    )),
+                    Expanded(
+                        child: Column(
+                      children: [
+                        TimePicker(),
+                        Text(
+                          displayTime(),
+                          style: TextStyle(
+                              color: MyApplication.logoColor2, fontSize: 14),
+                        ),
+                      ],
+                    )),
+                  ],
+                );
+              }),
               const SizedBox(
                 height: 10,
               ),
               DrawGrandPriceCreationWidget(
-                  descriptionController: description1EditingController,
-                  grandPriceIndex: 0,
-                  dateTime: drawDate),
+                descriptionController: description1EditingController,
+                grandPriceIndex: 0,
+              ),
               const SizedBox(
                 height: 10,
               ),
               DrawGrandPriceCreationWidget(
-                  descriptionController: description2EditingController,
-                  grandPriceIndex: 1,
-                  dateTime: drawDate),
+                descriptionController: description2EditingController,
+                grandPriceIndex: 1,
+              ),
               const SizedBox(
                 height: 10,
               ),
               DrawGrandPriceCreationWidget(
-                  descriptionController: description3EditingController,
-                  grandPriceIndex: 2,
-                  dateTime: drawDate),
+                descriptionController: description3EditingController,
+                grandPriceIndex: 2,
+              ),
               const SizedBox(
                 height: 10,
               ),
               DrawGrandPriceCreationWidget(
-                  descriptionController: description4EditingController,
-                  grandPriceIndex: 3,
-                  dateTime: drawDate),
+                descriptionController: description4EditingController,
+                grandPriceIndex: 3,
+              ),
               const SizedBox(
                 height: 10,
               ),
               DrawGrandPriceCreationWidget(
-                  descriptionController: description5EditingController,
-                  grandPriceIndex: 4,
-                  dateTime: drawDate),
+                descriptionController: description5EditingController,
+                grandPriceIndex: 4,
+              ),
               const SizedBox(
                 height: 10,
               ),
@@ -118,6 +208,12 @@ class StoreDrawRegistrationWidgetState
       );
 
   bool hasPickedAllPrices() {
+    storeController.setDescription(0, description1EditingController.text);
+    storeController.setDescription(1, description2EditingController.text);
+    storeController.setDescription(2, description3EditingController.text);
+    storeController.setDescription(3, description4EditingController.text);
+    storeController.setDescription(4, description5EditingController.text);
+
     return storeController.drawGrandPrice1ImageFile != null &&
         storeController.grandPrice1ImageURL!.isNotEmpty &&
         storeController.description1!.isNotEmpty &&
@@ -148,6 +244,7 @@ class StoreDrawRegistrationWidgetState
         child: InkWell(
           onTap: () async {
             if (hasPickedAllPrices()) {
+              debug.log('About to go to the next page...');
               final result = await storeController.createStoreDraw();
 
               // Does not go to the next screen.

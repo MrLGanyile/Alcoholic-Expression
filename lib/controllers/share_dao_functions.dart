@@ -9,7 +9,9 @@ bool showProgressBar = false;
 Future<String> uploadResource(File resource, String storagePath) async {
   Reference reference = FirebaseStorage.instance.ref().child(storagePath);
 
-  UploadTask uploadTask = reference.putFile(resource);
+  final metadata = SettableMetadata(contentType: "image/jpeg");
+
+  UploadTask uploadTask = reference.putFile(resource, metadata);
   TaskSnapshot taskSnapshot = await uploadTask;
 
   String downloadURL = await taskSnapshot.ref.getDownloadURL();

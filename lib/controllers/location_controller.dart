@@ -10,10 +10,10 @@ class LocationController extends GetxController {
     Stream<List<SupportedArea>> stream = FirebaseFirestore.instance
         .collection('supported_areas')
         .orderBy('areaName')
-        .orderBy('suburbOrTownship.suburbOrTownshipName')
+        /*.orderBy('suburbOrTownship.suburbOrTownshipName')
         .orderBy('suburbOrTownship.city.cityName')
         .orderBy('suburbOrTownship.city.provinceOrState.provinceOrStateName')
-        .orderBy('suburbOrTownship.city.provinceOrState.country.countryName')
+        .orderBy('suburbOrTownship.city.provinceOrState.country.countryName')*/
         .snapshots()
         .map((snapshot) => snapshot.docs.map((doc) {
               SupportedArea info = SupportedArea.fromJson(doc.data());

@@ -32,6 +32,7 @@ class CompetitionResultWidget extends StatelessWidget {
           //mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
+              flex: 1,
               child: Text(
                 'Group Name',
                 style: TextStyle(
@@ -42,6 +43,7 @@ class CompetitionResultWidget extends StatelessWidget {
               ),
             ),
             Expanded(
+              flex: 2,
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -63,6 +65,7 @@ class CompetitionResultWidget extends StatelessWidget {
           //mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
+              flex: 1,
               child: Text(
                 'Group Home',
                 style: TextStyle(
@@ -73,6 +76,7 @@ class CompetitionResultWidget extends StatelessWidget {
               ),
             ),
             Expanded(
+              flex: 2,
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -94,6 +98,7 @@ class CompetitionResultWidget extends StatelessWidget {
           //mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
+              flex: 1,
               child: Text(
                 'Group Area',
                 style: TextStyle(
@@ -104,6 +109,7 @@ class CompetitionResultWidget extends StatelessWidget {
               ),
             ),
             Expanded(
+              flex: 2,
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -132,6 +138,7 @@ class CompetitionResultWidget extends StatelessWidget {
         Row(
           children: [
             Expanded(
+              flex: 1,
               child: Text(
                 'Group Home',
                 style: TextStyle(
@@ -163,6 +170,7 @@ class CompetitionResultWidget extends StatelessWidget {
         Row(
           children: [
             Expanded(
+              flex: 1,
               child: Text(
                 'Group Area',
                 style: TextStyle(
@@ -310,7 +318,7 @@ class CompetitionResultWidget extends StatelessWidget {
                   color: Colors.black,
                 ),
                 child: CircleAvatar(
-                  radius: MediaQuery.of(context).size.width / 12,
+                  radius: MediaQuery.of(context).size.width / 8,
                   backgroundImage: NetworkImage(snapshot.data as String),
                 ),
               ),
@@ -338,7 +346,7 @@ class CompetitionResultWidget extends StatelessWidget {
     List<Widget> rowChildren;
     List<Widget> columnChildren;
 
-    if (groupMembersImageReferences.length <= 4) {
+    if (groupMembersImageReferences.length <= 3) {
       rowChildren = [];
       for (int i = 0; i < groupMembersImageReferences.length; i++) {
         rowChildren.add(createGroupParticipant(context, i));
@@ -348,33 +356,10 @@ class CompetitionResultWidget extends StatelessWidget {
         children: rowChildren,
       );
       return row;
-    } else if (groupMembersImageReferences.length <= 8) {
-      columnChildren = [];
-      rowChildren = [];
-      for (int i = 0; i < 4; i++) {
-        rowChildren.add(createGroupParticipant(context, i));
-      }
-      row = Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: rowChildren,
-      );
-      columnChildren.add(row);
-
-      rowChildren = [];
-      for (int i = 4; i < groupMembersImageReferences.length; i++) {
-        rowChildren.add(createGroupParticipant(context, i));
-      }
-      row = Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: rowChildren,
-      );
-      columnChildren.add(row);
-      column = Column(children: columnChildren);
-      return column;
     } else {
       columnChildren = [];
       rowChildren = [];
-      for (int i = 0; i < 4; i++) {
+      for (int i = 0; i < 3; i++) {
         rowChildren.add(createGroupParticipant(context, i));
       }
       row = Row(
@@ -384,16 +369,7 @@ class CompetitionResultWidget extends StatelessWidget {
       columnChildren.add(row);
 
       rowChildren = [];
-      for (int i = 4; i < 8; i++) {
-        rowChildren.add(createGroupParticipant(context, i));
-      }
-      row = Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: rowChildren,
-      );
-      columnChildren.add(row);
-      rowChildren = [];
-      for (int i = 8; i < groupMembersImageReferences.length; i++) {
+      for (int i = 3; i < groupMembersImageReferences.length; i++) {
         rowChildren.add(createGroupParticipant(context, i));
       }
       row = Row(
@@ -414,7 +390,7 @@ class CompetitionResultWidget extends StatelessWidget {
         children: [
           // Store Name, Section & Area
           Container(
-            margin: const EdgeInsets.symmetric(horizontal: 15),
+            margin: const EdgeInsets.only(right: 15, left: 15, top: 10),
             child: Column(children: [
               // Creator & Won Price Image
               SizedBox(
@@ -514,7 +490,7 @@ class CompetitionResultWidget extends StatelessWidget {
             ]),
           ),
           Container(
-            margin: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
+            margin: const EdgeInsets.only(left: 15, right: 15, bottom: 10),
             child: SizedBox(height: 40, child: retrieveWonPriceInfo(context)),
           ),
 

@@ -1,26 +1,24 @@
-import 'supported_city.dart';
-
 // Collection Name /suburbs_or_townships/{suburbOrTownshipId}
 // Branch : supported_locations_resources_crud ->  create_supported_locations_front_end
 class SupportedSuburbOrTownship {
-  String suburbOrTownshipId;
-  SupportedCity city;
-  String suburbOrTownshipName;
+  String townshipOrSuburbNo;
+  String cityFK;
+  String townshipOrSuburbName;
 
   SupportedSuburbOrTownship({
-    required this.suburbOrTownshipId,
-    required this.city,
-    required this.suburbOrTownshipName,
+    required this.townshipOrSuburbNo,
+    required this.cityFK,
+    required this.townshipOrSuburbName,
   });
 
   factory SupportedSuburbOrTownship.fromJson(dynamic json) =>
       SupportedSuburbOrTownship(
-          suburbOrTownshipId: json['suburbOrTownshipId'],
-          city: SupportedCity.fromJson(json['city']),
-          suburbOrTownshipName: json['suburbOrTownshipName']);
+          townshipOrSuburbNo: json['townshipOrSuburbNo'],
+          cityFK: json['cityFK'],
+          townshipOrSuburbName: json['townshipOrSuburbName']);
 
   @override
   String toString() {
-    return '$suburbOrTownshipName-${city.toString()}';
+    return townshipOrSuburbName;
   }
 }

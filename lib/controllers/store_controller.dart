@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:alco/controllers/share_dao_functions.dart';
+import 'package:alco/models/locations/section_name.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -10,12 +11,9 @@ import '../../models/stores/store_name_info.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../models/stores/store.dart';
+import 'dart:developer' as debug;
 
-enum StoreDrawSavingStatus {
-  loginRequired,
-  incomplete,
-  saved,
-}
+enum StoreDrawSavingStatus { loginRequired, incomplete, saved, notSaved }
 
 // Branch : store_resources_crud ->  store_resources_crud_data_access
 class StoreController extends GetxController {
@@ -23,48 +21,60 @@ class StoreController extends GetxController {
 
   static StoreController storeController = Get.find();
 
+  late Rx<Store?> _hostingStore;
+  Store? get hostingStore => _hostingStore.value;
+
   late Rx<File?> storePickedFile;
   File? get storeImageFile => storePickedFile.value;
 
-  late Rx<String?> _storeOwnerPhoneNumber;
-  String? get storeOwnerPhoneNumber => _storeOwnerPhoneNumber.value;
+  late Rx<int?> _drawDateYear = Rx<int?>(-1);
+  int? get drawDateYear => _drawDateYear.value;
 
-  late Rx<DateTime?> _drawDate;
-  DateTime? get drawDate => _drawDate.value;
+  late Rx<int?> _drawDateMonth = Rx<int?>(-1);
+  int? get drawDateMonth => _drawDateMonth.value;
+
+  late Rx<int?> _drawDateDay = Rx<int?>(-1);
+  int? get drawDateDay => _drawDateDay.value;
+
+  late Rx<int?> _drawDateHour = Rx<int?>(-1);
+  int? get drawDateHour => _drawDateHour.value;
+
+  late Rx<int?> _drawDateMinute = Rx<int?>(-1);
+  int? get drawDateMinute => _drawDateMinute.value;
 
   late Rx<File?> _drawGrandPrice1ImageFile;
   File? get drawGrandPrice1ImageFile => _drawGrandPrice1ImageFile.value;
-  late Rx<String?> _grandPrice1ImageURL;
+  late Rx<String?> _grandPrice1ImageURL = Rx<String?>('');
   String? get grandPrice1ImageURL => _grandPrice1ImageURL.value;
-  late Rx<String?> _description1;
+  late Rx<String?> _description1 = Rx<String?>('');
   String? get description1 => _description1.value;
 
   late Rx<File?> _drawGrandPrice2ImageFile;
   File? get drawGrandPrice2ImageFile => _drawGrandPrice2ImageFile.value;
-  late Rx<String?> _grandPrice2ImageURL;
+  late Rx<String?> _grandPrice2ImageURL = Rx<String?>('');
   String? get grandPrice2ImageURL => _grandPrice2ImageURL.value;
-  late Rx<String?> _description2;
+  late Rx<String?> _description2 = Rx<String?>('');
   String? get description2 => _description2.value;
 
   late Rx<File?> _drawGrandPrice3ImageFile;
   File? get drawGrandPrice3ImageFile => _drawGrandPrice3ImageFile.value;
-  late Rx<String?> _grandPrice3ImageURL;
+  late Rx<String?> _grandPrice3ImageURL = Rx<String?>('');
   String? get grandPrice3ImageURL => _grandPrice3ImageURL.value;
-  late Rx<String?> _description3;
+  late Rx<String?> _description3 = Rx<String?>('');
   String? get description3 => _description3.value;
 
   late Rx<File?> _drawGrandPrice4ImageFile;
   File? get drawGrandPrice4ImageFile => _drawGrandPrice4ImageFile.value;
-  late Rx<String?> _grandPrice4ImageURL;
+  late Rx<String?> _grandPrice4ImageURL = Rx<String?>('');
   String? get grandPrice4ImageURL => _grandPrice4ImageURL.value;
-  late Rx<String?> _description4;
+  late Rx<String?> _description4 = Rx<String?>('');
   String? get description4 => _description4.value;
 
   late Rx<File?> _drawGrandPrice5ImageFile;
   File? get drawGrandPrice5ImageFile => _drawGrandPrice5ImageFile.value;
-  late Rx<String?> _grandPrice5ImageURL;
+  late Rx<String?> _grandPrice5ImageURL = Rx<String?>('');
   String? get grandPrice5ImageURL => _grandPrice5ImageURL.value;
-  late Rx<String?> _description5;
+  late Rx<String?> _description5 = Rx<String?>('');
   String? get description5 => _description5.value;
 
   // Branch : store_resources_crud ->  store_resources_crud_data_access
@@ -110,6 +120,17 @@ class StoreController extends GetxController {
     return null;
   }
 
+  Future<void> initiateHostingStore() async {
+    DocumentReference storeReference =
+        firestore.collection('stores').doc('0661813561');
+
+    DocumentSnapshot snapshot = await storeReference.get();
+
+    if (snapshot.exists) {
+      _hostingStore = Rx<Store?>(Store.fromJson(snapshot.data()!));
+    }
+  }
+
 /*===========================Stores [End]============================= */
 
 /*======================Store Name Info [Start]======================== */
@@ -150,6 +171,37 @@ class StoreController extends GetxController {
   /*======================Store Name Info [End]======================== */
 
   /*=========================Store Draws [Start]========================= */
+
+  String trimmedImageURL(int index) {
+    switch (index) {
+      case 0:
+        return _grandPrice1ImageURL.value!
+            .substring(_grandPrice1ImageURL.value!.indexOf('/grand'),
+                _grandPrice1ImageURL.value!.indexOf('?'))
+            .replaceAll('%2F', '/');
+      case 1:
+        return _grandPrice2ImageURL.value!
+            .substring(_grandPrice2ImageURL.value!.indexOf('/grand'),
+                _grandPrice2ImageURL.value!.indexOf('?'))
+            .replaceAll('%2F', '/');
+      case 2:
+        return _grandPrice3ImageURL.value!
+            .substring(_grandPrice3ImageURL.value!.indexOf('/grand'),
+                _grandPrice3ImageURL.value!.indexOf('?'))
+            .replaceAll('%2F', '/');
+      case 3:
+        return _grandPrice4ImageURL.value!
+            .substring(_grandPrice4ImageURL.value!.indexOf('/grand'),
+                _grandPrice4ImageURL.value!.indexOf('?'))
+            .replaceAll('%2F', '/');
+      default:
+        return _grandPrice5ImageURL.value!
+            .substring(_grandPrice5ImageURL.value!.indexOf('/grand'),
+                _grandPrice5ImageURL.value!.indexOf('?'))
+            .replaceAll('%2F', '/');
+    }
+  }
+
   // Branch : competition_resources_crud ->  competitions_data_access
   Stream<List<StoreDraw>> findStoreDraws(String storeFK) {
     return FirebaseFirestore.instance
@@ -201,108 +253,128 @@ class StoreController extends GetxController {
     }
   }
 
-  void chooseGrandPriceImageFromGallery(int grandPriceIndex, String description,
-      int year, int month, int day, int hour, int minute) async {
-    if (description.isEmpty) {
-      Get.snackbar('Error', 'Description Missing.');
-    } else {
-      final pickedImageFile =
-          await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (pickedImageFile != null) {
-        String grandPriceId =
-            '$year-$month-$day@$hour:$minute-$grandPriceIndex';
-        switch (grandPriceIndex) {
-          case 1:
-            _drawGrandPrice1ImageFile = Rx<File?>(File(pickedImageFile.path));
-            _grandPrice1ImageURL = Rx<String?>(await uploadResource(
-                _drawGrandPrice1ImageFile.value!,
-                'grand_prices_images/$grandPriceId'));
-            _description1 = Rx<String?>(description);
-            break;
-          case 2:
-            _drawGrandPrice2ImageFile = Rx<File?>(File(pickedImageFile.path));
-            _grandPrice2ImageURL = Rx<String?>(await uploadResource(
-                _drawGrandPrice2ImageFile.value!,
-                'grand_prices_images/$grandPriceId'));
-            _description2 = Rx<String?>(description);
-            break;
-          case 3:
-            _drawGrandPrice3ImageFile = Rx<File?>(File(pickedImageFile.path));
-            _grandPrice3ImageURL = Rx<String?>(await uploadResource(
-                _drawGrandPrice3ImageFile.value!,
-                'grand_prices_images/$grandPriceId'));
-            _description3 = Rx<String?>(description);
-            break;
-          case 4:
-            _drawGrandPrice4ImageFile = Rx<File?>(File(pickedImageFile.path));
-            _grandPrice4ImageURL = Rx<String?>(await uploadResource(
-                _drawGrandPrice4ImageFile.value!,
-                'grand_prices_images/$grandPriceId'));
-            _description4 = Rx<String?>(description);
-            break;
-          default:
-            _drawGrandPrice5ImageFile = Rx<File?>(File(pickedImageFile.path));
-            _grandPrice5ImageURL = Rx<String?>(await uploadResource(
-                _drawGrandPrice5ImageFile.value!,
-                'grand_prices_images/$grandPriceId'));
-            _description5 = Rx<String?>(description);
-        }
-        Get.snackbar('Image Status', 'Image File Successfully Chosen.');
-        update();
-      }
+  void setDescription(int grandPriceIndex, String description) {
+    switch (grandPriceIndex) {
+      case 0:
+        _description1 = Rx<String?>(description);
+        break;
+      case 1:
+        _description2 = Rx<String?>(description);
+        break;
+      case 2:
+        _description3 = Rx<String?>(description);
+        break;
+      case 3:
+        _description4 = Rx<String?>(description);
+        break;
+      default:
+        _description5 = Rx<String?>(description);
     }
   }
 
-  void captureGrandPriceImageFromCamera(int grandPriceIndex, String description,
-      int year, int month, int day, int hour, int minute) async {
-    if (description.isEmpty) {
-      Get.snackbar('Error', 'Description Missing.');
-    } else {
-      final pickedImageFile =
-          await ImagePicker().pickImage(source: ImageSource.camera);
-      if (pickedImageFile != null) {
-        String grandPriceId =
-            '$year-$month-$day@$hour:$minute-$grandPriceIndex';
-        switch (grandPriceIndex) {
-          case 1:
-            _drawGrandPrice1ImageFile = Rx<File?>(File(pickedImageFile.path));
-            _grandPrice1ImageURL = Rx<String?>(await uploadResource(
-                _drawGrandPrice1ImageFile.value!,
-                'grand_prices_images/$grandPriceId'));
-            _description1 = Rx<String?>(description);
-            break;
-          case 2:
-            _drawGrandPrice2ImageFile = Rx<File?>(File(pickedImageFile.path));
-            _grandPrice2ImageURL = Rx<String?>(await uploadResource(
-                _drawGrandPrice2ImageFile.value!,
-                'grand_prices_images/$grandPriceId'));
-            _description2 = Rx<String?>(description);
-            break;
-          case 3:
-            _drawGrandPrice3ImageFile = Rx<File?>(File(pickedImageFile.path));
-            _grandPrice3ImageURL = Rx<String?>(await uploadResource(
-                _drawGrandPrice3ImageFile.value!,
-                'grand_prices_images/$grandPriceId'));
-            _description3 = Rx<String?>(description);
-            break;
-          case 4:
-            _drawGrandPrice4ImageFile = Rx<File?>(File(pickedImageFile.path));
-            _grandPrice4ImageURL = Rx<String?>(await uploadResource(
-                _drawGrandPrice4ImageFile.value!,
-                'grand_prices_images/$grandPriceId'));
-            _description4 = Rx<String?>(description);
-            break;
-          default:
-            _drawGrandPrice5ImageFile = Rx<File?>(File(pickedImageFile.path));
-            _grandPrice5ImageURL = Rx<String?>(await uploadResource(
-                _drawGrandPrice5ImageFile.value!,
-                'grand_prices_images/$grandPriceId'));
-            _description5 = Rx<String?>(description);
-        }
-        Get.snackbar('Image Status', 'Image File Successfully Captured.');
-        update();
+  void chooseGrandPriceImageFromGallery(int grandPriceIndex) async {
+    int year = _drawDateYear.value!,
+        month = _drawDateMonth.value!,
+        day = _drawDateDay.value!,
+        hour = _drawDateHour.value!,
+        minute = _drawDateMinute.value!;
+    final pickedImageFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedImageFile != null) {
+      String grandPriceId = '$day-$month-$year@$hour:$minute-$grandPriceIndex';
+      switch (grandPriceIndex) {
+        case 0:
+          _drawGrandPrice1ImageFile = Rx<File?>(File(pickedImageFile.path));
+          _grandPrice1ImageURL = Rx<String?>(await uploadResource(
+              _drawGrandPrice1ImageFile.value!,
+              'grand_prices_images/$grandPriceId'));
+
+          break;
+        case 1:
+          _drawGrandPrice2ImageFile = Rx<File?>(File(pickedImageFile.path));
+          _grandPrice2ImageURL = Rx<String?>(await uploadResource(
+              _drawGrandPrice2ImageFile.value!,
+              'grand_prices_images/$grandPriceId'));
+          break;
+        case 2:
+          _drawGrandPrice3ImageFile = Rx<File?>(File(pickedImageFile.path));
+          _grandPrice3ImageURL = Rx<String?>(await uploadResource(
+              _drawGrandPrice3ImageFile.value!,
+              'grand_prices_images/$grandPriceId'));
+          break;
+        case 3:
+          _drawGrandPrice4ImageFile = Rx<File?>(File(pickedImageFile.path));
+          _grandPrice4ImageURL = Rx<String?>(await uploadResource(
+              _drawGrandPrice4ImageFile.value!,
+              'grand_prices_images/$grandPriceId'));
+          break;
+        default:
+          _drawGrandPrice5ImageFile = Rx<File?>(File(pickedImageFile.path));
+          _grandPrice5ImageURL = Rx<String?>(await uploadResource(
+              _drawGrandPrice5ImageFile.value!,
+              'grand_prices_images/$grandPriceId'));
       }
+      Get.snackbar('Image Status', 'Image File Successfully Chosen.');
+      update();
     }
+  }
+
+  void captureGrandPriceImageFromCamera(
+    int grandPriceIndex,
+  ) async {
+    int year = _drawDateYear.value!,
+        month = _drawDateMonth.value!,
+        day = _drawDateDay.value!,
+        hour = _drawDateHour.value!,
+        minute = _drawDateMinute.value!;
+    final pickedImageFile =
+        await ImagePicker().pickImage(source: ImageSource.camera);
+    if (pickedImageFile != null) {
+      String grandPriceId = '$day-$month-$year@$hour:$minute-$grandPriceIndex';
+      switch (grandPriceIndex) {
+        case 0:
+          _drawGrandPrice1ImageFile = Rx<File?>(File(pickedImageFile.path));
+          _grandPrice1ImageURL = Rx<String?>(await uploadResource(
+              _drawGrandPrice1ImageFile.value!,
+              'grand_prices_images/$grandPriceId'));
+          break;
+        case 1:
+          _drawGrandPrice2ImageFile = Rx<File?>(File(pickedImageFile.path));
+          _grandPrice2ImageURL = Rx<String?>(await uploadResource(
+              _drawGrandPrice2ImageFile.value!,
+              'grand_prices_images/$grandPriceId'));
+          break;
+        case 2:
+          _drawGrandPrice3ImageFile = Rx<File?>(File(pickedImageFile.path));
+          _grandPrice3ImageURL = Rx<String?>(await uploadResource(
+              _drawGrandPrice3ImageFile.value!,
+              'grand_prices_images/$grandPriceId'));
+          break;
+        case 3:
+          _drawGrandPrice4ImageFile = Rx<File?>(File(pickedImageFile.path));
+          _grandPrice4ImageURL = Rx<String?>(await uploadResource(
+              _drawGrandPrice4ImageFile.value!,
+              'grand_prices_images/$grandPriceId'));
+          break;
+        default:
+          _drawGrandPrice5ImageFile = Rx<File?>(File(pickedImageFile.path));
+          _grandPrice5ImageURL = Rx<String?>(await uploadResource(
+              _drawGrandPrice5ImageFile.value!,
+              'grand_prices_images/$grandPriceId'));
+      }
+      Get.snackbar('Image Status', 'Image File Successfully Captured.');
+      update();
+    }
+  }
+
+  bool hasDate() {
+    return _drawDateYear.value! >= 2025 &&
+        _drawDateMonth.value! > 0 &&
+        _drawDateDay.value! > 0;
+  }
+
+  bool hasTime() {
+    return _drawDateHour.value! > 0 && _drawDateMinute.value! > 0;
   }
 
   bool hasGrandPrice(int memberIndex) {
@@ -330,50 +402,143 @@ class StoreController extends GetxController {
     }
   }
 
+  void setDate(int year, int month, int day) {
+    _drawDateYear = Rx<int?>(year);
+    _drawDateMonth = Rx<int?>(month);
+    _drawDateDay = Rx<int?>(day);
+    update();
+  }
+
+  void setTime(int hour, int minute) {
+    _drawDateHour = Rx<int?>(hour);
+    _drawDateMinute = Rx<int?>(minute);
+    update();
+  }
+
   Future<StoreDrawSavingStatus> createStoreDraw() async {
-    if (_drawDate.value != null &&
-        _storeOwnerPhoneNumber.value != null &&
-        _drawGrandPrice1ImageFile.value != null &&
-        _grandPrice1ImageURL.value != null &&
-        _description1.value != null &&
-        _drawGrandPrice2ImageFile.value != null &&
-        _grandPrice2ImageURL.value != null &&
-        _description2.value != null &&
-        _drawGrandPrice3ImageFile.value != null &&
-        _grandPrice3ImageURL.value != null &&
-        _description3.value != null &&
-        _drawGrandPrice4ImageFile.value != null &&
-        _grandPrice4ImageURL.value != null &&
-        _description4.value != null &&
-        _drawGrandPrice5ImageFile.value != null &&
-        _grandPrice5ImageURL.value != null &&
-        _description5.value != null) {
-      /*StoreDraw storeDraw = StoreDraw(
-          storeFK: _storeOwnerPhoneNumber.value!,
-          drawDateAndTime: _drawDate.value!,
-          numberOfGrandPrices: 5,
-          storeName: storeName,
-          storeImageURL: storeImageURL,
-          sectionName: sectionName); */
-      DrawGrandPrice drawGrandPrice;
-      if (hasGrandPrice(1)) {
-        /*drawGrandPrice = DrawGrandPrice(
-            storeDrawFK: storeDrawFK,
-            imageURL: imageURL,
-            description: description,
-            grandPriceIndex: grandPriceIndex); */
-        return StoreDrawSavingStatus.incomplete;
-      } else {
-        return StoreDrawSavingStatus.incomplete;
-      }
-    } else {
+    if (!hasDate()) {
+      Get.snackbar('Error', 'Date Info Missing.');
       return StoreDrawSavingStatus.incomplete;
     }
+
+    if (!hasTime()) {
+      Get.snackbar('Error', 'Time Info Missing.');
+      return StoreDrawSavingStatus.incomplete;
+    }
+
+    if (!hasGrandPrice(1)) {
+      Get.snackbar('Error', 'First Price Info Missing.');
+      return StoreDrawSavingStatus.incomplete;
+    }
+
+    if (!hasGrandPrice(2)) {
+      Get.snackbar('Error', 'Second Price Info Missing.');
+      return StoreDrawSavingStatus.incomplete;
+    }
+
+    if (!hasGrandPrice(3)) {
+      Get.snackbar('Error', 'Third Price Info Missing.');
+      return StoreDrawSavingStatus.incomplete;
+    }
+
+    if (!hasGrandPrice(4)) {
+      Get.snackbar('Error', 'Forth Price Info Missing.');
+      return StoreDrawSavingStatus.incomplete;
+    }
+
+    if (!hasGrandPrice(5)) {
+      Get.snackbar('Error', 'Fifth Price Info Missing.');
+      return StoreDrawSavingStatus.incomplete;
+    }
+
+    String storeDrawId =
+        '${_drawDateDay.value}-${_drawDateMonth.value}-${_drawDateYear.value}@${_drawDateHour.value}h${_drawDateMinute.value}';
+    DocumentReference reference = firestore
+        .collection('stores')
+        .doc(hostingStore!.storeOwnerPhoneNumber)
+        .collection('store_draws')
+        .doc(storeDrawId);
+
+    StoreDraw storeDraw = StoreDraw(
+        storeDrawId: reference.id,
+        storeFK: storeController.hostingStore!.storeOwnerPhoneNumber,
+        drawDateAndTime: DateTime(
+            storeController.drawDateYear!,
+            storeController.drawDateMonth!,
+            storeController.drawDateDay!,
+            storeController.drawDateHour!,
+            storeController.drawDateMinute!),
+        numberOfGrandPrices: 5,
+        storeName: storeController.hostingStore!.storeName,
+        storeImageURL: storeController.hostingStore!.storeImageURL,
+        sectionName: storeController.hostingStore!.sectionName);
+
+    await reference.set(storeDraw.toJson());
+
+    await _saveDrawGrandPrice(storeDraw.storeDrawId!, 0);
+    await _saveDrawGrandPrice(storeDraw.storeDrawId!, 1);
+    await _saveDrawGrandPrice(storeDraw.storeDrawId!, 2);
+    await _saveDrawGrandPrice(storeDraw.storeDrawId!, 3);
+    await _saveDrawGrandPrice(storeDraw.storeDrawId!, 4);
+
+    DocumentReference storeNameInfoReference =
+        firestore.collection("/stores_names_info/").doc(storeDraw.storeFK);
+
+    await storeNameInfoReference
+        .update({'latestStoreDrawId': storeDraw.storeDrawId});
+
+    return StoreDrawSavingStatus.saved;
   }
 
   /*===========================Store Draws [End]====================== */
 
   /*======================Draw Grand Price[Start]===================== */
+
+  Future<void> _saveDrawGrandPrice(
+      String storeDrawFK, int grandPriceIndex) async {
+    late String imageURL;
+    late String description;
+
+    switch (grandPriceIndex) {
+      case 0:
+        imageURL = trimmedImageURL(0);
+        description = _description1.value!;
+        break;
+      case 1:
+        imageURL = trimmedImageURL(1);
+        description = _description2.value!;
+        break;
+      case 2:
+        imageURL = trimmedImageURL(2);
+        description = _description3.value!;
+        break;
+      case 3:
+        imageURL = trimmedImageURL(3);
+        description = _description4.value!;
+        break;
+      default:
+        imageURL = trimmedImageURL(4);
+        description = _description5.value!;
+    }
+
+    DocumentReference reference = firestore
+        .collection('stores')
+        .doc(hostingStore!.storeOwnerPhoneNumber)
+        .collection('store_draws')
+        .doc(storeDrawFK)
+        .collection('draw_grand_prices')
+        .doc('$storeDrawFK-$grandPriceIndex');
+
+    DrawGrandPrice drawGrandPrice = DrawGrandPrice(
+        grandPriceId: reference.id,
+        storeDrawFK: storeDrawFK,
+        imageURL: imageURL,
+        description: description,
+        grandPriceIndex: grandPriceIndex);
+
+    await reference.set(drawGrandPrice.toJson());
+  }
+
   // Branch : competition_resources_crud ->  competitions_data_access
   Stream<List<DrawGrandPrice>> findDrawGrandPrices(
           String storeId, String storeDrawId) =>

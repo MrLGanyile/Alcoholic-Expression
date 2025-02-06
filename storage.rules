@@ -25,9 +25,9 @@ service firebase.storage {
     function isValidFileSize(data) {
       return data.size < 10 * 1024 * 1024;
     }
-  }
+  
 
-  // Branch : store_resources_crud ->  store_resources_crud_storage_security
+    // Branch : store_resources_crud ->  store_resources_crud_storage_security
     // Done Unit Testing, Except For The Update Operation.
     match /store_owners/stores_images/{storeImage} {
       
@@ -70,7 +70,8 @@ service firebase.storage {
       $(request.auth.uid))==false &&
 
       isValidFileSize(request.resource);// && 
-  // Branch : group_resources_crud ->  group_resources_crud_storage_security
+    }
+    // Branch : group_resources_crud ->  group_resources_crud_storage_security
     // Done Unit Testing, Except For The Update Operation.
     match /alcoholics/profile_images/{profileImage} {
 
@@ -162,6 +163,8 @@ service firebase.storage {
 
       // No one can delete a store image.
       allow update, delete: if false;
+    }
+
     // Branch : group_resources_crud ->  group_resources_crud_storage_security
     match /group_members/{creatorPhoneNumber}/{memberPhoneNumber} {
       //allow read;
@@ -169,4 +172,5 @@ service firebase.storage {
       allow get;
       allow write;
     }
+  }
 }

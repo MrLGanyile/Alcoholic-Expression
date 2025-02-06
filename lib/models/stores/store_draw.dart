@@ -53,8 +53,9 @@ class StoreDraw implements Comparable<StoreDraw> {
       'isOpen': isOpen,
       'storeName': storeName,
       'storeImageURL': storeImageURL,
-      'sectionName': sectionName,
+      'sectionName': Converter.asString(sectionName),
       'joiningFee': joiningFee,
+      'storeDrawState': Converter.fromStoreDrawStateToString(storeDrawState!)
     });
     return map;
   }

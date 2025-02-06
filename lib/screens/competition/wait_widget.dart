@@ -428,9 +428,10 @@ class WaitWidgetState extends State<WaitWidget> {
   }
 
   Widget showAppropriateIcon() {
-    if (widget.showAlarm) {
+    /*if (widget.showAlarm) {
       return buildAlarm();
-    } else if (widget.showRemainingTime || widget.pickWonPrice!) {
+    } else */
+    if (widget.showRemainingTime || widget.pickWonPrice!) {
       return const Expanded(child: SizedBox.shrink());
     } else {
       return buildPlayIcon();

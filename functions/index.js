@@ -26,132 +26,599 @@ import { log } from "firebase-functions/logger";
   //memory: "1GiB",
 }; */
 
-const queriedStoreDraws = [];
-
-// Branch : supported_locations_resources_crud -> create_supported_locaitons_back_end
-const supportedCountries = new Map();
-supportedCountries.set(
-    "ZA-South Africa", ["Kwa Zulu Natal"],
-);
-
-// Branch : supported_locations_resources_crud -> create_supported_locaitons_back_end
-const supportedProvincesOrStates = new Map();
-supportedProvincesOrStates.set(
-    "Kwa Zulu Natal", ["Durban", "Pinetown"],
-);
-
-// Branch : supported_locations_resources_crud -> create_supported_locaitons_back_end
-const supportedCities = new Map();
-supportedCities.set(
-    "Durban", ["Mayville", "Umlazi",
-      "Durban Central",
-      "Manor Gardens", "Westville"],
-);
-
-// Branch : supported_locations_resources_crud -> create_supported_locaitons_back_end
-supportedCities.set(
-    "Pinetown", ["Westmead"],
-
-);
-
-// Branch : supported_locations_resources_crud -> create_supported_locaitons_back_end
-const supportedSuburbOrTownships = new Map();
-supportedSuburbOrTownships.set(
-    "Mayville",
-    [
-      "Cato Crest", "Cato Manor", "Dunbar",
-      "Masxha",
-      "Bonela", "Sherwood", "Richview",
-      "Nsimbini",
-      "Manor Gardens",
-    ],
-);
-
-// Branch : supported_locations_resources_crud -> create_supported_locaitons_back_end
-supportedSuburbOrTownships.set(
-    "Umlazi",
-    [
-      "A Section", "AA Section", "B Section",
-      "BB Section", "C Section", "CC Section",
-      "D Section", "E Section",
-      "F Section", "G Section", "H Section",
-      "J Section", "K Section", "L Section",
-      "M Section", "N Section",
-      "P Section", "Q Section", "R Section",
-      "S Section", "U Section", "V Section",
-      "W Section", "Y Section",
-      "Z Section", "Malukazi", "Philani", "MUT",
-    ],
-);
-
-// Branch : supported_locations_resources_crud -> create_supported_locaitons_back_end
-supportedSuburbOrTownships.set(
-    "Durban Central", ["DUT"],
-);
-
-// Branch : supported_locations_resources_crud -> create_supported_locaitons_back_end
-supportedSuburbOrTownships.set(
-    "Manor Gardens", ["Haward Campus UKZN"],
-);
-
-// Branch : supported_locations_resources_crud -> create_supported_locaitons_back_end
-supportedSuburbOrTownships.set(
-    "Westville", ["Westville Campus UKZN"],
-);
-
-// Branch : supported_locations_resources_crud -> create_supported_locaitons_back_end
-supportedSuburbOrTownships.set(
-    "Westmead", ["Edgewood Campus UKZN"],
-);
-
-// Branch : supported_locations_resources_crud -> create_supported_locaitons_back_end
-// There is an error on name display.
-const supportedAreas = new Map();
-supportedAreas.set(
-    "Mayville",
-    [
-      "Cato Crest", "Cato Manor", "Dunbar", "Masxha",
-      "Bonela", "Sherwood", "Richview", "Nsimbini",
-      "Manor Gardens",
-    ],
-    "Umlazi",
-    [
-      "A Section", "AA Section", "B Section", "BB Section",
-      "C Section", "CC Section", "D Section", "E Section",
-      "F Section", "G Section", "H Section", "J Section",
-      "K Section", "L Section", "M Section", "N Section",
-      "P Section", "Q Section", "R Section", "S Section",
-      "U Section", "V Section", "W Section", "Y Section",
-      "Z Section", "Malukazi", "Philani", "MUT",
-    ],
-
-    "Durban Central", ["DUT"],
-    "Manor Gardens", ["Haward Campus UKZN"],
-    "Westville", ["Westville Campus UKZN"],
-    "Durban", ["Mayville", "Umlazi", "Durban Central",
-      "Manor Gardens", "Westville"],
-
-
-    "Westmead", ["Edgewood Campus UKZN"],
-    "Pinetown", ["Westmead"],
-
-    "Kwa Zulu Natal", ["Durban", "Pinetown"],
-    "ZA-South Africa", ["Kwa Zulu Natal"],
-
-
-);
-
+const pickingMultipleInSeconds = 3;
 
 initializeApp();
 
 
-// http://127.0.0.1:5001/alcoholic-expressions/us-central1/createSupportedAreas/
+// http://127.0.0.1:5001/alcoholic-expressions/us-central1/createSupportedLocations/
 // http://127.0.0.1:5001/alcoholic-expressions/us-central1/create5MembersGroups
 // http://127.0.0.1:5001/alcoholic-expressions/us-central1/saveStoreAndAdmins
 
 // ###################Production Functions [Start]########################
 
-const pickingMultipleInSeconds = 3;
+// Branch : supported_locations_resources_crud -> create_supported_locaitons_back_end
+const createSupportedCountries = async function(){
+
+  const country = {
+    countryCode: 'ZA',
+    countryName: 'South Africa',
+    countryNo: '1',
+  }
+
+  await getFirestore().collection('supported_countries').doc(country.countryCode).set(country);
+}
+
+// Branch : supported_locations_resources_crud -> create_supported_locaitons_back_end
+const createSupportedProvincesOrStates = async function(){
+
+  const province = {
+    countryFK: 'ZA',
+    provinceOrStateName: 'Kwa Zulu Natal',
+    provinceOrStateNo: '1',
+  }
+
+  await getFirestore().collection('supported_provinces_or_states')
+  .doc(province.provinceOrStateNo).set(province);
+}
+
+// Branch : supported_locations_resources_crud -> create_supported_locaitons_back_end
+const createSupportedCities = async function(){
+
+  const durban = {
+    provinceOrStateNo: '1',
+    cityName: 'Durban',
+    cityNo: '1',
+  }
+
+  await getFirestore().collection('supported_cities')
+  .doc(durban.cityNo).set(durban);
+
+  const pinetown = {
+    provinceOrStateNo: '1',
+    cityName: 'Durban',
+    cityNo: '2',
+  }
+
+  await getFirestore().collection('supported_cities')
+  .doc(pinetown.cityNo).set(pinetown);
+}
+
+// Branch : supported_locations_resources_crud -> create_supported_locaitons_back_end
+const createSupportedTownshipsOrSuburbs = async function(){
+
+  const mayville = {
+    cityFK: '1',
+    townshipOrSuburbName: 'Mayville',
+    townshipOrSuburbNo: '1',
+  }
+
+  await getFirestore().collection('supported_suburbs_or_townships')
+  .doc(mayville.townshipOrSuburbNo).set(mayville);
+
+  const umlazi = {
+    cityFK: '1',
+    townshipOrSuburbName: 'Umlazi',
+    townshipOrSuburbNo: '2',
+  }
+
+  await getFirestore().collection('supported_suburbs_or_townships')
+  .doc(umlazi.townshipOrSuburbNo).set(umlazi);
+
+  const durbanCentral = {
+    cityFK: '1',
+    townshipOrSuburbName: 'Durban Central',
+    townshipOrSuburbNo: '3',
+  }
+
+  await getFirestore().collection('supported_suburbs_or_townships')
+  .doc(durbanCentral.townshipOrSuburbNo).set(durbanCentral);
+
+  const westville = {
+    cityFK: '1',
+    townshipOrSuburbName: 'Westville',
+    townshipOrSuburbNo: '4',
+  }
+
+  await getFirestore().collection('supported_suburbs_or_townships')
+  .doc(westville.townshipOrSuburbNo).set(westville);
+
+  const westmead = {
+    cityFK: '2',
+    townshipOrSuburbName: 'Westmead',
+    townshipOrSuburbNo: '5',
+  }
+
+  await getFirestore().collection('supported_suburbs_or_townships')
+  .doc(westmead.townshipOrSuburbNo).set(westmead);
+}
+
+// Branch : supported_locations_resources_crud -> create_supported_locaitons_back_end
+// Total No Of Areas 12
+const createMayvilleSupportedAreas = async function() {
+
+  const catoCrest = {
+    townshipOrSuburbFK: '1',
+    areaName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '1',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(catoCrest.areaNo).set(catoCrest);
+
+  const catoManor = {
+    townshipOrSuburbFK: '1',
+    areaName: 'Cato Manor-Mayville-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '2',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(catoManor.areaNo).set(catoManor);
+
+  const dunbar = {
+    townshipOrSuburbFK: '1',
+    areaName: 'Dunbar-Mayville-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '3',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(dunbar.areaNo).set(dunbar);
+
+  const masxha = {
+    townshipOrSuburbFK: '1',
+    areaName: 'Masxha-Mayville-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '4',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(masxha.areaNo).set(masxha);
+
+  const bonela = {
+    townshipOrSuburbFK: '1',
+    areaName: 'Bonela-Mayville-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '5',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(bonela.areaNo).set(bonela);
+
+  const nkanini = {
+    townshipOrSuburbFK: '1',
+    areaName: 'Nkanini-Mayville-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '6',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(nkanini.areaNo).set(nkanini);
+
+  const sherwood = {
+    townshipOrSuburbFK: '1',
+    areaName: 'Sherwood-Mayville-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '7',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(sherwood.areaNo).set(sherwood);
+
+  const richview = {
+    townshipOrSuburbFK: '1',
+    areaName: 'Richview-Mayville-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '8',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(richview.areaNo).set(richview);
+
+  const mathayini = {
+    townshipOrSuburbFK: '1',
+    areaName: 'Mathayini-Mayville-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '9',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(mathayini.areaNo).set(mathayini);
+
+  const eshayamoya = {
+    townshipOrSuburbFK: '1',
+    areaName: 'Shayamoya-Mayville-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '10',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(eshayamoya.areaNo).set(eshayamoya);
+
+  const fastrack = {
+    townshipOrSuburbFK: '1',
+    areaName: 'Fastrack-Mayville-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '11',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(fastrack.areaNo).set(fastrack);
+
+  const haward = {
+    townshipOrSuburbFK: '1',
+    areaName: 'Howard College UKZN-Mayville-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '12',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(haward.areaNo).set(haward);
+
+  const nsimbini = {
+    townshipOrSuburbFK: '1',
+    areaName: 'Nsimbini-Mayville-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '49',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(nsimbini.areaNo).set(nsimbini);
+}
+
+// Branch : supported_locations_resources_crud -> create_supported_locaitons_back_end
+// Total No Of Areas 40-12
+const createUmlaziSupportedAreas = async function(){
+
+  const aSection = {
+    townshipOrSuburbFK: '2',
+    areaName: 'A Section-Umlazi-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '13',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(aSection.areaNo).set(aSection);
+
+  const aaSection = {
+    townshipOrSuburbFK: '2',
+    areaName: 'AA Section-Umlazi-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '14',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(aaSection.areaNo).set(aaSection);
+
+  const bSection = {
+    townshipOrSuburbFK: '2',
+    areaName: 'B Section-Umlazi-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '15',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(bSection.areaNo).set(bSection);
+
+  const bbSection = {
+    townshipOrSuburbFK: '2',
+    areaName: 'BB Section-Umlazi-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '16',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(bbSection.areaNo).set(bbSection);
+
+  const cSection = {
+    townshipOrSuburbFK: '2',
+    areaName: 'C Section-Umlazi-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '17',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(cSection.areaNo).set(cSection);
+
+  const ccSection = {
+    townshipOrSuburbFK: '2',
+    areaName: 'CC Section-Umlazi-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '18',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(ccSection.areaNo).set(ccSection);
+
+  const dSection = {
+    townshipOrSuburbFK: '2',
+    areaName: 'D Section-Umlazi-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '19',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(dSection.areaNo).set(dSection);
+
+  const eSection = {
+    townshipOrSuburbFK: '2',
+    areaName: 'E Section-Umlazi-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '20',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(eSection.areaNo).set(eSection);
+
+  const fSection = {
+    townshipOrSuburbFK: '2',
+    areaName: 'F Section-Umlazi-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '21',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(fSection.areaNo).set(fSection);
+
+  const gSection = {
+    townshipOrSuburbFK: '2',
+    areaName: 'G Section-Umlazi-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '22',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(gSection.areaNo).set(gSection);
+
+  const hSection = {
+    townshipOrSuburbFK: '2',
+    areaName: 'H Section-Umlazi-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '23',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(hSection.areaNo).set(hSection);
+
+  const jSection = {
+    townshipOrSuburbFK: '2',
+    areaName: 'J Section-Umlazi-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '24',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(jSection.areaNo).set(jSection);
+
+  const kSection = {
+    townshipOrSuburbFK: '2',
+    areaName: 'K Section-Umlazi-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '25',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(kSection.areaNo).set(kSection);
+
+  const lSection = {
+    townshipOrSuburbFK: '2',
+    areaName: 'L Section-Umlazi-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '26',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(lSection.areaNo).set(lSection);
+
+  const mSection = {
+    townshipOrSuburbFK: '2',
+    areaName: 'M Section-Umlazi-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '27',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(mSection.areaNo).set(mSection);
+
+  const nSection = {
+    townshipOrSuburbFK: '2',
+    areaName: 'N Section-Umlazi-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '28',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(nSection.areaNo).set(nSection);
+
+  const pSection = {
+    townshipOrSuburbFK: '2',
+    areaName: 'P Section-Umlazi-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '29',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(pSection.areaNo).set(pSection);
+
+  const qSection = {
+    townshipOrSuburbFK: '2',
+    areaName: 'Q Section-Umlazi-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '30',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(qSection.areaNo).set(qSection);
+
+  const rSection = {
+    townshipOrSuburbFK: '2',
+    areaName: 'R Section-Umlazi-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '31',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(rSection.areaNo).set(rSection);
+
+  const sSection = {
+    townshipOrSuburbFK: '2',
+    areaName: 'S Section-Umlazi-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '32',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(sSection.areaNo).set(sSection);
+
+  const uSection = {
+    townshipOrSuburbFK: '2',
+    areaName: 'U Section-Umlazi-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '33',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(uSection.areaNo).set(uSection);
+
+  const vSection = {
+    townshipOrSuburbFK: '2',
+    areaName: 'V Section-Umlazi-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '34',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(vSection.areaNo).set(vSection);
+
+  const wSection = {
+    townshipOrSuburbFK: '2',
+    areaName: 'W Section-Umlazi-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '35',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(wSection.areaNo).set(wSection);
+
+  const philani = {
+    townshipOrSuburbFK: '2',
+    areaName: 'Philani-Umlazi-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '36',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(philani.areaNo).set(philani);
+
+  const ySection = {
+    townshipOrSuburbFK: '2',
+    areaName: 'Y Section-Umlazi-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '37',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(ySection.areaNo).set(ySection);
+
+  const zSection = {
+    townshipOrSuburbFK: '2',
+    areaName: 'Z Section-Umlazi-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '38',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(zSection.areaNo).set(zSection);
+
+  const malukazi = {
+    townshipOrSuburbFK: '2',
+    areaName: 'Malukazi-Umlazi-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '39',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(malukazi.areaNo).set(malukazi);
+
+  const mut = {
+    townshipOrSuburbFK: '2',
+    areaName: 'MUT-Umlazi-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '40',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(mut.areaNo).set(mut);
+}
+
+// Branch : supported_locations_resources_crud -> create_supported_locaitons_back_end
+// Total No Of Areas 46-40
+const createDurbanCentralSupportedAreas = async function(){
+
+  const dut = {
+    townshipOrSuburbFK: '3',
+    areaName: 'DUT-Durban Central-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '41',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(dut.areaNo).set(dut);
+
+  const dcc = {
+    townshipOrSuburbFK: '3',
+    areaName: 'DCC-Durban Central-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '42',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(dcc.areaNo).set(dcc);
+
+  const bereaTech = {
+    townshipOrSuburbFK: '3',
+    areaName: 'Berea Tech-Durban Central-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '43',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(bereaTech.areaNo).set(bereaTech);
+
+  const pcTraining = {
+    townshipOrSuburbFK: '3',
+    areaName: 'PC Training-Durban Central-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '44',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(pcTraining.areaNo).set(pcTraining);
+
+  const damelin = {
+    townshipOrSuburbFK: '3',
+    areaName: 'Damelin-Durban Central-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '45',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(damelin.areaNo).set(damelin);
+
+  const icesa = {
+    townshipOrSuburbFK: '3',
+    areaName: 'ICESA-Durban Central-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '46',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(icesa.areaNo).set(icesa);
+}
+
+// Branch : supported_locations_resources_crud -> create_supported_locaitons_back_end
+// Total No Of Areas 47-46
+const createWestvilleSupportedAreas = async function(){
+
+  const westville = {
+    townshipOrSuburbFK: '4',
+    areaName: 'Westville Campus UKZN-Westville-Durban-Kwa Zulu Natal-South Africa',
+    areaNo: '47',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(westville.areaNo).set(westville);
+}
+
+// Branch : supported_locations_resources_crud -> create_supported_locaitons_back_end
+// Total No Of Areas 48-47
+const createWestmeadSupportedAreas = async function(){
+
+  const edgewood = {
+    townshipOrSuburbFK: '5',
+    areaName: 'Edgewood Campus UKZN-Westmead-Pinetown-Kwa Zulu Natal-South Africa',
+    areaNo: '48',
+  }
+
+  await getFirestore().collection('supported_areas')
+  .doc(edgewood.areaNo).set(edgewood);
+}
+
+// Branch : supported_locations_resources_crud -> create_supported_locaitons_back_end
+const createSupportedAreas = async function(){
+  await createMayvilleSupportedAreas();
+  await createUmlaziSupportedAreas();
+  await createDurbanCentralSupportedAreas();
+  await createWestvilleSupportedAreas();
+  await createWestmeadSupportedAreas();
+}
+
+// Branch : supported_locations_resources_crud -> create_supported_locaitons_back_end
+// http://127.0.0.1:5001/alcoholic-expressions/us-central1/createSupportedLocations/
+export const createSupportedLocations = onRequest(async (req, res)=>{
+  
+  createSupportedCountries();
+  createSupportedProvincesOrStates();
+  createSupportedCities();
+  createSupportedTownshipsOrSuburbs();
+  createSupportedAreas();
+  res.json({result: `Supported Areas Created Successfully.`});
+});
 
 // Branch : store_resources_crud -> create_store_resources_back_end
 // http://127.0.0.1:5001/alcoholic-expressions/us-central1/saveStoreAndAdmins
@@ -162,37 +629,8 @@ export const saveStoreAndAdmins = onRequest(async(req, res)=>{
       isSuperior: true,
       key: '000',
       isFemale: false,
-      phoneNumber: '+27661813561',
-      profileImageURL: '/admins/profile_images/superior/+27661813561.jpg',
-    },
-
-    {
-      isSuperior: true,
-      key: '001',
-      isFemale: false,
-      phoneNumber: '+27714294940',
-      profileImageURL: '/admins/profile_images/superior/+27714294940.jpg',
-    },
-    {
-      isSuperior: false,
-      key: '00000',
-      isFemale: true,
-      phoneNumber: '+27612345678',
-      profileImageURL: '/admins/profile_images/superior/+27612345678.jpg',
-    },
-    {
-      isSuperior: false,
-      key: '00001',
-      isFemale: true,
-      phoneNumber: '+27712345678',
-      profileImageURL: '/admins/profile_images/superior/+27712345678.jpg',
-    },
-    {
-      isSuperior: false,
-      key: '00002',
-      isFemale: true,
-      phoneNumber: '+27812345678',
-      profileImageURL: '/admins/profile_images/superior/+27812345678.jpg',
+      phoneNumber: '0661813561',
+      profileImageURL: '/admins/profile_images/superior/0661813561.jpg',
     },
   ];
 
@@ -204,9 +642,9 @@ export const saveStoreAndAdmins = onRequest(async(req, res)=>{
   } 
 
   const store = {
-    storeOwnerPhoneNumber: '+27661813561',
+    storeOwnerPhoneNumber: '0661813561',
     storeName: 'Ka Nkuxa',
-    storeImageURL: 'store_owners/store_images',
+    storeImageURL: 'store_owners/stores_images/0661813561.jpg',
     sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
     storeArea: 'Ringini',
   };
@@ -407,9 +845,12 @@ export const convertStoreDrawsToCompetitions =
 onRequest(async (req, res)=>{
   try {
     // Consistent timestamp
-    //const justNow = admin.firestore.Timestamp.now().toDate();
+    const justNow = Timestamp.now().toDate();
 
-    const justNow = new Date(); // Retrieve Current Time.
+    log(`Timestamp ${justNow.getFullYear()}-${justNow.getMonth()}-${justNow.getDate()}-${justNow.getHours()}-${justNow.getMinutes()}` );
+    
+
+    //const justNow = new Date(); // Retrieve Current Time.
 
     // Use the get() method for a read and the onSnapshot() for real time read.
     getFirestore().collectionGroup("store_draws").orderBy("storeName")
@@ -444,12 +885,10 @@ onRequest(async (req, res)=>{
               // .where("groupSectionName", "==", sectionName)
                   .onSnapshot(async (groupsSnapshot)=>{
                     if (groupsSnapshot.size>0) {
-                      storeDrawDoc.ref.update({isOpen: false,
-                        isRemainingTimeVisible: true});
+                      storeDrawDoc.ref.update({isOpen: false});
                       const storeDrawId = storeDrawDoc.data()["storeDrawId"];
 
                       const storeDraw = {
-                        isFake: storeDrawDoc.data()["isFake"],
                         storeDrawId: storeDrawDoc.data()["storeDrawId"],
                         storeFK: storeDrawDoc.data()["storeFK"],
                         drawDateAndTime:
@@ -465,8 +904,6 @@ onRequest(async (req, res)=>{
                         storeDrawDoc.data()["storeImageURL"],
                         sectionName: sectionName,
                       };
-
-                      queriedStoreDraws.push(storeDraw);
 
                       const reference = getFirestore()
                           .collection("competitions")
@@ -485,7 +922,6 @@ onRequest(async (req, res)=>{
                         joiningFee: storeDraw.joiningFee,
                         numberOfGrandPrices: storeDraw.numberOfGrandPrices,
                         isOver: false,
-                        isFake: storeDraw.isFake,
                         grandPricesGridId: "-",
                         competitorsGridId: "-",
                         groupPickingStartTime: -1,
@@ -573,7 +1009,6 @@ onDocumentCreated("/competitions/" +
             hasStarted: false,
             hasStopped: false,
             storeFK: storeFK,
-            isFake: event.data.data()["isFake"],
           };
 
           await reference.set(grandPricesGrid);
@@ -612,7 +1047,7 @@ export const createGrandPricesTokens =
             drawGrandPricesSnapshot.forEach(
                 async (drawGrandPrice)=>{
 
-                  if(drawGrandPrice.data().grandPriceIndex==indexOfWonGrandPrice){
+                  if(drawGrandPrice.data().grandPriceIndex==drawGrandPricesSnapshot.size-1){
                     getFirestore()
                         .collection("competitions")
                         .doc(competitionFK).onSnapshot(async (competitionDoc)=>{
@@ -644,7 +1079,6 @@ export const createGrandPricesTokens =
                     drawGrandPrice.data().imageURL,
                     description:
                     drawGrandPrice.data().description,
-                    isFake: event.data.data()["isFake"],
                   };
                   await tokenReference.set(grandPriceToken);
                 });
@@ -704,7 +1138,6 @@ onDocumentCreated("/competitions/" +
                     hasStopped: false,
                     storeFK: storeFK,
                     competitionSectionName: competitionSectionName,
-                    isFake: event.data.data()["isFake"],
                   };
 
                   await reference.set(groupCompetitorsGrid);
@@ -742,7 +1175,8 @@ export const createGroupCompetitorsTokens =
                   const groupDoc =
                   groupsSnapshot.docs.at(groupIndex);
 
-                  if(wonGroupCreatorNumber===groupDoc.data().groupCreatorPhoneNumber){
+                  // Last Group Wins.
+                  if(groupIndex===groupsSnapshot.size-1){
                     getFirestore()
                         .collection("competitions")
                         .doc(competitionFK).onSnapshot((competitionDoc)=>{
@@ -768,9 +1202,7 @@ export const createGroupCompetitorsTokens =
                     groupCompetitorsGridFK:
                       groupCompetitorsGridId,
                     tokenIndex: groupIndex,
-                    // isPointed: groupIndex==0,
                     group: groupDoc.data(),
-                    isFake: event.data.data()["isFake"],
                   };
 
                   await tokenDocReference
@@ -835,6 +1267,7 @@ onDocumentCreated("/competitions/" +
 
   const competitionEndTime = grandPricesOrder.length*pickingMultipleInSeconds +
   timeBetweenPricePickingAndGroupPicking + competitorsOrder.length*pickingMultipleInSeconds;
+  log(`Clock End Time ${competitionEndTime}`);
 
 
   const collectionId = `${day}-${month}-${year}-${hour}-${minute}`;
@@ -853,15 +1286,15 @@ onDocumentCreated("/competitions/" +
       */
 
       // Remaining seconds should always start at -300.
-      const max = pickingMultipleInSeconds*300;
-      let second = -100*pickingMultipleInSeconds;
+      const max = pickingMultipleInSeconds*20;
+      let second = -10*pickingMultipleInSeconds;
 
       reference.set({
         remainingTime: second,
       });
 
       const timerId = setInterval(async ()=>{
-        if (second>competitionEndTime) {
+        if (second>max) {
           //initiatePicking(collectionId);
           clearInterval(timerId);
         }
@@ -874,7 +1307,7 @@ onDocumentCreated("/competitions/" +
 
         // batchWriteTester(second);
         // keepTrackOfReadOnly(collectionId);
-      }, 5000);
+      }, pickingMultipleInSeconds*1000);
     }
   });
 });
@@ -947,7 +1380,6 @@ export const createWonPriceSummary =
     if (competitionsSnapshot.exists) {
       const isOver = competitionsSnapshot.data().isOver;
       const isLive = competitionsSnapshot.data().isLive;
-      const isFake = competitionsSnapshot.data().isFake;
 
       if (isOver && isLive) {
         reference.update({isLive: false});
@@ -1105,7 +1537,6 @@ export const createWonPriceSummary =
                                                                                       groupCreatorUsername: groupCreatorUsername,
                                                                                       groupCreatorImageURL: groupCreatorImageURL,
                                                                                       groupCreatorPhoneNumber: groupCreatorPhoneNumber,
-                                                                                      isFake: isFake,
                                                                                     };
 
                                                                                     // Create won price summary.
@@ -1142,83 +1573,81 @@ export const createWonPriceSummary =
   });
 });
 
-// Branch : supported_locations_resources_crud -> create_supported_locaitons_back_end
-// http://127.0.0.1:5001/alcoholic-expressions/us-central1/createSupportedAreas/
-export const createSupportedAreas = onRequest(async (req, res)=>{
-  let reference;
-
-  supportedCountries.forEach(async (countryValue, countryKey, country)=>{
-    reference = getFirestore()
-        .collection("supported_countries")
-        .doc();
-
-
-    const countryCodeAndName = countryKey.split("-");
-
-    const countryObject = {
-      countryId: reference.id,
-      countryCode: countryCodeAndName[0],
-      countryName: countryCodeAndName[1],
-    };
-    await reference.set(countryObject, {merge: true});
-
-    supportedProvincesOrStates.forEach(async (provinceOrStateValue, provinceOrStateKey, provinceOrState)=>{
-      reference = getFirestore()
-          .collection("supported_provinces_or_states")
-          .doc();
-
-      const provinceOrStateObject = {
-        provinceOrStateId: reference.id,
-        provinceOrStateName: provinceOrStateKey,
-        country: countryObject,
-      };
-      await reference.set(provinceOrStateObject, {merge: true});
-
-      supportedCities.forEach(async (cityValue, cityKey, city)=>{
-        reference = getFirestore()
-            .collection("supported_cities")
-            .doc();
-
-        const cityObject = {
-          cityId: reference.id,
-          cityName: cityKey,
-          provinceOrState: provinceOrStateObject,
-        };
-        await reference.set(cityObject, {merge: true});
-
-        supportedSuburbOrTownships.forEach(async (suburbOrTownshipValue, suburbOrTownshipKey, suburbOrTownship)=>{
-          reference = getFirestore()
-              .collection("supported_suburbs_or_townships")
-              .doc();
-          const suburbOrTownshipObject = {
-            suburbOrTownshipId: reference.id,
-            suburbOrTownshipName: suburbOrTownshipKey,
-            city: cityObject,
-          };
-          await reference.set(suburbOrTownshipObject, {merge: true});
-
-          for (let areaIndex = 0; areaIndex < suburbOrTownshipValue.length; areaIndex++) {
-            reference = getFirestore()
-                .collection("supported_areas")
-                .doc();
-            const areaObject = {
-              areaId: reference.id,
-              areaName: suburbOrTownshipValue[areaIndex],
-              suburbOrTownship: suburbOrTownshipObject,
-            };
-            await reference.set(areaObject, {merge: true});
-          }
-        });
-      });
-    });
-  });
-
-  res.json({result: `Supported Areas Created Successfully.`});
-});
-
 // ##################Production Functions [End]########################
 
 // ########Development Functions [Start]###############
+
+// http://127.0.0.1:5001/alcoholic-expressions/us-central1/createFakeGroups
+export const createFakeGroups = onRequest(async(req, res)=>{
+
+  const group1 = {
+    groupName: 'Izinja',
+    groupImageURL: '/groups_specific_locations/0612345678.jpeg',
+    groupSectionName: 'MUT-Umlazi-Durban-Kwa Zulu Natal-South Africa',
+    groupSpecificArea: 'Berea Court',
+
+    groupCreatorPhoneNumber: '0612345678',
+    groupCreatorImageURL: '/group_members/0612345678/0612345678.jpg',
+    groupCreatorUsername: 'Nevada',
+    isActive: true, // A group is active if it has atleast 10 members.
+    maxNoOfMembers: 5, // 5
+
+    groupMembers: ['0612345678', '0611111111', '0622222222', '0633333333', '0644444444']
+  }
+
+  const groupReference = getFirestore().collection('groups').doc(group1.groupCreatorPhoneNumber);
+
+  await groupReference.set(group1);
+
+  const alcoholics = [
+    {
+      'phoneNumber': '0612345678',
+      'profileImageURL': '/group_members/0612345678/0612345678.jpeg',
+      'sectionName': group1.groupSectionName,
+      'username': 'Nevada',
+      'groupFK': group1.groupCreatorPhoneNumber,
+    },
+    {
+      'phoneNumber': '0611111111',
+      'profileImageURL': '/group_members/0612345678/0611111111.jpeg',
+      'sectionName': group1.groupSectionName,
+      'username': 'Mdu',
+      'groupFK': group1.groupCreatorPhoneNumber,
+    },
+    {
+      'phoneNumber': '0622222222',
+      'profileImageURL': '/group_members/0612345678/0622222222.jpeg',
+      'sectionName': group1.groupSectionName,
+      'username': 'Sakhile',
+      'groupFK': group1.groupCreatorPhoneNumber,
+    },
+    {
+      'phoneNumber': '0633333333',
+      'profileImageURL': '/group_members/0612345678/0633333333.jpeg',
+      'sectionName': group1.groupSectionName,
+      'username': 'Cebo',
+      'groupFK': group1.groupCreatorPhoneNumber,
+    },
+    {
+      'phoneNumber': '0644444444',
+      'profileImageURL': '/group_members/0612345678/0644444444.jpeg',
+      'sectionName': group1.groupSectionName,
+      'username': 'Mountain',
+      'groupFK': group1.groupCreatorPhoneNumber,
+    },
+  ];
+
+  let alcoholicReference;
+  for(let alcoholicIndex = 0; alcoholicIndex < alcoholics.length;alcoholicIndex++){
+    const alcoholic = alcoholics[alcoholicIndex];
+    alcoholicReference = getFirestore().collection('alcoholics').doc(alcoholic.phoneNumber);
+    
+    await alcoholicReference.set(alcoholic);
+  }
+
+  res.json({result: `All Groups Added Successfully`});
+
+});
 
 /*
 ===============================================================

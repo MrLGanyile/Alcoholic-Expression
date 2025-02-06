@@ -1,24 +1,20 @@
+import 'package:alco/controllers/store_controller.dart';
 import 'package:flutter/material.dart';
 import 'date_picker_helper.dart';
 import 'dart:developer' as debug;
 
-class DatePicker extends StatefulWidget{
-  
-  String text = 'Pick Delivery Date';
+class DatePicker extends StatefulWidget {
   DateTime validationDate = DateTime.now().subtract(const Duration(days: 1));
   DateTime deliveryDate = DateTime.now().subtract(const Duration(days: 1));
 
   DatePicker({Key? key}) : super(key: key);
 
-  @override 
+  @override
   _DatePickerState createState() => _DatePickerState();
-
 }
 
-class _DatePickerState extends State<DatePicker>{
-
-  
-  
+class _DatePickerState extends State<DatePicker> {
+  StoreController storeController = StoreController.storeController;
 
   @override
   void initState() {
@@ -33,34 +29,27 @@ class _DatePickerState extends State<DatePicker>{
     // This method is called before the build method.
     super.didUpdateWidget(oldWidget);
   }
-  
 
   // our text controller
   final TextEditingController textEditingController = TextEditingController();
 
   @override
-  Widget build(BuildContext context) => DatePickerHelper(text:widget.text,onClicked: ()=>pickDate(context));
-  
+  Widget build(BuildContext context) =>
+      DatePickerHelper(onClicked: () => pickDate(context));
 
-  Future pickDate(BuildContext context) async{
-    debug.log('...................');
-    final initialDate = DateTime.now().add(const Duration(days: 3));
+  Future pickDate(BuildContext context) async {
+    final initialDate = DateTime.now().add(const Duration(hours: 1));
+
     final newDate = await showDatePicker(
-      context: context,
-      initialDate: initialDate,
-      firstDate: initialDate,
-      lastDate: initialDate.add(const Duration(days: 50))
-    );
-      
-    if(newDate==null){
+        context: context,
+        initialDate: initialDate,
+        firstDate: initialDate,
+        lastDate: initialDate.add(const Duration(days: 50)));
+
+    if (newDate == null) {
       return;
     }
 
-    setState((){
-      widget.deliveryDate=newDate;
-      widget.text = 'Delivery Date - ${widget.deliveryDate.day}\\${widget.deliveryDate.month}\\${widget.deliveryDate.year}';
-    });
+    storeController.setDate(newDate.year, newDate.month, newDate.day);
   }
-
 }
-

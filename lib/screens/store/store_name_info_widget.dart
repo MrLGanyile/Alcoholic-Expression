@@ -1,4 +1,5 @@
 import '../../controllers/user_controller.dart';
+import '../competition/won_grand_price_widget.dart';
 import '/controllers/competition_controller.dart';
 import '/screens/competition/competition_result_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -100,11 +101,11 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
       children: [
         // The Name Of A Store On Which The Winner Won From.
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
+              flex: 1,
               child: Text(
-                'Store Name',
+                'Host Name',
                 style: TextStyle(
                     fontSize: MyApplication.infoTextFontSize,
                     color: MyApplication.storesTextColor,
@@ -113,17 +114,15 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
               ),
             ),
             Expanded(
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  widget.storeNameInfo.storeName,
-                  style: TextStyle(
-                    fontSize: MyApplication.infoTextFontSize,
-                    fontWeight: FontWeight.bold,
-                    color: MyApplication.storesTextColor,
-                    decoration: TextDecoration.none,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+              flex: 2,
+              child: Text(
+                widget.storeNameInfo.storeName,
+                style: TextStyle(
+                  fontSize: MyApplication.infoTextFontSize,
+                  fontWeight: FontWeight.bold,
+                  color: MyApplication.storesTextColor,
+                  decoration: TextDecoration.none,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ),
@@ -132,11 +131,11 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
 
         // The Address Of A Store On Which The Winner Won From.
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
+              flex: 1,
               child: Text(
-                'Store Area',
+                'Host Area',
                 style: TextStyle(
                     fontSize: MyApplication.infoTextFontSize,
                     fontWeight: FontWeight.bold,
@@ -145,17 +144,15 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
               ),
             ),
             Expanded(
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  Converter.asString(widget.storeNameInfo.sectionName),
-                  style: TextStyle(
-                      fontSize: MyApplication.infoTextFontSize,
-                      fontWeight: FontWeight.bold,
-                      color: MyApplication.storesTextColor,
-                      decoration: TextDecoration.none,
-                      overflow: TextOverflow.ellipsis),
-                ),
+              flex: 2,
+              child: Text(
+                Converter.asString(widget.storeNameInfo.sectionName),
+                style: TextStyle(
+                    fontSize: MyApplication.infoTextFontSize,
+                    fontWeight: FontWeight.bold,
+                    color: MyApplication.storesTextColor,
+                    decoration: TextDecoration.none,
+                    overflow: TextOverflow.ellipsis),
               ),
             ),
           ],
@@ -381,12 +378,14 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
                 countDownClock.remainingTime <
                     grandPricePickingDuration +
                         competition.timeBetweenPricePickingAndGroupPicking!) {
-              return Center(
+              /*return Center(
                 child: Text(
                   "Won Price Display",
                   style: TextStyle(color: MyApplication.attractiveColor1),
                 ),
-              );
+              );*/
+
+              return WonGrandPriceWidget(wonPrice: competition.wonPrice!);
             }
             // Show group picking
             else if (isCurrentlyViewed &&
@@ -401,7 +400,7 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
             }
 
             // Show Won Price Summary For The Next 5 Minute.
-            else if (countDownClock.remainingTime <= competitionTotalDuration) {
+            else /*if (countDownClock.remainingTime <= competitionTotalDuration) */ {
               if (!competition.isWonCompetitorGroupPicked!) {
                 competitionReference
                     .update({"isWonCompetitorGroupPicked": true});
@@ -413,26 +412,27 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
               }
 
               // State Management Glitch Exist Here.
-              /*
+
               competitionResultWidget ??= CompetitionResultWidget(
                 wonPrice: competition.wonPrice!,
                 wonGroup: competition.wonGroup!,
                 competitionEndTime: competitionEndTime,
               );
-              
-              return competitionResultWidget!; */
-              return Center(
+
+              return competitionResultWidget!;
+              /*return Center(
                 child: Text(
                   'Show Won Price & Group',
                   style: TextStyle(color: MyApplication.attractiveColor1),
                 ),
-              );
+              );*/
             }
 
             // Show game over
+            /*
             else {
               return CompetitionFinishedWidget(endMoment: competitionEndTime);
-            }
+            }*/
           } else if (snapshot.hasError) {
             debug.log('Error fetching count down clock data ${snapshot.error}');
             return const Center(

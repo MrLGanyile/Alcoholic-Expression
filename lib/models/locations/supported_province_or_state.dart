@@ -1,27 +1,25 @@
-import 'supported_country.dart';
-
 // Collection Name /provinces_or_states/{provinceOrStateId}
 // Branch : supported_locations_resources_crud ->  create_supported_locations_front_end
 class SupportedProvinceOrState {
-  String provinceOrStateId;
+  String provinceOrStateNo;
   String provinceOrStateName;
-  SupportedCountry country;
+  String countryFK;
 
   SupportedProvinceOrState({
-    required this.provinceOrStateId,
+    required this.provinceOrStateNo,
     required this.provinceOrStateName,
-    required this.country,
+    required this.countryFK,
   });
 
   factory SupportedProvinceOrState.fromJson(dynamic json) =>
       SupportedProvinceOrState(
-        provinceOrStateId: json['provinceOrStateId'],
+        provinceOrStateNo: json['provinceOrStateNo'],
         provinceOrStateName: json['provinceOrStateName'],
-        country: SupportedCountry.fromJson(json['country']),
+        countryFK: json['countryFK'],
       );
 
   @override
   String toString() {
-    return '$provinceOrStateName-${country.toString()}';
+    return provinceOrStateName;
   }
 }

@@ -33,10 +33,18 @@ enum GroupUpdatingStatus {
 class UserController extends GetxController {
   final firestore = FirebaseFirestore.instance;
   final functions = FirebaseFunctions.instance;
-  final storage = FirebaseStorage.instance;
+  final storage = FirebaseStorage.instance
+      .refFromURL("gs://alcoholic-expressions.appspot.com/");
   final auth = FirebaseAuth.instance;
 
   static UserController instance = Get.find();
+
+  Rx<bool> _hasPickedGroupSectionName = Rx<bool>(false);
+  bool get hasPickedGroupSectionName => _hasPickedGroupSectionName.value;
+
+  void setHasPickedGroupSectionName(bool hasPickedGroupSectionName) {
+    _hasPickedGroupSectionName = Rx<bool>(hasPickedGroupSectionName);
+  }
 
   late Rx<File?> _groupImageFile;
   File? get groupImageFile => _groupImageFile.value;
@@ -44,16 +52,14 @@ class UserController extends GetxController {
   String? get groupImageURL => _groupImageURL.value;
   late Rx<String?> _groupName = Rx('');
   String? get groupName => _groupName.value;
-  late Rx<SectionName?> _groupSectionName;
+  late Rx<SectionName?> _groupSectionName =
+      Rx(SectionName.howardCollegeCampusUKZNDurbanKwaZuluNatalSouthAfrica);
   SectionName? get groupSectionName => _groupSectionName.value;
-  late Rx<String?> _chosenSectionName = Rx<String?>('');
-  String? get chosenSectionName => _chosenSectionName.value;
   late Rx<String?> _groupSpecificArea = Rx('');
   String? get groupSpecificArea => _groupSpecificArea.value;
   late Rx<bool> _isActive; // A group is active if it has atleast 10 members.
   bool get isActive => _isActive.value;
-
-  late Rx<int> _maxNoOfMembers; // 5
+  Rx<int> _maxNoOfMembers = Rx(5);
   int get maxNoOfMembers => _maxNoOfMembers.value;
 
   late Rx<File?> _member1ProfileImageFile;
@@ -100,6 +106,40 @@ class UserController extends GetxController {
   String? get leaderPhoneNumber => _leaderPhoneNumber.value;
   late Rx<String?> _leaderUsername = Rx('');
   String? get leaderUsername => _leaderUsername.value;
+
+  void clearAll() {
+    _groupImageFile = Rx(null);
+    _groupImageURL = Rx('');
+    _groupName = Rx('');
+
+    _groupSpecificArea = Rx('');
+    _isActive = Rx(true);
+
+    _member1ProfileImageFile = Rx(null);
+    _member1ImageURL = Rx('');
+    _member1PhoneNumber = Rx('');
+    _member1Username = Rx('');
+
+    _member2ProfileImageFile = Rx(null);
+    _member2ImageURL = Rx('');
+    _member2PhoneNumber = Rx('');
+    _member2Username = Rx('');
+
+    _member3ProfileImageFile = Rx(null);
+    _member3ImageURL = Rx('');
+    _member3PhoneNumber = Rx('');
+    _member3Username = Rx('');
+
+    _member4ProfileImageFile = Rx(null);
+    _member4ImageURL = Rx('');
+    _member4PhoneNumber = Rx('');
+    _member4Username = Rx('');
+
+    _leaderProfileImageFile = Rx(null);
+    _leaderImageURL = Rx('');
+    _leaderPhoneNumber = Rx('');
+    _leaderUsername = Rx('');
+  }
 
   // ==========================Alcoholic [Start]==========================
 
@@ -259,8 +299,9 @@ class UserController extends GetxController {
 
   // ==========================Group [Start]==========================
 
-  void setChosenSectionName(String chosenSectionName) {
-    _chosenSectionName = Rx<String?>(chosenSectionName);
+  void setGroupSectionName(String chosenSectionName) {
+    _groupSectionName =
+        Rx<SectionName?>(Converter.toSectionName(chosenSectionName));
     update();
   }
 
@@ -302,6 +343,7 @@ class UserController extends GetxController {
         _groupSpecificArea = Rx<String?>(groupSpecificArea);
 
         Get.snackbar('Image Status', 'Image File Successfully Picked.');
+        update();
       } else {
         Get.snackbar('Error', 'Image Wasn\'t Picked.');
         update();
@@ -461,6 +503,41 @@ class UserController extends GetxController {
     }
   }
 
+  String trimmedImageURL(int index) {
+    switch (index) {
+      case 0:
+        return _leaderImageURL.value!
+            .substring(_leaderImageURL.value!.indexOf('/alcoholics'),
+                _leaderImageURL.value!.indexOf('?'))
+            .replaceAll('%2F', '/');
+      case 1:
+        return _member1ImageURL.value!
+            .substring(_member1ImageURL.value!.indexOf('/alcoholics'),
+                _member1ImageURL.value!.indexOf('?'))
+            .replaceAll('%2F', '/');
+      case 2:
+        return _member2ImageURL.value!
+            .substring(_member2ImageURL.value!.indexOf('/alcoholics'),
+                _member2ImageURL.value!.indexOf('?'))
+            .replaceAll('%2F', '/');
+      case 3:
+        return _member3ImageURL.value!
+            .substring(_member3ImageURL.value!.indexOf('/alcoholics'),
+                _member3ImageURL.value!.indexOf('?'))
+            .replaceAll('%2F', '/');
+      case 4:
+        return _member4ImageURL.value!
+            .substring(_member4ImageURL.value!.indexOf('/alcoholics'),
+                _member4ImageURL.value!.indexOf('?'))
+            .replaceAll('%2F', '/');
+      default:
+        return _groupImageURL.value!
+            .substring(_groupImageURL.value!.indexOf('/groups'),
+                _groupImageURL.value!.indexOf('?'))
+            .replaceAll('%2F', '/');
+    }
+  }
+
   // groups_crud -> create_group
   Future<GroupSavingStatus> createGroup() async {
     if (_groupImageFile.value != null &&
@@ -478,7 +555,7 @@ class UserController extends GetxController {
         alcoholic = Alcoholic(
           phoneNumber: _leaderPhoneNumber.value,
           username: _leaderUsername.value!,
-          profileImageURL: _leaderImageURL.value,
+          profileImageURL: trimmedImageURL(0),
           sectionName: _groupSectionName.value!,
           groupFK: _leaderPhoneNumber.value,
         );
@@ -488,7 +565,7 @@ class UserController extends GetxController {
           alcoholic = Alcoholic(
             phoneNumber: _member1PhoneNumber.value,
             username: _member1Username.value!,
-            profileImageURL: member1ImageURL,
+            profileImageURL: trimmedImageURL(1),
             sectionName: _groupSectionName.value!,
             groupFK: _leaderPhoneNumber.value,
           );
@@ -498,7 +575,7 @@ class UserController extends GetxController {
             alcoholic = Alcoholic(
               phoneNumber: _member2PhoneNumber.value,
               username: _member2Username.value!,
-              profileImageURL: member2ImageURL,
+              profileImageURL: trimmedImageURL(2),
               sectionName: _groupSectionName.value!,
               groupFK: _leaderPhoneNumber.value,
             );
@@ -508,7 +585,7 @@ class UserController extends GetxController {
               alcoholic = Alcoholic(
                 phoneNumber: _member3PhoneNumber.value,
                 username: _member3Username.value!,
-                profileImageURL: member3ImageURL,
+                profileImageURL: trimmedImageURL(3),
                 sectionName: _groupSectionName.value!,
                 groupFK: _leaderPhoneNumber.value,
               );
@@ -518,7 +595,7 @@ class UserController extends GetxController {
                 alcoholic = Alcoholic(
                   phoneNumber: _member4PhoneNumber.value,
                   username: _member4Username.value!,
-                  profileImageURL: member4ImageURL,
+                  profileImageURL: trimmedImageURL(4),
                   sectionName: _groupSectionName.value!,
                   groupFK: _leaderPhoneNumber.value,
                 );
@@ -526,11 +603,11 @@ class UserController extends GetxController {
 
                 Map<String, dynamic> registrationGroup = {
                   'groupName': _groupName.value,
-                  'groupImageURL': _groupImageURL.value,
+                  'groupImageURL': trimmedImageURL(5),
                   'groupSectionName': groupSectionName,
                   'groupSpecificArea': _groupSpecificArea.value,
                   'groupCreatorPhoneNumber': _leaderPhoneNumber.value,
-                  'groupCreatorImageURL': _leaderImageURL.value,
+                  'groupCreatorImageURL': trimmedImageURL(0),
                   'groupCreatorUsername': _leaderUsername.value,
                   'isActive': false,
                   'maxNoOfMembers': 5,
@@ -542,23 +619,12 @@ class UserController extends GetxController {
                     functions.httpsCallable('createGroup');
                 await httpCallable.call(group);*/
 
-                // Saving Without A Cloud Function.
-                for (int alcoholicIndex = 0;
-                    alcoholicIndex < members.length;
-                    alcoholicIndex++) {
-                  Alcoholic alcoholic =
-                      Alcoholic.fromJson(members[alcoholicIndex]);
-                  await firestore
-                      .collection('alcoholics')
-                      .doc(alcoholic.phoneNumber)
-                      .set(alcoholic.toJson());
-                }
-
                 List<String> phoneNumbers = [];
 
                 for (int i = 0; i < members.length; i++) {
                   phoneNumbers.add(members[i]['phoneNumber']);
                 }
+
                 Group group = Group(
                     groupName: registrationGroup['groupName'],
                     groupImageURL: registrationGroup['groupImageURL'],
@@ -578,6 +644,42 @@ class UserController extends GetxController {
                     .collection('groups')
                     .doc(group.creatorPhoneNumber)
                     .set(group.toJson());
+
+                for (int alcoholicIndex = 0;
+                    alcoholicIndex < members.length;
+                    alcoholicIndex++) {
+                  Alcoholic alcoholic =
+                      Alcoholic.fromJson(members[alcoholicIndex]);
+                  await firestore
+                      .collection('alcoholics')
+                      .doc(alcoholic.phoneNumber)
+                      .set(alcoholic.toJson());
+                }
+
+                if (hasMember(0)) {
+                  await uploadResource(leaderProfileImageFile!,
+                      'group_members/$_leaderPhoneNumber/$_leaderPhoneNumber');
+                }
+
+                if (hasMember(1)) {
+                  await uploadResource(member1ProfileImageFile!,
+                      'group_members/$_leaderPhoneNumber/$_member1PhoneNumber');
+                }
+
+                if (hasMember(2)) {
+                  await uploadResource(member2ProfileImageFile!,
+                      'group_members/$_leaderPhoneNumber/$_member2PhoneNumber');
+                }
+
+                if (hasMember(3)) {
+                  await uploadResource(member3ProfileImageFile!,
+                      'group_members/$_leaderPhoneNumber/$_member3PhoneNumber');
+                }
+
+                if (hasMember(4)) {
+                  await uploadResource(member4ProfileImageFile!,
+                      'group_members/$_leaderPhoneNumber/$_member4PhoneNumber');
+                }
                 Get.snackbar('Group Status', 'Saved Group Successfully .');
 
                 return GroupSavingStatus.saved;

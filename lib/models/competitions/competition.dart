@@ -13,7 +13,7 @@ class Competition {
 
   bool isLive;
   bool isOver;
-  double joiningFee;
+  int joiningFee;
 
   SectionName competitionSectionName;
 

@@ -1,5 +1,6 @@
 import 'package:alco/controllers/store_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../controllers/user_controller.dart';
 import '../../main.dart';
@@ -12,12 +13,11 @@ import '../utils/page_navigation.dart';
 class DrawGrandPriceCreationWidget extends StatefulWidget {
   TextEditingController descriptionController;
   int grandPriceIndex;
-  DateTime dateTime;
 
-  DrawGrandPriceCreationWidget(
-      {required this.descriptionController,
-      required this.grandPriceIndex,
-      required this.dateTime});
+  DrawGrandPriceCreationWidget({
+    required this.descriptionController,
+    required this.grandPriceIndex,
+  });
 
   @override
   State createState() => DrawGrandPriceCreationWidgetState();
@@ -34,6 +34,14 @@ class DrawGrandPriceCreationWidgetState
         margin: const EdgeInsets.only(bottom: 5),
         child: Column(
           children: [
+            showPickedPrice(),
+            const SizedBox(
+              height: 10,
+            ),
+            singlePricePicker(),
+            const SizedBox(
+              height: 10,
+            ),
             TextField(
               minLines: 1,
               maxLines: 10,
@@ -66,10 +74,119 @@ class DrawGrandPriceCreationWidgetState
             const SizedBox(
               height: 10,
             ),
-            singlePricePicker(),
           ],
         ),
       );
+
+  Widget showPickedPrice() {
+    switch (widget.grandPriceIndex) {
+      case 0:
+        return GetBuilder<StoreController>(builder: (_) {
+          return storeController.grandPrice1ImageURL!.isEmpty ||
+                  storeController.drawGrandPrice1ImageFile == null
+              ? const SizedBox.shrink()
+              : Center(
+                  child: Container(
+                    height: 90,
+                    width: 90,
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(20),
+                      image: DecorationImage(
+                        image:
+                            NetworkImage(storeController.grandPrice1ImageURL!),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                );
+        });
+      case 1:
+        return GetBuilder<StoreController>(builder: (_) {
+          return storeController.grandPrice2ImageURL!.isEmpty ||
+                  storeController.drawGrandPrice2ImageFile == null
+              ? const SizedBox.shrink()
+              : Center(
+                  child: Container(
+                    height: 90,
+                    width: 90,
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(20),
+                      image: DecorationImage(
+                        image:
+                            NetworkImage(storeController.grandPrice2ImageURL!),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                );
+        });
+      case 2:
+        return GetBuilder<StoreController>(builder: (_) {
+          return storeController.grandPrice3ImageURL!.isEmpty ||
+                  storeController.drawGrandPrice3ImageFile == null
+              ? const SizedBox.shrink()
+              : Center(
+                  child: Container(
+                    height: 90,
+                    width: 90,
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(20),
+                      image: DecorationImage(
+                        image:
+                            NetworkImage(storeController.grandPrice3ImageURL!),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                );
+        });
+      case 3:
+        return GetBuilder<StoreController>(builder: (_) {
+          return storeController.grandPrice4ImageURL!.isEmpty ||
+                  storeController.drawGrandPrice4ImageFile == null
+              ? const SizedBox.shrink()
+              : Center(
+                  child: Container(
+                    height: 90,
+                    width: 90,
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(20),
+                      image: DecorationImage(
+                        image:
+                            NetworkImage(storeController.grandPrice4ImageURL!),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                );
+        });
+      default:
+        return GetBuilder<StoreController>(builder: (_) {
+          return storeController.grandPrice5ImageURL!.isEmpty ||
+                  storeController.drawGrandPrice5ImageFile == null
+              ? const SizedBox.shrink()
+              : Center(
+                  child: Container(
+                    height: 90,
+                    width: 90,
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(20),
+                      image: DecorationImage(
+                        image:
+                            NetworkImage(storeController.grandPrice5ImageURL!),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                );
+        });
+    }
+  }
 
   Widget singlePricePicker() => Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -94,16 +211,8 @@ class DrawGrandPriceCreationWidgetState
               icon: Icon(Icons.camera_alt, color: MyApplication.logoColor1),
               onPressed: () async {
                 storeController.captureGrandPriceImageFromCamera(
-                    widget.grandPriceIndex,
-                    widget.descriptionController.text,
-                    widget.dateTime.year,
-                    widget.dateTime.month,
-                    widget.dateTime.day,
-                    widget.dateTime.hour,
-                    widget.dateTime.minute);
-
-                debug.log(
-                    'drawGrandPrice Index ${widget.grandPriceIndex} Description ${widget.descriptionController.text}');
+                  widget.grandPriceIndex,
+                );
               },
             ),
           ),
@@ -115,16 +224,8 @@ class DrawGrandPriceCreationWidgetState
                 icon: Icon(Icons.upload, color: MyApplication.logoColor1),
                 onPressed: () async {
                   storeController.chooseGrandPriceImageFromGallery(
-                      widget.grandPriceIndex,
-                      widget.descriptionController.text,
-                      widget.dateTime.year,
-                      widget.dateTime.month,
-                      widget.dateTime.day,
-                      widget.dateTime.hour,
-                      widget.dateTime.minute);
-
-                  debug.log(
-                      'drawGrandPrice Index ${widget.grandPriceIndex} Description ${widget.descriptionController.text}');
+                    widget.grandPriceIndex,
+                  );
                 }),
           ),
         ],

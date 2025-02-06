@@ -34,6 +34,7 @@ class SingleGroupWidgetState extends State<SingleGroupWidget> {
           //mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
+              flex: 1,
               child: Text(
                 'Group Home',
                 style: TextStyle(
@@ -44,6 +45,7 @@ class SingleGroupWidgetState extends State<SingleGroupWidget> {
               ),
             ),
             Expanded(
+              flex: 2,
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -65,6 +67,7 @@ class SingleGroupWidgetState extends State<SingleGroupWidget> {
           //mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
+              flex: 1,
               child: Text(
                 'Group Area',
                 style: TextStyle(
@@ -75,6 +78,7 @@ class SingleGroupWidgetState extends State<SingleGroupWidget> {
               ),
             ),
             Expanded(
+              flex: 2,
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -163,7 +167,7 @@ class SingleGroupWidgetState extends State<SingleGroupWidget> {
                   color: Colors.lightBlue,
                 ),
                 child: CircleAvatar(
-                  radius: MediaQuery.of(context).size.width / 12,
+                  radius: MediaQuery.of(context).size.width / 8,
                   backgroundImage: NetworkImage(snapshot.data as String),
                 ),
               ),
@@ -179,7 +183,6 @@ class SingleGroupWidgetState extends State<SingleGroupWidget> {
             );
           }
         });
-    ;
   }
 
   Widget createGroupMembers(BuildContext context) {
@@ -189,7 +192,7 @@ class SingleGroupWidgetState extends State<SingleGroupWidget> {
     List<Widget> rowChildren;
     List<Widget> columnChildren;
 
-    if (groupMembersImageReferences.length <= 4) {
+    if (groupMembersImageReferences.length <= 3) {
       rowChildren = [];
       for (int i = 0; i < groupMembersImageReferences.length; i++) {
         rowChildren.add(createGroupParticipant(context, i));
@@ -199,33 +202,10 @@ class SingleGroupWidgetState extends State<SingleGroupWidget> {
         children: rowChildren,
       );
       return row;
-    } else if (groupMembersImageReferences.length <= 8) {
-      columnChildren = [];
-      rowChildren = [];
-      for (int i = 0; i < 4; i++) {
-        rowChildren.add(createGroupParticipant(context, i));
-      }
-      row = Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: rowChildren,
-      );
-      columnChildren.add(row);
-
-      rowChildren = [];
-      for (int i = 4; i < groupMembersImageReferences.length; i++) {
-        rowChildren.add(createGroupParticipant(context, i));
-      }
-      row = Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: rowChildren,
-      );
-      columnChildren.add(row);
-      column = Column(children: columnChildren);
-      return column;
     } else {
       columnChildren = [];
       rowChildren = [];
-      for (int i = 0; i < 4; i++) {
+      for (int i = 0; i < 3; i++) {
         rowChildren.add(createGroupParticipant(context, i));
       }
       row = Row(
@@ -235,22 +215,14 @@ class SingleGroupWidgetState extends State<SingleGroupWidget> {
       columnChildren.add(row);
 
       rowChildren = [];
-      for (int i = 4; i < 8; i++) {
+      for (int i = 3; i < groupMembersImageReferences.length; i++) {
         rowChildren.add(createGroupParticipant(context, i));
       }
       row = Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: rowChildren,
       );
-      columnChildren.add(row);
-      rowChildren = [];
-      for (int i = 8; i < groupMembersImageReferences.length; i++) {
-        rowChildren.add(createGroupParticipant(context, i));
-      }
-      row = Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: rowChildren,
-      );
+
       columnChildren.add(row);
       column = Column(children: columnChildren);
       return column;
@@ -329,6 +301,7 @@ class SingleGroupWidgetState extends State<SingleGroupWidget> {
                               child: Column(
                                 children: [
                                   FutureBuilder(
+                                    future: findGroupCreatorImageURL(),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
                                         final data = snapshot.data as String;
@@ -339,7 +312,7 @@ class SingleGroupWidgetState extends State<SingleGroupWidget> {
                                         );
                                       } else if (snapshot.hasError) {
                                         debug.log(
-                                            "Error Fetching Data - ${snapshot.error}");
+                                            "Error Fetching Group Data - ${snapshot.error}");
                                         return const Center(
                                           child: CircularProgressIndicator(),
                                         );
@@ -349,7 +322,6 @@ class SingleGroupWidgetState extends State<SingleGroupWidget> {
                                         );
                                       }
                                     },
-                                    future: findGroupCreatorImageURL(),
                                   ),
                                   Text(
                                     'Leader',

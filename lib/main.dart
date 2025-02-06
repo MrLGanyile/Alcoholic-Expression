@@ -132,18 +132,9 @@ class _MyApplicationState extends State<MyApplication> {
       ),
 
       home: StoreDrawRegistrationWidget(),
-      // home: GroupRegistrationWidget(),
       // home: VerificationScreen(phoneNumber: '+27661813561', pin: '12312'),
       // home: StartScreen(),
       // home: const AlcoholicRegistrationWidget(),
-      // home: StoreRegistrationWidget(),
-
-      //home: StoreInfoWidget(store:SampleForTesting.allRegisteredStores[0]),
-      //home: OnPlayWidget(store:SampleForTesting.allRegisteredStores[0]),
-      //home: OnWaitWidget(store:SampleForTesting.allRegisteredStores[0], sampleForTesting: widget.sampleForTesting,),
-      // home: StoresWidget(sampleForTesting: widget.sampleForTesting,),
-      //home: Center(child:Text('Lwandile')),
-      //home: WinnerWidget(wonPrice: SampleForTesting.allRegisteredWonPrices[0],/*SampleForTesting.allRegisteredStores[0].lastWonPrice!*/)
     ));
   }
 }

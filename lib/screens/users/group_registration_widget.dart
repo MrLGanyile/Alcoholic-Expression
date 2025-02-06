@@ -13,13 +13,8 @@ import '../../controllers/user_controller.dart';
 import '../../main.dart';
 import '../../models/locations/converter.dart';
 import '../../models/locations/supported_area.dart';
-import '../../models/users/alcoholic.dart';
-import '../utils/my_route_generator.dart';
-import '../utils/page_navigation.dart';
-import 'dart:developer' as debug;
-import 'dart:math';
 
-import 'groups_screen.dart';
+import 'dart:developer' as debug;
 import 'verification_screen.dart';
 
 class GroupRegistrationWidget extends StatelessWidget {
@@ -54,7 +49,9 @@ class GroupRegistrationWidget extends StatelessWidget {
   LocationController locationController = LocationController.locationController;
   late DropdownButton2<String> dropDowButton;
 
-  GroupRegistrationWidget();
+  GroupRegistrationWidget() {
+    userController.clearAll();
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -62,7 +59,8 @@ class GroupRegistrationWidget extends StatelessWidget {
           centerTitle: true,
           title: Text('Registration',
               style: TextStyle(
-                  fontSize: 14, color: MyApplication.attractiveColor1)),
+                  fontSize: MyApplication.infoTextFontSize,
+                  color: MyApplication.attractiveColor1)),
           backgroundColor: Colors.black,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
@@ -224,33 +222,34 @@ class GroupRegistrationWidget extends StatelessWidget {
           ),
 
           // Group Area Name
-          StreamBuilder<List<SupportedArea>>(
-            stream: supportedAreasStream,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                List<String> dbItems = [];
-                for (int areaIndex = 0;
-                    areaIndex < snapshot.data!.length;
-                    areaIndex++) {
-                  dbItems.add(snapshot.data![areaIndex].toString());
-                }
-                items = dbItems;
-                return GetBuilder<UserController>(builder: (_) {
+          GetBuilder<UserController>(builder: (_) {
+            return StreamBuilder<List<SupportedArea>>(
+              stream: supportedAreasStream,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  List<String> dbItems = [];
+                  dbItems.add('Pick Group Area');
+                  for (int areaIndex = 0;
+                      areaIndex < snapshot.data!.length;
+                      areaIndex++) {
+                    dbItems.add(snapshot.data![areaIndex].toString());
+                  }
+                  items = dbItems;
                   return pickAreaName(context);
-                });
-              } else if (snapshot.hasError) {
-                debug.log(
-                    "Error Fetching Supported Areas Data - ${snapshot.error}");
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            },
-          ),
+                } else if (snapshot.hasError) {
+                  debug.log(
+                      "Error Fetching Supported Areas Data - ${snapshot.error}");
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
+            );
+          }),
 
           const SizedBox(
             height: 10,
@@ -375,11 +374,12 @@ class GroupRegistrationWidget extends StatelessWidget {
         child: InkWell(
           onTap: () async {
             if (isValidInputWithoutImages()) {
+              debug.log('isValieInputWithoutImages -> True');
               final result = await userController.createGroup();
 
               // Does not go to the next screen.
               if (result == GroupSavingStatus.saved) {
-                Get.to(() => const GroupsScreen());
+                debug.log('Show dialog box');
               }
             }
 
@@ -537,9 +537,12 @@ class GroupRegistrationWidget extends StatelessWidget {
                 ),
               ))
           .toList(),
-      value: userController.chosenSectionName,
+      value: !userController.hasPickedGroupSectionName
+          ? 'Pick Group Area'
+          : Converter.asString(userController.groupSectionName!),
       onChanged: (String? value) {
-        userController.setChosenSectionName(value!);
+        userController.setGroupSectionName(value!);
+        userController.setHasPickedGroupSectionName(true);
       },
       buttonStyleData: ButtonStyleData(
         height: 60,
