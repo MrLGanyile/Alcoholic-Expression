@@ -28,7 +28,7 @@ class WonGrandPriceWidget extends StatelessWidget {
 
   AspectRatio retrieveWonPriceImage(BuildContext context, String imageURL) {
     return AspectRatio(
-      aspectRatio: 8 / 2,
+      aspectRatio: 7 / 3,
       child: Container(
         decoration: BoxDecoration(
           color: Colors.orange,

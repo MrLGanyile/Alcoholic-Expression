@@ -70,7 +70,7 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
   // Not used yet, but will be later to avoid flickuring of group members images.
   OnCurrentGroupSet? onCurrentGroupSet;
 
-  int currentlyPointedGroupCompetitorIndex = 0;
+  int currentlyPointedGroupCompetitorIndex = -1;
 
   @override
   void initState() {
@@ -105,7 +105,7 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
             Expanded(
               flex: 1,
               child: Text(
-                'Host Name',
+                'Host',
                 style: TextStyle(
                     fontSize: MyApplication.infoTextFontSize,
                     color: MyApplication.storesTextColor,
@@ -114,7 +114,7 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
               ),
             ),
             Expanded(
-              flex: 2,
+              flex: 3,
               child: Text(
                 widget.storeNameInfo.storeName,
                 style: TextStyle(
@@ -135,7 +135,7 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
             Expanded(
               flex: 1,
               child: Text(
-                'Host Area',
+                'Area',
                 style: TextStyle(
                     fontSize: MyApplication.infoTextFontSize,
                     fontWeight: FontWeight.bold,
@@ -144,9 +144,9 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
               ),
             ),
             Expanded(
-              flex: 2,
+              flex: 3,
               child: Text(
-                Converter.asString(widget.storeNameInfo.sectionName),
+                widget.storeNameInfo.storeArea,
                 style: TextStyle(
                     fontSize: MyApplication.infoTextFontSize,
                     fontWeight: FontWeight.bold,
@@ -320,10 +320,8 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
             int grandPricePickingDuration =
                 competition.grandPricesOrder.length *
                     competition.pickingMultipleInSeconds;
-            int groupPickingDuration = competition.grandPricesOrder.length *
-                    competition.pickingMultipleInSeconds +
-                competition.competitorsOrder.length *
-                    competition.pickingMultipleInSeconds;
+            int groupPickingDuration = competition.competitorsOrder.length *
+                competition.pickingMultipleInSeconds;
             int competitionTotalDuration = grandPricePickingDuration +
                 competition.timeBetweenPricePickingAndGroupPicking! +
                 groupPickingDuration;
@@ -364,13 +362,14 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
             else if (isCurrentlyViewed &&
                 countDownClock.remainingTime < grandPricePickingDuration) {
               return WaitWidget(
-                remainingDuration:
-                    Duration(seconds: countDownClock.remainingTime),
-                storeDraw: latestStoreDraw,
-                pickWonPrice: true,
-                showAlarm: false,
-                grandPricesOrder: competition.grandPricesOrder,
-              );
+                  remainingDuration:
+                      Duration(seconds: countDownClock.remainingTime),
+                  storeDraw: latestStoreDraw,
+                  pickWonPrice: true,
+                  showAlarm: false,
+                  grandPricesOrder: competition.grandPricesOrder,
+                  pickingMultipleInSeconds:
+                      competition.pickingMultipleInSeconds);
             }
 
             // Display won price.
@@ -389,13 +388,17 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
             }
             // Show group picking
             else if (isCurrentlyViewed &&
-                countDownClock.remainingTime <= groupPickingDuration) {
-              currentlyPointedGroupCompetitorIndex =
-                  (countDownClock.remainingTime -
-                          competition.groupPickingStartTime) ~/
-                      competition.pickingMultipleInSeconds;
+                countDownClock.remainingTime <
+                    grandPricePickingDuration +
+                        competition.timeBetweenPricePickingAndGroupPicking! +
+                        groupPickingDuration) {
+              currentlyPointedGroupCompetitorIndex = (countDownClock
+                          .remainingTime -
+                      grandPricePickingDuration -
+                      competition.timeBetweenPricePickingAndGroupPicking!) ~/
+                  competition.pickingMultipleInSeconds;
               debug.log(
-                  '$currentlyPointedGroupCompetitorIndex ${competition.competitorsOrder.length}');
+                  'Order ${competition.competitorsOrder} currentlyPointedGroupCompetitorIndex $currentlyPointedGroupCompetitorIndex remainingTime ${countDownClock.remainingTime}');
               return displayGroupCompetitors();
             }
 

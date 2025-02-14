@@ -120,9 +120,9 @@ class StoreController extends GetxController {
     return null;
   }
 
-  Future<void> initiateHostingStore() async {
+  Future<void> initiateHostingStore(String storeOwnerPhoneNumber) async {
     DocumentReference storeReference =
-        firestore.collection('stores').doc('0661813561');
+        firestore.collection('stores').doc(storeOwnerPhoneNumber);
 
     DocumentSnapshot snapshot = await storeReference.get();
 

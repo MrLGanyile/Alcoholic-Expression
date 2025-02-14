@@ -641,15 +641,41 @@ export const saveStoreAndAdmins = onRequest(async(req, res)=>{
     await adminReference.set(admins[adminIndex]);
   } 
 
-  const store = {
+  var store = {
     storeOwnerPhoneNumber: '0661813561',
-    storeName: 'Ka Nkuxa',
+    storeName: 'Mayville-Durban-Kwa Zulu Natal-South Africa',
     storeImageURL: 'store_owners/stores_images/0661813561.jpg',
     sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
-    storeArea: 'Ringini',
+    storeArea: 'Ka Nkuxa E-Ringini [Cato Crest]',
   };
 
-  const storeReference = getFirestore().collection('stores')
+  var storeReference = getFirestore().collection('stores')
+  .doc(store.storeOwnerPhoneNumber);
+  
+  await storeReference.set(store);
+
+store = {
+    storeOwnerPhoneNumber: '0766915230',
+    storeName: 'UKZN-Durban-Kwa Zulu Natal-South Africa',
+    storeImageURL: 'store_owners/stores_images/0766915230.jpeg',
+    sectionName: 'Howard College UKZN-Mayville-Durban-Kwa Zulu Natal-South Africa',
+    storeArea: 'Howard College Campus',
+  };
+  
+  storeReference = getFirestore().collection('stores')
+  .doc(store.storeOwnerPhoneNumber);
+  
+  await storeReference.set(store);
+
+  store = {
+    storeOwnerPhoneNumber: '0835367834',
+    storeName: 'DUT-Durban-Kwa Zulu Natal-South Africa',
+    storeImageURL: 'store_owners/stores_images/0835367834.jpeg',
+    sectionName: 'DUT-Durban Central-Durban-Kwa Zulu Natal-South Africa',
+    storeArea: 'Steve Biko Campus', 
+  };
+  
+  storeReference = getFirestore().collection('stores')
   .doc(store.storeOwnerPhoneNumber);
   
   await storeReference.set(store);
@@ -1000,6 +1026,9 @@ onDocumentCreated("/competitions/" +
           // Suffle the list to make sure the order is random.
           grandPricesOrder = shuffle(grandPricesOrder);
 
+          // Price To Win Index
+          grandPricesOrder.push(Math.floor(Math.random()*numberOfGrandPrices));
+
           const grandPricesGrid = {
             grandPricesGridId: reference.id,
             competitionFK: competitionId,
@@ -1035,6 +1064,7 @@ export const createGrandPricesTokens =
     const competitionFK = event.data.data()["competitionFK"];
     const grandPricesGridId = event.data.data()["grandPricesGridId"];
     const storeFK = event.data.data()["storeFK"];
+    const grandPricesOrder = event.data.data()["grandPricesOrder"];
 
     getFirestore()
         .collection("stores")
@@ -1047,7 +1077,7 @@ export const createGrandPricesTokens =
             drawGrandPricesSnapshot.forEach(
                 async (drawGrandPrice)=>{
 
-                  if(drawGrandPrice.data().grandPriceIndex==drawGrandPricesSnapshot.size-1){
+                  if(drawGrandPrice.data().grandPriceIndex==grandPricesOrder[drawGrandPricesSnapshot.size]){
                     getFirestore()
                         .collection("competitions")
                         .doc(competitionFK).onSnapshot(async (competitionDoc)=>{
@@ -1164,6 +1194,8 @@ export const createGroupCompetitorsTokens =
     const groupCompetitorsGridId =
     event.data.data()["competitorsGridId"];
 
+    const competitorsOrder = event.data.data()["competitorsOrder"];
+
     getFirestore()
         .collection("groups")
         .where("groupSectionName", "==", competitionSectionName)
@@ -1176,7 +1208,7 @@ export const createGroupCompetitorsTokens =
                   groupsSnapshot.docs.at(groupIndex);
 
                   // Last Group Wins.
-                  if(groupIndex===groupsSnapshot.size-1){
+                  if(groupDoc.data().groupCreatorPhoneNumber===competitorsOrder[groupsSnapshot.size-1]){
                     getFirestore()
                         .collection("competitions")
                         .doc(competitionFK).onSnapshot((competitionDoc)=>{

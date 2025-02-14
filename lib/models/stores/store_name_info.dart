@@ -33,7 +33,6 @@ class StoreNameInfo implements Comparable<StoreNameInfo> {
 
   @override
   int compareTo(StoreNameInfo other) {
-    return Converter.asString(sectionName)
-        .compareTo(Converter.asString(other.sectionName));
+    return other.storeArea.compareTo(storeArea);
   }
 }

@@ -12,6 +12,10 @@ import 'dart:developer' as debug;
 import 'time_picker.dart';
 
 class StoreDrawRegistrationWidget extends StatefulWidget {
+  String storeOwnerPhoneNumber;
+
+  StoreDrawRegistrationWidget({required this.storeOwnerPhoneNumber});
+
   @override
   State<StatefulWidget> createState() => StoreDrawRegistrationWidgetState();
 }
@@ -33,7 +37,7 @@ class StoreDrawRegistrationWidgetState
   @override
   void initState() {
     super.initState();
-    storeController.initiateHostingStore();
+    storeController.initiateHostingStore(widget.storeOwnerPhoneNumber);
   }
 
   @override

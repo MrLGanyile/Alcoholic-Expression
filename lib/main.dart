@@ -21,6 +21,7 @@ import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
 // Branching Strategy - Trunk-Based Dev
 // initialization -> app_establishment
 // Mlu NERD 0842457343
+// 0835367834 0766915230
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -125,13 +126,14 @@ class _MyApplicationState extends State<MyApplication> {
     return FirebasePhoneAuthProvider(
         child: GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Alcoholic',
+      title: 'Alco',
       theme: ThemeData(
         primaryColor: const Color.fromARGB(115, 231, 195, 214),
         secondaryHeaderColor: const Color.fromARGB(115, 231, 195, 214),
       ),
 
-      home: StoreDrawRegistrationWidget(),
+      // Make sure to create a draw given there are groups belonging to the host's location.
+      home: StoreDrawRegistrationWidget(storeOwnerPhoneNumber: '0835367834'),
       // home: VerificationScreen(phoneNumber: '+27661813561', pin: '12312'),
       // home: StartScreen(),
       // home: const AlcoholicRegistrationWidget(),

@@ -28,6 +28,8 @@ class WaitWidget extends StatefulWidget {
   List<int>? grandPricesOrder;
   bool? pickWonPrice;
 
+  int? pickingMultipleInSeconds;
+
   // Not used yet, but will be later to avoid flickuring of group members images.
   OnCurrentGroupSet? onCurrentGroupSet;
 
@@ -44,6 +46,7 @@ class WaitWidget extends StatefulWidget {
       this.showRemainingTime = false,
       this.showAlarm = true,
       this.grandPricesOrder = const [],
+      this.pickingMultipleInSeconds,
       this.onCurrentGroupSet})
       : super(key: key);
 
@@ -170,8 +173,8 @@ class WaitWidgetState extends State<WaitWidget> {
 
     int currentIndex = -1;
     if (widget.grandPricesOrder!.isNotEmpty) {
-      currentIndex =
-          widget.remainingDuration!.inSeconds % widget.grandPricesOrder!.length;
+      currentIndex = widget.remainingDuration!.inSeconds ~/
+          widget.pickingMultipleInSeconds!;
       currentlyPointedGrandPriceIndex = widget.grandPricesOrder![currentIndex];
     }
 
