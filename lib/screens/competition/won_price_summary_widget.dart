@@ -657,12 +657,12 @@ class WonPriceSummaryWidgetState extends State<WonPriceSummaryWidget> {
               // Group Location/Area Details
               SizedBox(height: 50, child: retrieveGroupInfo(context)),
             ]),
-          ),
+          ), /*
           Container(
             margin: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
             child:
                 SizedBox(height: 40, child: retrieveCommentTextField(context)),
-          ),
+          ),*/
         ],
       ),
     );

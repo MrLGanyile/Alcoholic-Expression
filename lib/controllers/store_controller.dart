@@ -21,7 +21,7 @@ class StoreController extends GetxController {
 
   static StoreController storeController = Get.find();
 
-  late Rx<Store?> _hostingStore;
+  late Rx<Store?> _hostingStore = Rx<Store?>(null);
   Store? get hostingStore => _hostingStore.value;
 
   late Rx<File?> storePickedFile;
@@ -123,10 +123,7 @@ class StoreController extends GetxController {
     return null;
   }
 
-  Future<void> initiateHostingStore(String? storeOwnerPhoneNumber) async {
-    if (storeOwnerPhoneNumber == null) {
-      return;
-    }
+  Future<void> initiateHostingStore(String storeOwnerPhoneNumber) async {
     DocumentReference storeReference =
         firestore.collection('stores').doc(storeOwnerPhoneNumber);
 
@@ -381,7 +378,24 @@ class StoreController extends GetxController {
   }
 
   void setAdminCode(String adminCode) {
-    _adminCode = Rx(adminCode);
+    debug.log(
+        'contains ${adminCode.contains('QAZwsxedc321@CC') && 'QAZwsxedc321@CC'.contains(adminCode)}');
+    if (adminCode.contains('QAZwsxedc321@DUT') &&
+        'QAZwsxedc321@DUT'.contains(adminCode)) {
+      initiateHostingStore('0835367834');
+    } else if (adminCode.contains('QAZwsxedc321@CC') &&
+        'QAZwsxedc321@CC'.contains(adminCode)) {
+      initiateHostingStore('0661813561');
+    } else if (adminCode.contains('QAZwsxedc321@UKZN') &&
+        'QAZwsxedc321@UKZN'.contains(adminCode)) {
+      initiateHostingStore('0766915230');
+    } else if (adminCode.isEmpty) {
+      Get.snackbar('Warning', 'Hosting Store Not Initialized.');
+    } else {
+      Get.snackbar('Error', 'Incorrect Admin Code.');
+    }
+
+    _adminCode = Rx<String?>(adminCode);
     update();
   }
 

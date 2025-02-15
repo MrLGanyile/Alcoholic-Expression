@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 
 import '../../main.dart';
 import 'date_picker.dart';
-
+import 'dart:developer' as debug;
 import 'time_picker.dart';
 
 class StoreDrawRegistrationWidget extends StatefulWidget {
@@ -66,7 +66,7 @@ class StoreDrawRegistrationWidgetState
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: TextField(
                 minLines: 1,
-                maxLength: 16,
+                maxLength: 17,
                 style: TextStyle(color: MyApplication.logoColor1),
                 cursorColor: MyApplication.logoColor1,
                 controller: adminCodeEditingController,
@@ -274,13 +274,14 @@ class StoreDrawRegistrationWidgetState
         child: InkWell(
           onTap: () async {
             if (hasPickedAllPrices()) {
-              String adminCode = adminCodeEditingController.text;
-              storeController.setAdminCode(adminCode);
+              //String adminCode = adminCodeEditingController.text;
+              //storeController.setAdminCode(adminCode);
 
               final result = await storeController.createStoreDraw();
 
               // Does not go to the next screen.
               if (result == StoreDrawSavingStatus.saved) {
+                storeController.setAdminCode('');
                 Get.to(() => StartScreen());
               } else if (result == StoreDrawSavingStatus.incomplete) {
                 Get.snackbar('Error', 'Incomplete Draw Info');

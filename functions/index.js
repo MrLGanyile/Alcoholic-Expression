@@ -643,7 +643,7 @@ export const saveStoreAndAdmins = onRequest(async(req, res)=>{
 
   var store = {
     storeOwnerPhoneNumber: '0661813561',
-    storeName: 'Mayville-Durban-Kwa Zulu Natal-South Africa',
+    storeName: 'Mayville',
     storeImageURL: 'store_owners/stores_images/0661813561.jpg',
     sectionName: 'Cato Crest-Mayville-Durban-Kwa Zulu Natal-South Africa',
     storeArea: 'Ka Nkuxa E-Ringini [Cato Crest]',
@@ -656,7 +656,7 @@ export const saveStoreAndAdmins = onRequest(async(req, res)=>{
 
 store = {
     storeOwnerPhoneNumber: '0766915230',
-    storeName: 'UKZN-Durban-Kwa Zulu Natal-South Africa',
+    storeName: 'UKZN',
     storeImageURL: 'store_owners/stores_images/0766915230.jpeg',
     sectionName: 'Howard College UKZN-Mayville-Durban-Kwa Zulu Natal-South Africa',
     storeArea: 'Howard College Campus',
@@ -669,7 +669,7 @@ store = {
 
   store = {
     storeOwnerPhoneNumber: '0835367834',
-    storeName: 'DUT-Durban-Kwa Zulu Natal-South Africa',
+    storeName: 'DUT',
     storeImageURL: 'store_owners/stores_images/0835367834.jpeg',
     sectionName: 'DUT-Durban Central-Durban-Kwa Zulu Natal-South Africa',
     storeArea: 'Steve Biko Campus', 

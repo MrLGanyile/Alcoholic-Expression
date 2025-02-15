@@ -145,7 +145,7 @@ class _StartScreenState extends State<StartScreen>
               HomeWidget(),
               StoresWidget(),
               const GroupsScreen(),
-              StoreDrawRegistrationWidget(),
+              const StoreDrawRegistrationWidget(),
             ]),
           ),
         ),
