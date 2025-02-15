@@ -15,7 +15,7 @@ class TimePickerHelper extends StatelessWidget {
       onPressed: onClicked,
       color: Colors.white,
       iconSize: MediaQuery.of(context).size.width * 0.15,
-      icon: Icon(Icons.punch_clock, color: MyApplication.logoColor1),
+      icon: Icon(Icons.punch_clock, color: MyApplication.logoColor2),
     );
   }
 }

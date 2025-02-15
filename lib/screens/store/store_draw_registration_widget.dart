@@ -7,14 +7,10 @@ import 'package:get/get.dart';
 import '../../main.dart';
 import 'date_picker.dart';
 
-import 'dart:developer' as debug;
-
 import 'time_picker.dart';
 
 class StoreDrawRegistrationWidget extends StatefulWidget {
-  String storeOwnerPhoneNumber;
-
-  StoreDrawRegistrationWidget({required this.storeOwnerPhoneNumber});
+  const StoreDrawRegistrationWidget({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => StoreDrawRegistrationWidgetState();
@@ -23,6 +19,8 @@ class StoreDrawRegistrationWidget extends StatefulWidget {
 class StoreDrawRegistrationWidgetState
     extends State<StoreDrawRegistrationWidget> {
   StoreController storeController = StoreController.storeController;
+
+  TextEditingController adminCodeEditingController = TextEditingController();
 
   TextEditingController description1EditingController = TextEditingController();
 
@@ -35,33 +33,72 @@ class StoreDrawRegistrationWidgetState
   TextEditingController description5EditingController = TextEditingController();
 
   @override
-  void initState() {
-    super.initState();
-    storeController.initiateHostingStore(widget.storeOwnerPhoneNumber);
-  }
+  Widget build(BuildContext context) => Container(
+        color: Colors.black,
+        child: GetBuilder<StoreController>(builder: (_) {
+          return storeController.hasAcceptableAdminCredentials()
+              ? buildStoreDraw()
+              : adminEntrance();
+        }),
+      );
 
-  @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text('Registration',
+  Widget adminEntrance() => SingleChildScrollView(
+        child: Column(
+          children: [
+            CircleAvatar(
+              backgroundImage: const AssetImage('assets/logo.png'),
+              radius: MediaQuery.of(context).size.width * 0.15,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              'Alco',
               style: TextStyle(
-                  fontSize: 14, color: MyApplication.attractiveColor1)),
-          backgroundColor: Colors.black,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            iconSize: 20,
-            color: MyApplication.logoColor2,
-            onPressed: (() {
-              //Navigator.pop(context);
-              Get.back();
-            }),
-          ),
-          elevation: 0,
-        ),
-        body: Container(
-          color: Colors.black,
-          child: buildStoreDraw(),
+                  fontSize: MyApplication.infoTextFontSize,
+                  color: MyApplication.logoColor1,
+                  fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: TextField(
+                minLines: 1,
+                maxLength: 16,
+                style: TextStyle(color: MyApplication.logoColor1),
+                cursorColor: MyApplication.logoColor1,
+                controller: adminCodeEditingController,
+                decoration: InputDecoration(
+                  labelText: 'Admin Code',
+                  prefixIcon: Icon(Icons.admin_panel_settings,
+                      color: MyApplication.logoColor1),
+                  labelStyle: TextStyle(
+                    fontSize: 14,
+                    color: MyApplication.logoColor2,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(6),
+                    borderSide: BorderSide(
+                      color: MyApplication.logoColor2,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(6),
+                    borderSide: BorderSide(
+                      color: MyApplication.logoColor2,
+                    ),
+                  ),
+                ),
+                obscureText: true,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: proceedButton(),
+            ),
+          ],
         ),
       );
 
@@ -125,17 +162,6 @@ class StoreDrawRegistrationWidgetState
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const SizedBox(
-                height: 10,
-              ),
-              // Logo
-              CircleAvatar(
-                backgroundImage: const AssetImage('assets/logo.png'),
-                radius: MediaQuery.of(context).size.width * 0.15,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
               const SizedBox(
                 height: 10,
               ),
@@ -205,7 +231,7 @@ class StoreDrawRegistrationWidgetState
               const SizedBox(
                 height: 10,
               ),
-              signInButton(),
+              createDrawButton(),
             ],
           ),
         ),
@@ -235,9 +261,9 @@ class StoreDrawRegistrationWidgetState
         storeController.description5!.isNotEmpty;
   }
 
-  Widget signInButton() => Container(
+  Widget createDrawButton() => Container(
         width: MediaQuery.of(context).size.width,
-        height: 45,
+        height: 60,
         //width: double.maxFinite, visible width
         //height: double.maxFinite visible height
         decoration: BoxDecoration(
@@ -248,18 +274,55 @@ class StoreDrawRegistrationWidgetState
         child: InkWell(
           onTap: () async {
             if (hasPickedAllPrices()) {
-              debug.log('About to go to the next page...');
+              String adminCode = adminCodeEditingController.text;
+              storeController.setAdminCode(adminCode);
+
               final result = await storeController.createStoreDraw();
 
               // Does not go to the next screen.
               if (result == StoreDrawSavingStatus.saved) {
                 Get.to(() => StartScreen());
+              } else if (result == StoreDrawSavingStatus.incomplete) {
+                Get.snackbar('Error', 'Incomplete Draw Info');
+              } else if (result == StoreDrawSavingStatus.loginRequired) {
+                Get.snackbar('Error', 'Not Authorized To Create Draw.');
+                return;
               }
             }
           },
           child: const Center(
             child: Text(
               'Create Draw',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.black,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ),
+      );
+
+  Widget proceedButton() => Container(
+        width: MediaQuery.of(context).size.width,
+        height: 60,
+        //width: double.maxFinite, visible width
+        //height: double.maxFinite visible height
+        decoration: BoxDecoration(
+            color: MyApplication.logoColor1,
+            borderRadius: const BorderRadius.all(
+              Radius.circular(10),
+            )),
+        child: InkWell(
+          onTap: () async {
+            storeController.setAdminCode(adminCodeEditingController.text);
+            if (!storeController.hasAcceptableAdminCredentials()) {
+              Get.snackbar('Error', 'Not Authorized To Create Draw.');
+            }
+          },
+          child: const Center(
+            child: Text(
+              'Proceed',
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.black,

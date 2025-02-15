@@ -133,9 +133,9 @@ class _MyApplicationState extends State<MyApplication> {
       ),
 
       // Make sure to create a draw given there are groups belonging to the host's location.
-      home: StoreDrawRegistrationWidget(storeOwnerPhoneNumber: '0835367834'),
+      // home: StoreDrawRegistrationWidget(storeOwnerPhoneNumber: '0835367834'),
       // home: VerificationScreen(phoneNumber: '+27661813561', pin: '12312'),
-      // home: StartScreen(),
+      home: StartScreen(),
       // home: const AlcoholicRegistrationWidget(),
     ));
   }

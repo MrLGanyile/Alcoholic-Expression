@@ -377,13 +377,6 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
                 countDownClock.remainingTime <
                     grandPricePickingDuration +
                         competition.timeBetweenPricePickingAndGroupPicking!) {
-              /*return Center(
-                child: Text(
-                  "Won Price Display",
-                  style: TextStyle(color: MyApplication.attractiveColor1),
-                ),
-              );*/
-
               return WonGrandPriceWidget(wonPrice: competition.wonPrice!);
             }
             // Show group picking
@@ -397,8 +390,6 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
                       grandPricePickingDuration -
                       competition.timeBetweenPricePickingAndGroupPicking!) ~/
                   competition.pickingMultipleInSeconds;
-              debug.log(
-                  'Order ${competition.competitorsOrder} currentlyPointedGroupCompetitorIndex $currentlyPointedGroupCompetitorIndex remainingTime ${countDownClock.remainingTime}');
               return displayGroupCompetitors();
             }
 

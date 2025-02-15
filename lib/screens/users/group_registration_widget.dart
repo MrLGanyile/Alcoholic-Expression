@@ -205,6 +205,13 @@ class GroupRegistrationWidget extends StatelessWidget {
             backgroundImage: const AssetImage('assets/logo.png'),
             radius: MediaQuery.of(context).size.width * 0.15,
           ),
+          Text(
+            'Alco',
+            style: TextStyle(
+                fontSize: MyApplication.infoTextFontSize,
+                color: MyApplication.logoColor1,
+                fontWeight: FontWeight.bold),
+          ),
           const SizedBox(
             height: 10,
           ),
@@ -374,7 +381,7 @@ class GroupRegistrationWidget extends StatelessWidget {
         child: InkWell(
           onTap: () async {
             if (isValidInputWithoutImages()) {
-              debug.log('isValieInputWithoutImages -> True');
+              debug.log('isValideInputWithoutImages -> True');
               final result = await userController.createGroup();
 
               // Does not go to the next screen.

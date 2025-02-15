@@ -7,7 +7,7 @@ import 'dart:developer' as debug;
 
 // Collection Name /won_prices_summaries/wonPriceSummaryId
 // Branch : won_price_summary_resources_crud -> create_won_price_summary_front_end
-class WonPriceSummary {
+class WonPriceSummary implements Comparable<WonPriceSummary> {
   String wonPriceSummaryId; // Same as the storeDrawId & competitionId
 
   String storeFK;
@@ -74,6 +74,11 @@ class WonPriceSummary {
         json['wonDate']['minute'],
       ),
     );
+  }
+
+  @override
+  int compareTo(WonPriceSummary other) {
+    return other.wonDate.compareTo(wonDate);
   }
 }
 

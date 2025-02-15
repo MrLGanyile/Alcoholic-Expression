@@ -77,6 +77,9 @@ class StoreController extends GetxController {
   late Rx<String?> _description5 = Rx<String?>('');
   String? get description5 => _description5.value;
 
+  late Rx<String?> _adminCode = Rx<String?>(null);
+  String? get adminCode => _adminCode.value;
+
   // Branch : store_resources_crud ->  store_resources_crud_data_access
   void chooseStoreImageFromGallery() async {
     final storePickedImageFile =
@@ -120,7 +123,10 @@ class StoreController extends GetxController {
     return null;
   }
 
-  Future<void> initiateHostingStore(String storeOwnerPhoneNumber) async {
+  Future<void> initiateHostingStore(String? storeOwnerPhoneNumber) async {
+    if (storeOwnerPhoneNumber == null) {
+      return;
+    }
     DocumentReference storeReference =
         firestore.collection('stores').doc(storeOwnerPhoneNumber);
 
@@ -367,6 +373,18 @@ class StoreController extends GetxController {
     }
   }
 
+  bool hasAcceptableAdminCredentials() {
+    return _adminCode.value != null &&
+        (_adminCode.value!.compareTo('QAZwsxedc321@DUT') == 0 ||
+            _adminCode.value!.compareTo('QAZwsxedc321@CC') == 0 ||
+            _adminCode.value!.compareTo('QAZwsxedc321@UKZN') == 0);
+  }
+
+  void setAdminCode(String adminCode) {
+    _adminCode = Rx(adminCode);
+    update();
+  }
+
   bool hasDate() {
     return _drawDateYear.value! >= 2025 &&
         _drawDateMonth.value! > 0 &&
@@ -374,7 +392,7 @@ class StoreController extends GetxController {
   }
 
   bool hasTime() {
-    return _drawDateHour.value! > 0 && _drawDateMinute.value! > 0;
+    return _drawDateHour.value! >= 0 && _drawDateMinute.value! >= 0;
   }
 
   bool hasGrandPrice(int memberIndex) {
@@ -416,7 +434,11 @@ class StoreController extends GetxController {
   }
 
   Future<StoreDrawSavingStatus> createStoreDraw() async {
-    if (!hasDate()) {
+    if (_adminCode.value!.compareTo('QAZwsxedc321@DUT') != 0 &&
+        _adminCode.value!.compareTo('QAZwsxedc321@CC') != 0 &&
+        _adminCode.value!.compareTo('QAZwsxedc321@UKZN') != 0) {
+      return StoreDrawSavingStatus.loginRequired;
+    } else if (!hasDate()) {
       Get.snackbar('Error', 'Date Info Missing.');
       return StoreDrawSavingStatus.incomplete;
     }

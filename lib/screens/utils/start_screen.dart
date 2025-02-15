@@ -1,6 +1,7 @@
 import 'package:alco/screens/users/group_registration_widget.dart';
 import 'package:get/get.dart';
 
+import '../store/store_draw_registration_widget.dart';
 import '/screens/store/stores_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +22,12 @@ class StartScreen extends StatefulWidget {
 class _StartScreenState extends State<StartScreen>
     with SingleTickerProviderStateMixin {
   int currentIndex = 0;
-  List<String> titles = ['Recent Wins', 'All Stores', 'Groups'];
+  List<String> titles = [
+    'Recent Wins',
+    'All Stores',
+    'Groups',
+    'Administration'
+  ];
 
   void updateCurrentIndex(int index) {
     setState(() => currentIndex = index);
@@ -33,7 +39,7 @@ class _StartScreenState extends State<StartScreen>
   void initState() {
     super.initState();
     _tabController = TabController(
-      length: 3,
+      length: 4,
       vsync: this,
     );
   }
@@ -122,6 +128,11 @@ class _StartScreenState extends State<StartScreen>
                 icon: Icon(Icons.group, color: MyApplication.attractiveColor1),
                 text: 'Groups',
               ),
+              Tab(
+                icon: Icon(Icons.admin_panel_settings,
+                    color: MyApplication.attractiveColor1),
+                text: 'Admin',
+              ),
             ],
           ),
         ),
@@ -132,9 +143,9 @@ class _StartScreenState extends State<StartScreen>
             ),
             child: TabBarView(controller: _tabController, children: [
               HomeWidget(),
-              //DatePicker(),
               StoresWidget(),
-              GroupsScreen(),
+              const GroupsScreen(),
+              StoreDrawRegistrationWidget(),
             ]),
           ),
         ),

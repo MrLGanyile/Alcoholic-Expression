@@ -13,12 +13,16 @@ class CompetitionController extends GetxController {
       FirebaseFirestore.instance
           .collection('won_prices_summaries')
           .snapshots()
-          .map((wonPriceSummariesSnapshot) =>
-              wonPriceSummariesSnapshot.docs.map((wonPriceSummaryDoc) {
-                WonPriceSummary wonPriceSummary =
-                    WonPriceSummary.fromJson(wonPriceSummaryDoc.data());
-                return wonPriceSummary;
-              }).toList());
+          .map((wonPriceSummariesSnapshot) {
+        List<WonPriceSummary> list =
+            wonPriceSummariesSnapshot.docs.map((wonPriceSummaryDoc) {
+          WonPriceSummary wonPriceSummary =
+              WonPriceSummary.fromJson(wonPriceSummaryDoc.data());
+          return wonPriceSummary;
+        }).toList();
+        list.sort();
+        return list;
+      });
 
   // Branch : competition_resources_crud ->  competitions_data_access
   Stream<DocumentSnapshot>? findCompetition(String competitionId) {

@@ -208,7 +208,7 @@ class DrawGrandPriceCreationWidgetState
             child: IconButton(
               color: Colors.white,
               iconSize: MediaQuery.of(context).size.width * 0.15,
-              icon: Icon(Icons.camera_alt, color: MyApplication.logoColor1),
+              icon: Icon(Icons.camera_alt, color: MyApplication.logoColor2),
               onPressed: () async {
                 storeController.captureGrandPriceImageFromCamera(
                   widget.grandPriceIndex,

@@ -15,7 +15,7 @@ class DatePickerHelper extends StatelessWidget {
       onPressed: onClicked,
       color: Colors.white,
       iconSize: MediaQuery.of(context).size.width * 0.15,
-      icon: Icon(Icons.date_range, color: MyApplication.logoColor1),
+      icon: Icon(Icons.date_range, color: MyApplication.logoColor2),
     );
   }
 }
