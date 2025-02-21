@@ -17,3 +17,10 @@ Future<String> uploadResource(File resource, String storagePath) async {
   String downloadURL = await taskSnapshot.ref.getDownloadURL();
   return downloadURL;
 }
+
+Future<String> findFullImageURL(String imageURL) async {
+  Reference storageReference = FirebaseStorage.instance
+      .refFromURL("gs://alcoholic-expressions.appspot.com/");
+
+  return await storageReference.child(imageURL).getDownloadURL();
+}
