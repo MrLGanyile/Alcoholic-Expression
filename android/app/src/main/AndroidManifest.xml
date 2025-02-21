@@ -6,7 +6,7 @@
     
    <application
         android:installLocation="auto"
-        android:label="alcoholic"
+        android:label="alco"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         

@@ -759,7 +759,7 @@ export const createGroup = onCall(async (request)=>{
 });
 
 
-export const creStoreateDraw = onCall(async (request)=>{
+export const createStoreDraw = onCall(async (request)=>{
   if (request.data.numberOfGrandPrices != request.data.ddrawGrandPrices.length) {
     return;
   }
@@ -850,14 +850,13 @@ onSchedule("5,25,45 8 * * FRI,SUN", async (event) => {*/
 // onSchedule("*/5 * * * *", async (event) => { */
 // http://127.0.0.1:5001/alcoholic-expressions/us-central1/convertStoreDrawsToCompetitions
 export const convertStoreDrawsToCompetitions =
-onSchedule("5,25,45 8 * * FRI,SUN", async (event) => {
-// onRequest(async (req, res)=>{
+//onSchedule("5,25,45 8 * * FRI,SUN", async (event) => {
+onRequest(async (req, res)=>{
   try {
     // Consistent timestamp
     const justNow = Timestamp.now().toDate();
 
-    log(`Timestamp ${justNow.getFullYear()}-${justNow.getMonth()}-${justNow.getDate()}-${justNow.getHours()}-${justNow.getMinutes()}` );
-
+    log(`${justNow.getFullYear()}  ${justNow.getMonth() + 1} ${justNow.getDate()} ${justNow.getHours() + 2}`);
 
     // const justNow = new Date(); // Retrieve Current Time.
 
@@ -887,6 +886,8 @@ onSchedule("5,25,45 8 * * FRI,SUN", async (event) => {
           if (storeDrawsSnapshot.size) {
             storeDrawsSnapshot.forEach(async (storeDrawDoc)=>{
               const sectionName = storeDrawDoc.data()["sectionName"];
+              
+
               /* Only initiate the conversion step if there are
                  groups belonging in a section which is the same
                  as the store draw's.*/
@@ -964,7 +965,7 @@ onSchedule("5,25,45 8 * * FRI,SUN", async (event) => {
           }
         });
 
-    // res.json({result: `Done Converting Store Draws Into Competitions.`});
+    res.json({result: `Done Converting Store Draws Into Competitions.`});
   }
   catch (e) {
     logger.log(e);

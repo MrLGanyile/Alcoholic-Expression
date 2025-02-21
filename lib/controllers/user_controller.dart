@@ -107,7 +107,7 @@ class UserController extends GetxController {
   late Rx<String?> _leaderUsername = Rx('');
   String? get leaderUsername => _leaderUsername.value;
 
-  void clearAll() {
+  void clearGroup() {
     _groupImageFile = Rx(null);
     _groupImageURL = Rx('');
     _groupName = Rx('');

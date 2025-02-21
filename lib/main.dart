@@ -126,18 +126,19 @@ class _MyApplicationState extends State<MyApplication> {
   Widget build(BuildContext context) {
     return FirebasePhoneAuthProvider(
         child: GetMaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'Alco',
-            theme: ThemeData(
-              primaryColor: const Color.fromARGB(115, 231, 195, 214),
-              secondaryHeaderColor: const Color.fromARGB(115, 231, 195, 214),
-            ),
+      debugShowCheckedModeBanner: false,
+      title: 'Alco',
+      theme: ThemeData(
+        primaryColor: const Color.fromARGB(115, 231, 195, 214),
+        secondaryHeaderColor: const Color.fromARGB(115, 231, 195, 214),
+      ),
 
-            // Make sure to create a draw given there are groups belonging to the host's location.
-            // home: StoreDrawRegistrationWidget(storeOwnerPhoneNumber: '0835367834'),
-            // home: VerificationScreen(phoneNumber: '+27661813561', pin: '12312'),
-            // home: StartScreen(),
-            // home: const AlcoholicRegistrationWidget(),
-            home: WonPriceSummaryCommentsWidgets()));
+      // Make sure to create a draw given there are groups belonging to the host's location.
+      // home: StoreDrawRegistrationWidget(storeOwnerPhoneNumber: '0835367834'),
+      // home: VerificationScreen(phoneNumber: '+27661813561', pin: '12312'),
+      home: StartScreen(),
+      // home: const AlcoholicRegistrationWidget(),
+      // home: WonPriceSummaryCommentsWidgets()
+    ));
   }
 }
