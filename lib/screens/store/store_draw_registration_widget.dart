@@ -282,8 +282,6 @@ class StoreDrawRegistrationWidgetState
               // Does not go to the next screen.
               if (result == StoreDrawSavingStatus.saved) {
                 storeController.setAdminCode('');
-                storeController.clearGrandPrices();
-
                 Get.to(() => StartScreen());
               } else if (result == StoreDrawSavingStatus.incomplete) {
                 Get.snackbar('Error', 'Incomplete Draw Info');

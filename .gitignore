@@ -49,8 +49,3 @@ app.*.map.json
 # Phone Authentication Example
 lib/phone auth example/
 node_modules
-
-# Keys
-/android/app/release-keystore.jks
-/android/app/release-keystore.jks.old
-/key.properties

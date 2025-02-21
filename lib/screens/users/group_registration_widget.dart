@@ -50,7 +50,7 @@ class GroupRegistrationWidget extends StatelessWidget {
   late DropdownButton2<String> dropDowButton;
 
   GroupRegistrationWidget() {
-    userController.clearGroup();
+    userController.clearAll();
   }
 
   @override
@@ -386,34 +386,7 @@ class GroupRegistrationWidget extends StatelessWidget {
 
               // Does not go to the next screen.
               if (result == GroupSavingStatus.saved) {
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    actions: [
-                      TextButton(
-                          onPressed: () {
-                            userController.clearGroup();
-                            leaderPhoneNumberEditingController.clear();
-                            leaderUsernameEditingController.clear();
-                            phoneNumber1EditingController.clear();
-                            username1EditingController.clear();
-                            phoneNumber2EditingController.clear();
-                            username2EditingController.clear();
-                            phoneNumber3EditingController.clear();
-                            username3EditingController.clear();
-                            phoneNumber4EditingController.clear();
-                            username4EditingController.clear();
-                            groupNameEditingController.clear();
-                            groupSpecificAreaEditingController.clear();
-                            Get.back();
-                          },
-                          child: const Text('Close')),
-                    ],
-                    title: const Text('Confirmed'),
-                    contentPadding: const EdgeInsets.all(20),
-                    content: const Text('Group Created Successfully!'),
-                  ),
-                );
+                debug.log('Show dialog box');
               }
             }
 

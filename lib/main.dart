@@ -11,7 +11,6 @@ import 'controllers/store_controller.dart';
 import '/controllers/user_controller.dart';
 
 import 'screens/store/store_draw_registration_widget.dart';
-import 'screens/users/won_price_summary_comments_widget.dart';
 import 'screens/utils/firebase_options.dart';
 import 'screens/users/alcoholic_registration_widget.dart';
 import 'screens/users/group_registration_widget.dart';
@@ -138,7 +137,6 @@ class _MyApplicationState extends State<MyApplication> {
       // home: VerificationScreen(phoneNumber: '+27661813561', pin: '12312'),
       home: StartScreen(),
       // home: const AlcoholicRegistrationWidget(),
-      // home: WonPriceSummaryCommentsWidgets()
     ));
   }
 }

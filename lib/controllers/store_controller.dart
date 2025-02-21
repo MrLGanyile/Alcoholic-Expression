@@ -80,20 +80,6 @@ class StoreController extends GetxController {
   late Rx<String?> _adminCode = Rx<String?>(null);
   String? get adminCode => _adminCode.value;
 
-  void clearGrandPrices() {
-    _drawDateYear = Rx<int?>(-1);
-    _drawDateMonth = Rx<int?>(-1);
-    _drawDateDay = Rx<int?>(-1);
-    _drawDateHour = Rx<int?>(-1);
-    _drawDateMinute = Rx<int?>(-1);
-
-    _grandPrice1ImageURL = Rx<String?>('');
-    _grandPrice2ImageURL = Rx<String?>('');
-    _grandPrice3ImageURL = Rx<String?>('');
-    _grandPrice4ImageURL = Rx<String?>('');
-    _grandPrice5ImageURL = Rx<String?>('');
-  }
-
   // Branch : store_resources_crud ->  store_resources_crud_data_access
   void chooseStoreImageFromGallery() async {
     final storePickedImageFile =
