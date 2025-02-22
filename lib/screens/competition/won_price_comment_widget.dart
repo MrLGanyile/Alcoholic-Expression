@@ -10,30 +10,6 @@ import 'dart:developer' as debug;
 class WonPriceCommentWidget extends StatelessWidget {
   WonPriceComment wonPriceComment;
 
-  String passedTimeRepresentation() {
-    Duration duration = wonPriceComment.dateCreated!.difference(DateTime.now());
-
-    debug.log('uration.inMinutes ${duration.inMinutes}');
-
-    String passedTimeRepresentation;
-    if (duration.inMinutes.abs() <= 1) {
-      passedTimeRepresentation = 'now';
-    } else if (duration.inMinutes.abs() <= 59) {
-      passedTimeRepresentation = '${duration.inMinutes.abs()}mins';
-    } else if (duration.inMinutes.abs() < 120) {
-      passedTimeRepresentation = '1h';
-    } else if (duration.inMinutes.abs() < 60 * 24) {
-      passedTimeRepresentation = '${duration.inHours.abs()}h';
-    } else if (duration.inMinutes.abs() < 60 * 24 * 7) {
-      passedTimeRepresentation = '${duration.inDays.abs()}d';
-    } else {
-      passedTimeRepresentation =
-          '${duration.inMinutes.abs() ~/ (60 * 24 * 7)}w';
-    }
-
-    return passedTimeRepresentation;
-  }
-
   WonPriceCommentWidget({required this.wonPriceComment});
   @override
   Widget build(BuildContext context) => Row(
@@ -55,7 +31,7 @@ class WonPriceCommentWidget extends StatelessWidget {
                                 NetworkImage(snapshot.data as String),
                           );
                         } else if (snapshot.hasError) {
-                          Get.snackbar('Error', snapshot.error.toString());
+                          debug.log(snapshot.error.toString());
                           return const Center(
                             child: CircularProgressIndicator(),
                           );
@@ -78,7 +54,7 @@ class WonPriceCommentWidget extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: Text(
-                      passedTimeRepresentation(),
+                      wonPriceComment.passedTimeRepresentation(),
                       style: TextStyle(
                           fontSize: 12,
                           color: MyApplication.logoColor1,

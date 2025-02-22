@@ -1,5 +1,8 @@
+import 'package:alco/screens/competition/won_price_summary_comments_widget.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../controllers/competition_controller.dart';
 import '../../main.dart';
 
 import '../../models/locations/converter.dart';
@@ -22,6 +25,9 @@ class WonPriceSummaryWidgetState extends State<WonPriceSummaryWidget> {
   Reference storageReference = FirebaseStorage.instance
       .refFromURL("gs://alcoholic-expressions.appspot.com/");
   late List<Reference> groupMembersImageReferences;
+
+  CompetitionController competitionController =
+      CompetitionController.competitionController;
 
   WonPriceSummaryWidgetState();
 
@@ -260,44 +266,6 @@ class WonPriceSummaryWidgetState extends State<WonPriceSummaryWidget> {
           ],
         ),
       ],
-    );
-  }
-
-  Widget retrieveCommentTextField(BuildContext context) {
-    TextEditingController controller = TextEditingController();
-    return TextField(
-      maxLines: 10,
-      style: TextStyle(color: MyApplication.scaffoldBodyColor),
-      cursorColor: MyApplication.scaffoldBodyColor,
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: 'Write Your Comment',
-        helperMaxLines: 10,
-        prefixIcon: Icon(Icons.comment, color: MyApplication.logoColor1),
-        suffixIcon: GestureDetector(
-          child: Icon(Icons.send, color: MyApplication.logoColor1),
-          onTap: () {
-            // Save Comment
-          },
-        ),
-        labelStyle: TextStyle(
-          fontSize: 14,
-          color: MyApplication.logoColor2,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(6),
-          borderSide: BorderSide(
-            color: MyApplication.logoColor2,
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(6),
-          borderSide: BorderSide(
-            color: MyApplication.logoColor2,
-          ),
-        ),
-      ),
-      obscureText: false,
     );
   }
 
@@ -657,12 +625,26 @@ class WonPriceSummaryWidgetState extends State<WonPriceSummaryWidget> {
               // Group Location/Area Details
               SizedBox(height: 50, child: retrieveGroupInfo(context)),
             ]),
-          ), /*
+          ),
+
           Container(
-            margin: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
-            child:
-                SizedBox(height: 40, child: retrieveCommentTextField(context)),
-          ),*/
+            margin: const EdgeInsets.only(right: 15),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: IconButton(
+                onPressed: () {
+                  Get.to(() => WonPriceSummaryCommentsWidgets(
+                      wonPriceSummaryFK:
+                          widget.wonPriceSummary.wonPriceSummaryId));
+                },
+                icon: Icon(
+                  Icons.message,
+                  size: 30,
+                  color: MyApplication.logoColor1,
+                ),
+              ),
+            ),
+          )
         ],
       ),
     );

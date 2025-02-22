@@ -25,6 +25,14 @@ service firebase.storage {
     function isValidFileSize(data) {
       return data.size < 10 * 1024 * 1024;
     }
+
+    match /admins/profile_images/normal/{adminImage}{
+      allow write, read;
+    }
+
+    match /admins/profile_images/superior/{adminImage}{
+      allow write, read;
+    }
   
 
     // Branch : store_resources_crud ->  store_resources_crud_storage_security

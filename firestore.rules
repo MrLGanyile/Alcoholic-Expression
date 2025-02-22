@@ -297,6 +297,12 @@ service cloud.firestore {
 
       // Everybody can see a won price.
       allow read;
+
+      // Note: Has Model Named {WonPriceComment}
+      match /comments/{commentId}{
+        allow write;
+        allow read;
+      }
     }
 
     // Branch : store_resources_crud ->  store_resources_crud_storage_security_rules

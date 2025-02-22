@@ -10,11 +10,14 @@ import 'package:image_picker/image_picker.dart';
 
 import '../models/locations/converter.dart';
 import '../models/locations/section_name.dart';
+import '../models/users/admin.dart';
 import '../models/users/alcoholic.dart';
 import '../models/users/group.dart';
 import 'share_dao_functions.dart';
+import '../models/users/user.dart' as myUser;
 
 enum GroupSavingStatus {
+  incorrectData,
   incompleteData,
   loginRequired,
   alreadyCreatedGroup,
@@ -45,6 +48,15 @@ class UserController extends GetxController {
   void setHasPickedGroupSectionName(bool hasPickedGroupSectionName) {
     _hasPickedGroupSectionName = Rx<bool>(hasPickedGroupSectionName);
   }
+
+  // ignore: prefer_final_fields
+  late Rx<myUser.User?> _currentlyLoggedInUser = Rx(Admin(
+      phoneNumber: '0661813561',
+      profileImageURL: 'admins/profile_images/superior/0661813561.jpg',
+      isFemale: false,
+      isSuperiorAdmin: true,
+      key: "000"));
+  myUser.User? get currentlyLoggedInUser => _currentlyLoggedInUser.value;
 
   late Rx<File?> _groupImageFile;
   File? get groupImageFile => _groupImageFile.value;
@@ -106,6 +118,32 @@ class UserController extends GetxController {
   String? get leaderPhoneNumber => _leaderPhoneNumber.value;
   late Rx<String?> _leaderUsername = Rx('');
   String? get leaderUsername => _leaderUsername.value;
+
+  void loginUser(String userPhoneNumber) {
+    DocumentReference reference =
+        firestore.collection('alcoholics').doc(userPhoneNumber);
+
+    reference.snapshots().map((alcoholicDoc) {
+      // Currently logged in user is an alcoholic
+      if (alcoholicDoc.exists) {
+        Alcoholic alcoholic = Alcoholic.fromJson(alcoholicDoc.data());
+        _currentlyLoggedInUser = Rx(alcoholic);
+      } else {
+        reference = firestore.collection('admins').doc(userPhoneNumber);
+
+        reference.snapshots().map((adminDoc) {
+          if (adminDoc.exists) {
+            Admin admin = Admin.fromJson(adminDoc.data());
+            _currentlyLoggedInUser = Rx(admin);
+          }
+        });
+      }
+    });
+  }
+
+  void logoutUser() {
+    _currentlyLoggedInUser = Rx(null);
+  }
 
   void clearAll() {
     _groupImageFile = Rx(null);
@@ -545,6 +583,11 @@ class UserController extends GetxController {
         _groupName.value != null &&
         _groupSectionName.value != null &&
         _groupSpecificArea.value != null) {
+      if (!allValidPhoneNumbers()) {
+        Get.snackbar('Error', 'Invalid Phone Number Entered.');
+        return GroupSavingStatus.incorrectData;
+      }
+
       String groupSectionName = Converter.asString(_groupSectionName.value!);
 
       List<Map<String, dynamic>> members = [];
