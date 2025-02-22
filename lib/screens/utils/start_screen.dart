@@ -1,7 +1,12 @@
-import 'package:alco/screens/users/group_registration_widget.dart';
-import 'package:get/get.dart';
+import 'package:alco/screens/users/admin_entrance_widget.dart';
 
 import '../store/store_draw_registration_widget.dart';
+import '../users/admin_registration_widget.dart';
+import '../users/alcoholic_registration_widget.dart';
+import '../users/alcoholics_widgets.dart';
+import '/screens/users/group_registration_widget.dart';
+import 'package:get/get.dart';
+
 import '/screens/store/stores_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -22,6 +27,8 @@ class StartScreen extends StatefulWidget {
 class _StartScreenState extends State<StartScreen>
     with SingleTickerProviderStateMixin {
   int currentIndex = 0;
+  double listTilesFontSize = 15;
+  double listTilesIconSize = 30;
   List<String> titles = [
     'Recent Wins',
     'All Stores',
@@ -52,6 +59,105 @@ class _StartScreenState extends State<StartScreen>
 
   @override
   Widget build(BuildContext context) => Scaffold(
+        drawer: Drawer(
+          width: MediaQuery.of(context).size.width * 0.5,
+          backgroundColor: Colors.black.withOpacity(0.9),
+          child: ListView(
+            children: [
+              ListTile(
+                leading: Icon(
+                  Icons.info,
+                  size: listTilesIconSize,
+                ),
+                iconColor: MyApplication.logoColor1,
+                textColor: MyApplication.logoColor2,
+                title: Text(
+                  'About',
+                  style: TextStyle(
+                    fontSize: listTilesFontSize,
+                  ),
+                ),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => const AboutDialog(
+                      applicationIcon: CircleAvatar(
+                        backgroundImage: AssetImage('assets/logo.png'),
+                      ),
+                      applicationLegalese: 'Lealese',
+                      applicationName: 'Alco',
+                      applicationVersion: 'version 1.0.0',
+                      children: [Text('Cheers!!!')],
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading:
+                    Icon(Icons.admin_panel_settings, size: listTilesIconSize),
+                iconColor: MyApplication.logoColor1,
+                textColor: MyApplication.logoColor2,
+                title: Text(
+                  'Admins',
+                  style: TextStyle(
+                    fontSize: listTilesFontSize,
+                  ),
+                ),
+                onTap: () => Get.to(() => AdminRegistrationWidget()),
+              ),
+              ListTile(
+                leading:
+                    Icon(Icons.location_searching, size: listTilesIconSize),
+                iconColor: MyApplication.logoColor1,
+                textColor: MyApplication.logoColor2,
+                title: Text(
+                  'Areas',
+                  style: TextStyle(
+                    fontSize: listTilesFontSize,
+                  ),
+                ),
+                onTap: () {},
+              ),
+              /*
+              ListTile(
+                leading: Icon(Icons.local_drink, size: listTilesIconSize),
+                iconColor: MyApplication.logoColor1,
+                textColor: MyApplication.logoColor2,
+                title: Text(
+                  'Draws',
+                  style: TextStyle(
+                    fontSize: listTilesFontSize,
+                  ),
+                ),
+                onTap: () => Get.to(() => const AdminEntranceWidget()),
+              ),*/
+              ListTile(
+                leading: Icon(Icons.account_circle, size: listTilesIconSize),
+                iconColor: MyApplication.logoColor1,
+                textColor: MyApplication.logoColor2,
+                title: Text(
+                  'Join',
+                  style: TextStyle(
+                    fontSize: listTilesFontSize,
+                  ),
+                ),
+                onTap: () => Get.to(() => const AlcoholicRegistrationWidget()),
+              ),
+              ListTile(
+                leading: Icon(Icons.group, size: listTilesIconSize),
+                iconColor: MyApplication.logoColor1,
+                textColor: MyApplication.logoColor2,
+                title: Text(
+                  'Users',
+                  style: TextStyle(
+                    fontSize: listTilesFontSize,
+                  ),
+                ),
+                onTap: () => Get.to(() => AlcoholicsWidget()),
+              ),
+            ],
+          ),
+        ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: currentIndex != 2
             ? const SizedBox.shrink()
@@ -67,12 +173,16 @@ class _StartScreenState extends State<StartScreen>
         backgroundColor: MyApplication.scaffoldColor,
         appBar: AppBar(
           backgroundColor: MyApplication.scaffoldColor,
-          leading: IconButton(
-            icon: const Icon(Icons.menu),
-            iconSize: 30,
-            color: MyApplication.logoColor2,
-            onPressed: (() {}),
-          ),
+          leading: Builder(builder: (context) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              iconSize: 30,
+              color: MyApplication.logoColor2,
+              onPressed: (() {
+                Scaffold.of(context).openDrawer();
+              }),
+            );
+          }),
           title: Text(
             titles[currentIndex],
             style: TextStyle(

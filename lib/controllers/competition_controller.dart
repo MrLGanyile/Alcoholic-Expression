@@ -1,4 +1,4 @@
-import 'package:alco/controllers/user_controller.dart';
+import 'package:alco/controllers/group_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,6 +12,8 @@ import '../models/users/won_price_comment.dart';
 
 import 'dart:developer' as debug;
 
+import 'share_dao_functions.dart';
+
 // Branch : competition_resources_crud ->  competitions_data_access
 class CompetitionController extends GetxController {
   final firestore = FirebaseFirestore.instance;
@@ -21,7 +23,7 @@ class CompetitionController extends GetxController {
   final auth = FirebaseAuth.instance;
 
   static CompetitionController competitionController = Get.find();
-  UserController userController = UserController.instance;
+  GroupController groupController = GroupController.instance;
 
   // Branch : won_price_summary_resources_crud ->  won_price_summary_resources_data_access
   Stream<List<WonPriceSummary>> readAllWonPriceSummaries() =>
@@ -171,7 +173,7 @@ class CompetitionController extends GetxController {
     String wonPriceSummaryFK,
     String message,
   ) async {
-    if (userController.currentlyLoggedInUser == null) {
+    if (currentlyLoggedInUser == null) {
       return;
     }
 
@@ -185,9 +187,9 @@ class CompetitionController extends GetxController {
         wonPriceCommentId: reference.id,
         wonPriceSummaryFK: wonPriceSummaryFK,
         message: message,
-        imageURL: userController.currentlyLoggedInUser!.profileImageURL,
-        username: userController.currentlyLoggedInUser! is Alcoholic
-            ? (userController.currentlyLoggedInUser! as Alcoholic).username
+        imageURL: currentlyLoggedInUser!.profileImageURL,
+        username: currentlyLoggedInUser! is Alcoholic
+            ? (currentlyLoggedInUser! as Alcoholic).username
             : 'Admin');
 
     await reference.set(comment.toJson());

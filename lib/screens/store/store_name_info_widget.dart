@@ -1,4 +1,4 @@
-import '../../controllers/user_controller.dart';
+import '../../controllers/group_controller.dart';
 import '../competition/won_grand_price_widget.dart';
 import '/controllers/competition_controller.dart';
 import '/screens/competition/competition_result_widget.dart';
@@ -43,7 +43,7 @@ class StoreNameInfoWidget extends StatefulWidget {
 
 class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
   StoreController storeController = StoreController.storeController;
-  UserController userController = UserController.instance;
+  GroupController groupController = GroupController.instance;
   late CompetitionController competitionController;
   late Stream<DocumentSnapshot> storeNameInfoSteam;
   late Reference storageReference;
@@ -80,7 +80,7 @@ class StoreNameInfoWidgetState extends State<StoreNameInfoWidget> {
         .retrieveStoreNameInfo(widget.storeNameInfo.storeNameInfoId);
     storageReference = FirebaseStorage.instance
         .refFromURL("gs://alcoholic-expressions.appspot.com/");
-    groupsStream = userController.readGroups(widget.storeNameInfo.sectionName);
+    groupsStream = groupController.readGroups(widget.storeNameInfo.sectionName);
   }
 
   void updateIsCurrentlyViewed(bool isCurrentlyViewed) {

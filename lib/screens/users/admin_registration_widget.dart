@@ -1,8 +1,10 @@
-import 'package:alco/screens/users/verification_screen.dart';
+import '/controllers/admin_controller.dart';
+import '/models/locations/converter.dart';
 import 'package:get/get.dart';
 
-import '../../controllers/alcoholic_controller.dart';
-import '../../controllers/share_dao_functions.dart';
+import '/screens/utils/page_navigation.dart';
+import '/screens/users/verification_screen.dart';
+
 import '/models/locations/supported_area.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_container/easy_container.dart';
@@ -16,55 +18,58 @@ import '../../controllers/location_controller.dart';
 import '../../controllers/group_controller.dart';
 import '../../main.dart';
 
+import '../utils/globals.dart';
 import 'dart:developer' as debug;
 import 'dart:math';
 
-class AlcoholicRegistrationWidget extends StatefulWidget {
-  const AlcoholicRegistrationWidget({
+class AdminRegistrationWidget extends StatelessWidget {
+  AdminRegistrationWidget({
     Key? key,
   }) : super(key: key);
 
-  @override
-  // ignore: library_private_types_in_public_api
-  _AlcoholicRegistrationWidgetState createState() =>
-      _AlcoholicRegistrationWidgetState();
-}
-
-class _AlcoholicRegistrationWidgetState
-    extends State<AlcoholicRegistrationWidget> {
   GroupController groupController = GroupController.instance;
+  AdminController adminController = AdminController.instance;
   LocationController locationController = LocationController.locationController;
-  AlcoholicController alcoholicController =
-      AlcoholicController.alcoholicController;
 
-  late Stream<List<SupportedArea>> supportedAreasStream;
+  late Stream<List<SupportedArea>> supportedAreasStream =
+      locationController.readAllSupportedAreas();
   late List<String> items;
 
-  String? selectedValue;
-  final _formKey = GlobalKey<FormState>();
+  List<String> gender = ['Female', 'Male'];
+  String currentGender = 'Female';
 
   Color textColor = Colors.green;
   late DropdownButton2<String> dropDowButton;
 
-  TextEditingController usernameEditingController = TextEditingController();
   TextEditingController phoneNumberEditingController = TextEditingController();
 
-  String? enteredCode;
-  late String correctCode;
-
-  @override
-  void initState() {
-    super.initState();
-
-    supportedAreasStream = locationController.readAllSupportedAreas();
+  bool containsNumbersOnly(String phoneNumber) {
+    for (var charIndex = 0; charIndex < phoneNumber.length; charIndex++) {
+      if (!(phoneNumber[charIndex] == '0' ||
+          phoneNumber[charIndex] == '1' ||
+          phoneNumber[charIndex] == '2' ||
+          phoneNumber[charIndex] == '3' ||
+          phoneNumber[charIndex] == '4' ||
+          phoneNumber[charIndex] == '5' ||
+          phoneNumber[charIndex] == '6' ||
+          phoneNumber[charIndex] == '7' ||
+          phoneNumber[charIndex] == '8' ||
+          phoneNumber[charIndex] == '9')) {
+        return false;
+      }
+    }
+    return true;
   }
 
-  void setVerificationCode(String? code) {
-    setState(() {
-      enteredCode = code;
-    });
+  bool isValidPhoneNumber() {
+    return phoneNumberEditingController.text.length == 9 &&
+        (phoneNumberEditingController.text.startsWith('6') ||
+            phoneNumberEditingController.text.startsWith('7') ||
+            phoneNumberEditingController.text.startsWith('8')) &&
+        containsNumbersOnly(phoneNumberEditingController.text);
   }
 
+  // Include radio buttons for isFemale
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -104,7 +109,7 @@ class _AlcoholicRegistrationWidgetState
                 height: 10,
               ),
 
-              // Alcoholic Phone Number.
+              // Admin Phone Number.
               EasyContainer(
                 elevation: 0,
                 height: 65,
@@ -134,7 +139,7 @@ class _AlcoholicRegistrationWidgetState
                 height: 10,
               ),
 
-              // Alcoholic Area Name
+              // Admin Area Name
               StreamBuilder<List<SupportedArea>>(
                 stream: supportedAreasStream,
                 builder: (context, snapshot) {
@@ -146,7 +151,7 @@ class _AlcoholicRegistrationWidgetState
                       dbItems.add(snapshot.data![areaIndex].toString());
                     }
                     items = dbItems;
-                    return pickAreaName();
+                    return pickAreaName(context);
                   } else if (snapshot.hasError) {
                     debug.log(
                         "Error Fetching Supported Areas Data - ${snapshot.error}");
@@ -165,12 +170,62 @@ class _AlcoholicRegistrationWidgetState
                 height: 5,
               ),
 
-              // Alcoholic Image
-              GetBuilder<AlcoholicController>(builder: (_) {
-                return alcoholicController.newAlcoholicImageURL!.isNotEmpty
+              // Femal Or Male
+              GetBuilder<AdminController>(builder: (_) {
+                return Row(
+                  children: [
+                    Expanded(
+                      child: RadioListTile(
+                          title: Text(
+                            gender[0],
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: MyApplication.logoColor1),
+                          ),
+                          value: gender[0],
+                          groupValue: adminController.newAdminIsFemale
+                              ? gender[0]
+                              : gender[1],
+                          onChanged: (newValue) {
+                            if (newValue == 'Female') {
+                              adminController.setNewAdminIsFemale(true);
+                            } else {
+                              adminController.setNewAdminIsFemale(false);
+                            }
+                          }),
+                    ),
+                    Expanded(
+                      child: RadioListTile(
+                          title: Text(
+                            gender[1],
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: MyApplication.logoColor1),
+                          ),
+                          value: gender[1],
+                          groupValue: adminController.newAdminIsFemale
+                              ? gender[0]
+                              : gender[1],
+                          onChanged: (newValue) {
+                            if (newValue == 'Female') {
+                              adminController.setNewAdminIsFemale(true);
+                            } else {
+                              adminController.setNewAdminIsFemale(false);
+                            }
+                          }),
+                    ),
+                  ],
+                );
+              }),
+
+              // Admin Image
+              GetBuilder<AdminController>(builder: (_) {
+                return adminController.newAdminProfileImageURL.isNotEmpty
                     ? CircleAvatar(
                         backgroundImage: NetworkImage(
-                            alcoholicController.newAlcoholicImageURL!),
+                            adminController.newAdminProfileImageURL),
                         radius: MediaQuery.of(context).size.width * 0.15,
                       )
                     : const SizedBox.shrink();
@@ -184,7 +239,7 @@ class _AlcoholicRegistrationWidgetState
                     Expanded(
                       flex: 2,
                       child: Text(
-                        'Capture/Pick Your Face',
+                        'Capture/Pick Admin Face',
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -203,12 +258,10 @@ class _AlcoholicRegistrationWidgetState
                               icon: Icon(Icons.camera_alt,
                                   color: MyApplication.logoColor2),
                               onPressed: () {
-                                if (isValidPhoneNumber(
-                                    phoneNumberEditingController.text)) {
-                                  alcoholicController
-                                      .captureAlcoholicProfileImageWithCamera(
-                                          phoneNumberEditingController.text,
-                                          usernameEditingController.text);
+                                if (isValidPhoneNumber()) {
+                                  adminController
+                                      .captureAdminProfileImageWithCamera(
+                                          phoneNumberEditingController.text);
                                 } else {
                                   Get.snackbar('Error', 'Invalid Phone Number');
                                 }
@@ -223,12 +276,11 @@ class _AlcoholicRegistrationWidgetState
                               icon: Icon(Icons.upload,
                                   color: MyApplication.logoColor2),
                               onPressed: () {
-                                if (isValidPhoneNumber(
-                                    phoneNumberEditingController.text)) {
-                                  alcoholicController
-                                      .chooseAlcoholicProfileImageFromGallery(
-                                          phoneNumberEditingController.text,
-                                          usernameEditingController.text);
+                                if (isValidPhoneNumber()) {
+                                  adminController
+                                      .chooseAdminProfileImageFromGallery(
+                                    phoneNumberEditingController.text,
+                                  );
                                 } else {
                                   Get.snackbar('Error', 'Invalid Phone Number');
                                 }
@@ -256,7 +308,7 @@ class _AlcoholicRegistrationWidgetState
                     )
                   : Column(
                       children: [
-                        // Sign Up Alcoholic
+                        // Sign Up Admin
                         Container(
                           width: MediaQuery.of(context).size.width,
                           height: 45,
@@ -269,17 +321,16 @@ class _AlcoholicRegistrationWidgetState
                           child: InkWell(
                             onTap: () async {
                               debug.log(
-                                  'Alcoholic Validation From AdmiRegistrationScreen');
-                              // Create Alcoholic Now
-                              if (alcoholicController
-                                      .newAlcoholicPhoneNumber!.isNotEmpty &&
-                                  alcoholicController
-                                      .newAlcoholicImageURL!.isNotEmpty &&
-                                  alcoholicController
-                                          .newAlcoholicProfileImageFile !=
+                                  'Admin Validation From AdmiRegistrationScreen');
+                              // Create Admin Now
+                              if (adminController
+                                      .newAdminPhoneNumber!.isNotEmpty &&
+                                  adminController
+                                      .newAdminProfileImageURL.isNotEmpty &&
+                                  adminController.newAdminProfileImage !=
                                       null) {
                                 debug.log(
-                                    'Alcoholic Validated From AdmiRegistrationScreen');
+                                    'Admin Validated From AdmiRegistrationScreen');
                                 final auth = FirebaseAuth.instance;
 
                                 await auth.verifyPhoneNumber(
@@ -288,39 +339,37 @@ class _AlcoholicRegistrationWidgetState
                                   verificationCompleted:
                                       (PhoneAuthCredential credential) async {
                                     debug.log(
-                                        '1. About To Signed In User From AlcoholicRegistrationScreen...');
+                                        '1. About To Signed In User From AdminRegistrationScreen...');
                                     // ANDROID ONLY!
                                     // Sign the user in (or link) with the auto-generated credential
                                     await auth.signInWithCredential(credential);
 
                                     debug.log(
-                                        '1. Successfully Signed In User From AlcoholicRegistrationScreen...');
-                                    Future<AlcoholicSavingStatus>
+                                        '1. Successfully Signed In User From AdminRegistrationScreen...');
+                                    Future<AdminSavingStatus>
                                         adminSavingStatus =
-                                        alcoholicController.saveAlcoholic();
+                                        adminController.saveAdmin();
 
                                     adminSavingStatus.then((value) {
                                       if (value ==
-                                          AlcoholicSavingStatus.unathourized) {
+                                          AdminSavingStatus.unathourized) {
                                         debug.log(
-                                            'AlcoholicSavingStatus.unathourized From AlcoholicRegistrationScreen...');
+                                            'AdminSavingStatus.unathourized From AdminRegistrationScreen...');
                                       } else if (value ==
-                                          AlcoholicSavingStatus
-                                              .adminAlreadyExist) {
+                                          AdminSavingStatus.adminAlreadyExist) {
                                         debug.log(
-                                            'AlcoholicSavingStatus.adminAlreadyExist From AlcoholicRegistrationScreen...');
+                                            'AdminSavingStatus.adminAlreadyExist From AdminRegistrationScreen...');
                                       } else if (value ==
-                                          AlcoholicSavingStatus.loginRequired) {
+                                          AdminSavingStatus.loginRequired) {
                                         debug.log(
-                                            'AlcoholicSavingStatus.loginRequired From AlcoholicRegistrationScreen...');
+                                            'AdminSavingStatus.loginRequired From AdminRegistrationScreen...');
                                       } else if (value ==
-                                          AlcoholicSavingStatus
-                                              .incompleteData) {
+                                          AdminSavingStatus.incompleteData) {
                                         debug.log(
-                                            'AlcoholicSavingStatus.incompleteData From AlcoholicRegistrationScreen...');
+                                            'AdminSavingStatus.incompleteData From AdminRegistrationScreen...');
                                       } else {
                                         debug.log(
-                                            '2. Successfully Saved User From AlcoholicRegistrationScreen...');
+                                            '2. Successfully Saved User From AdminRegistrationScreen...');
                                       }
                                     });
                                   },
@@ -396,7 +445,7 @@ class _AlcoholicRegistrationWidgetState
     );
   }
 
-  Widget pickAreaName() {
+  Widget pickAreaName(BuildContext context) {
     dropDowButton = DropdownButton2<String>(
       isExpanded: true,
       hint: Row(
@@ -411,7 +460,7 @@ class _AlcoholicRegistrationWidgetState
           ),
           Expanded(
             child: Text(
-              'Pick Your Area',
+              'Admin\'s Area',
               style: TextStyle(
                 fontSize: 14,
                 color: MyApplication.logoColor2,
@@ -435,11 +484,9 @@ class _AlcoholicRegistrationWidgetState
                 ),
               ))
           .toList(),
-      value: selectedValue,
+      value: Converter.asString(adminController.newAdminSectionName),
       onChanged: (String? value) {
-        setState(() {
-          selectedValue = value;
-        });
+        adminController.setNewAdminSectionName(Converter.toSectionName(value!));
       },
       buttonStyleData: ButtonStyleData(
         height: 60,

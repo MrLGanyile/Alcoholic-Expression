@@ -1,20 +1,21 @@
-import 'package:alco/controllers/share_dao_functions.dart';
-import 'package:alco/screens/utils/home_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:pinput/pinput.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 
-import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
+import '../../controllers/group_controller.dart';
+import '../../main.dart';
+
+import 'package:flutter/material.dart';
 
 import 'dart:developer' as debug;
-
-import '../utils/page_navigation.dart';
 
 // Branch : group_resources_crud ->  create_group_resources_front_end
 class VerificationScreen extends StatefulWidget {
   String phoneNumber;
-  String correctPin;
+  String verificationId;
 
-  VerificationScreen({required this.phoneNumber, required this.correctPin});
+  VerificationScreen(
+      {Key? key, required this.phoneNumber, required this.verificationId})
+      : super(key: key);
 
   @override
   State<VerificationScreen> createState() => _VerificationScreenState();
@@ -22,19 +23,11 @@ class VerificationScreen extends StatefulWidget {
 
 class _VerificationScreenState extends State<VerificationScreen> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  TextEditingController otpController = TextEditingController();
+  GroupController groupController = GroupController.instance;
 
   @override
   Widget build(BuildContext context) {
-    Widget _resendCodeLink() => Text(
-          "Didn't the code,\nResend Code?",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontWeight: FontWeight.w200,
-            fontSize: 15,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-        );
-
     return Scaffold(
       body: SafeArea(
         child: SizedBox.expand(
@@ -55,59 +48,47 @@ class _VerificationScreenState extends State<VerificationScreen> {
                   _numberText()
                 ],
               ),
-              !showProgressBar
-                  ? pinInputForm()
-                  : const SimpleCircularProgressBar(),
-              _resendCodeLink(),
+              TextField(
+                controller: otpController,
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: 45,
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                decoration: BoxDecoration(
+                  color: MyApplication.logoColor1,
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+                child: InkWell(
+                  onTap: () async {
+                    try {
+                      PhoneAuthProvider.credential(
+                          verificationId: widget.verificationId,
+                          smsCode: otpController.text);
+                      debug.log(
+                          'Signed In Successfully From VerificationScreen');
+                    } catch (error) {
+                      Get.snackbar('Error', 'Error Signing The User In.');
+                      debug.log('Error Signing User From VerificationScreen');
+                    }
+                  },
+                  child: const Center(
+                    child: Text(
+                      'Verify',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+              )
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget pinInputForm() {
-    return Form(
-      key: formKey,
-      child: Column(
-        children: [
-          Pinput(
-            validator: ((value) {
-              debug.log(value!);
-              debug.log('${widget.correctPin} ${widget.phoneNumber}');
-
-              if (value == widget.correctPin) {
-                return null;
-              } else {
-                return 'Incorrect Pin';
-              }
-            }),
-            onCompleted: (userPin) {
-              showProgressBar = true;
-              if (userPin == widget.correctPin) {
-                Navigator.of(context)
-                    .push(CustomPageRoute(child: HomeWidget()));
-              }
-              showProgressBar = false;
-            },
-            errorBuilder: (errorText, userPin) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: Center(
-                  child: Text(
-                    errorText ?? '',
-                    style: const TextStyle(color: Colors.red),
-                  ),
-                ),
-              );
-            },
-          ),
-          TextButton(
-              onPressed: () {
-                formKey.currentState!.validate();
-              },
-              child: const Text('Validate')),
-        ],
       ),
     );
   }

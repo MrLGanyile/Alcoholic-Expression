@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 
 import '../../controllers/location_controller.dart';
 import '../../controllers/share_dao_functions.dart';
-import '../../controllers/user_controller.dart';
+import '../../controllers/group_controller.dart';
 import '../../main.dart';
 import '../../models/locations/converter.dart';
 import '../../models/locations/supported_area.dart';
@@ -40,7 +40,7 @@ class GroupRegistrationWidget extends StatelessWidget {
   TextEditingController username4EditingController = TextEditingController();
   TextEditingController phoneNumber4EditingController = TextEditingController();
 
-  UserController userController = UserController.instance;
+  GroupController groupController = GroupController.instance;
   StoreController storeController = StoreController.storeController;
 
   late Stream<List<SupportedArea>> supportedAreasStream =
@@ -50,7 +50,7 @@ class GroupRegistrationWidget extends StatelessWidget {
   late DropdownButton2<String> dropDowButton;
 
   GroupRegistrationWidget() {
-    userController.clearAll();
+    groupController.clearAll();
   }
 
   @override
@@ -229,7 +229,7 @@ class GroupRegistrationWidget extends StatelessWidget {
           ),
 
           // Group Area Name
-          GetBuilder<UserController>(builder: (_) {
+          GetBuilder<GroupController>(builder: (_) {
             return StreamBuilder<List<SupportedArea>>(
               stream: supportedAreasStream,
               builder: (context, snapshot) {
@@ -305,9 +305,9 @@ class GroupRegistrationWidget extends StatelessWidget {
   AspectRatio retrieveGroupImage(BuildContext context) {
     return AspectRatio(
         aspectRatio: 5 / 2,
-        child: GetBuilder<UserController>(
+        child: GetBuilder<GroupController>(
           builder: (_) {
-            return userController.groupImageURL!.isEmpty
+            return groupController.groupImageURL!.isEmpty
                 ? Container(
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
@@ -326,7 +326,7 @@ class GroupRegistrationWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                       image: DecorationImage(
                         fit: BoxFit.cover,
-                        image: NetworkImage(userController.groupImageURL!),
+                        image: NetworkImage(groupController.groupImageURL!),
                       ),
                     ),
                   );
@@ -349,7 +349,7 @@ class GroupRegistrationWidget extends StatelessWidget {
                 iconSize: MediaQuery.of(context).size.width * 0.15,
                 icon: Icon(Icons.camera_alt, color: MyApplication.logoColor1),
                 onPressed: () async {
-                  userController.captureGroupImageWithCamera(
+                  groupController.captureGroupImageWithCamera(
                       groupNameEditingController.text,
                       Converter.toSectionName(dropDowButton.value!),
                       groupSpecificAreaEditingController.text);
@@ -359,7 +359,7 @@ class GroupRegistrationWidget extends StatelessWidget {
                 iconSize: MediaQuery.of(context).size.width * 0.15,
                 icon: Icon(Icons.upload, color: MyApplication.logoColor1),
                 onPressed: () async {
-                  userController.chooseGroupImageFromGallery(
+                  groupController.chooseGroupImageFromGallery(
                       groupNameEditingController.text,
                       Converter.toSectionName(dropDowButton.value!),
                       groupSpecificAreaEditingController.text);
@@ -382,7 +382,7 @@ class GroupRegistrationWidget extends StatelessWidget {
           onTap: () async {
             if (isValidInputWithoutImages()) {
               debug.log('isValideInputWithoutImages -> True');
-              final result = await userController.createGroup();
+              final result = await groupController.createGroup();
 
               // Does not go to the next screen.
               if (result == GroupSavingStatus.saved) {
@@ -406,8 +406,8 @@ class GroupRegistrationWidget extends StatelessWidget {
 
                   // Save Leader
                   if (hasLeader) {
-                    userController.saveAlcoholic(
-                        userController.leaderProfileImageFile!,
+                    groupController.saveAlcoholic(
+                        groupController.leaderProfileImageFile!,
                         leaderPhoneNumber!,
                         Converter.toSectionName(dropDowButton.value!),
                         leaderPhoneNumber!,
@@ -416,8 +416,8 @@ class GroupRegistrationWidget extends StatelessWidget {
 
                   // Save Member 1
                   if (hasUser1) {
-                    userController.saveAlcoholic(
-                        userController.member1ProfileImageFile!,
+                    groupController.saveAlcoholic(
+                        groupController.member1ProfileImageFile!,
                         username1EditingController.text!,
                         Converter.toSectionName(dropDowButton.value!),
                         username1EditingController.text!,
@@ -426,8 +426,8 @@ class GroupRegistrationWidget extends StatelessWidget {
 
                   // Save Member 2
                   if (hasUser2) {
-                    userController.saveAlcoholic(
-                        userController.member2ProfileImageFile!,
+                    groupController.saveAlcoholic(
+                        groupController.member2ProfileImageFile!,
                         username1EditingController.text!,
                         Converter.toSectionName(dropDowButton.value!),
                         username2EditingController.text!,
@@ -436,8 +436,8 @@ class GroupRegistrationWidget extends StatelessWidget {
 
                   // Save Member 3
                   if (hasUser3) {
-                    userController.saveAlcoholic(
-                        userController.member3ProfileImageFile!,
+                    groupController.saveAlcoholic(
+                        groupController.member3ProfileImageFile!,
                         username1EditingController.text!,
                         Converter.toSectionName(dropDowButton.value!),
                         username3EditingController.text!,
@@ -446,15 +446,15 @@ class GroupRegistrationWidget extends StatelessWidget {
 
                   // Save Member 4
                   if (hasUser4) {
-                    userController.saveAlcoholic(
-                        userController.member4ProfileImageFile!,
+                    groupController.saveAlcoholic(
+                        groupController.member4ProfileImageFile!,
                         username4EditingController.text!,
                         Converter.toSectionName(dropDowButton.value!),
                         username4EditingController.text!,
                         user4Username!);
                   }
 
-                  /*userController.saveGroup(userController.groupImageFile!,
+                  /*groupController.saveGroup(groupController.groupImageFile!,
                       groupName!, groupSpecificArea!);*/
                 },
                 verificationFailed: (FirebaseAuthException e) {
@@ -544,12 +544,12 @@ class GroupRegistrationWidget extends StatelessWidget {
                 ),
               ))
           .toList(),
-      value: !userController.hasPickedGroupSectionName
+      value: !groupController.hasPickedGroupSectionName
           ? 'Pick Group Area'
-          : Converter.asString(userController.groupSectionName!),
+          : Converter.asString(groupController.groupSectionName!),
       onChanged: (String? value) {
-        userController.setGroupSectionName(value!);
-        userController.setHasPickedGroupSectionName(true);
+        groupController.setGroupSectionName(value!);
+        groupController.setHasPickedGroupSectionName(true);
       },
       buttonStyleData: ButtonStyleData(
         height: 60,

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/share_dao_functions.dart';
-import '../../controllers/user_controller.dart';
+import '../../controllers/group_controller.dart';
 import 'single_member_text_field.dart';
 
 import 'dart:developer' as debug;
@@ -25,7 +25,7 @@ class SingleMemberFormWidget extends StatefulWidget {
 }
 
 class SingleMemberFormWidgetState extends State<SingleMemberFormWidget> {
-  UserController userController = UserController.instance;
+  GroupController groupController = GroupController.instance;
 
   String labelText1 = 'Leader Username';
   String labelText2 = 'Leader Phone Number';
@@ -76,7 +76,7 @@ class SingleMemberFormWidgetState extends State<SingleMemberFormWidget> {
                 iconSize: MediaQuery.of(context).size.width * 0.15,
                 icon: Icon(Icons.upload, color: MyApplication.logoColor1),
                 onPressed: () async {
-                  userController.chooseMemberProfileImageFromGallery(
+                  groupController.chooseMemberProfileImageFromGallery(
                       widget.memberIndex,
                       widget.phoneNumberController.text,
                       widget.userNameController.text);
@@ -104,7 +104,7 @@ class SingleMemberFormWidgetState extends State<SingleMemberFormWidget> {
               iconSize: MediaQuery.of(context).size.width * 0.15,
               icon: Icon(Icons.camera_alt, color: MyApplication.logoColor1),
               onPressed: () async {
-                userController.captureMemberProfileImageFromCamera(
+                groupController.captureMemberProfileImageFromCamera(
                     widget.memberIndex,
                     widget.phoneNumberController.text,
                     widget.userNameController.text);
@@ -120,8 +120,8 @@ class SingleMemberFormWidgetState extends State<SingleMemberFormWidget> {
   Widget pickedMemberImage() {
     switch (widget.memberIndex) {
       case 1:
-        return GetBuilder<UserController>(builder: (_) {
-          return userController.member1ImageURL!.isEmpty
+        return GetBuilder<GroupController>(builder: (_) {
+          return groupController.member1ImageURL!.isEmpty
               ? const SizedBox.shrink()
               : CircleAvatar(
                   radius: MediaQuery.of(context).size.width / 8,
@@ -130,14 +130,15 @@ class SingleMemberFormWidgetState extends State<SingleMemberFormWidget> {
                         shape: BoxShape.circle,
                         image: DecorationImage(
                             image:
-                                // Get.find<UserController>().member1ImageURL!
-                                NetworkImage(userController.member1ImageURL!))),
+                                // Get.find<GroupController>().member1ImageURL!
+                                NetworkImage(
+                                    groupController.member1ImageURL!))),
                   ),
                 );
         });
       case 2:
-        return GetBuilder<UserController>(builder: (_) {
-          return userController.member2ImageURL!.isEmpty
+        return GetBuilder<GroupController>(builder: (_) {
+          return groupController.member2ImageURL!.isEmpty
               ? const SizedBox.shrink()
               : CircleAvatar(
                   radius: MediaQuery.of(context).size.width / 8,
@@ -145,14 +146,14 @@ class SingleMemberFormWidgetState extends State<SingleMemberFormWidget> {
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                            image:
-                                NetworkImage(userController.member2ImageURL!))),
+                            image: NetworkImage(
+                                groupController.member2ImageURL!))),
                   ),
                 );
         });
       case 3:
-        return GetBuilder<UserController>(builder: (_) {
-          return userController.member3ImageURL!.isEmpty
+        return GetBuilder<GroupController>(builder: (_) {
+          return groupController.member3ImageURL!.isEmpty
               ? const SizedBox.shrink()
               : CircleAvatar(
                   radius: MediaQuery.of(context).size.width / 8,
@@ -160,14 +161,14 @@ class SingleMemberFormWidgetState extends State<SingleMemberFormWidget> {
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                            image:
-                                NetworkImage(userController.member3ImageURL!))),
+                            image: NetworkImage(
+                                groupController.member3ImageURL!))),
                   ),
                 );
         });
       case 4:
-        return GetBuilder<UserController>(builder: (_) {
-          return userController.member4ImageURL!.isEmpty
+        return GetBuilder<GroupController>(builder: (_) {
+          return groupController.member4ImageURL!.isEmpty
               ? const SizedBox.shrink()
               : CircleAvatar(
                   radius: MediaQuery.of(context).size.width / 8,
@@ -175,14 +176,14 @@ class SingleMemberFormWidgetState extends State<SingleMemberFormWidget> {
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                            image:
-                                NetworkImage(userController.member4ImageURL!))),
+                            image: NetworkImage(
+                                groupController.member4ImageURL!))),
                   ),
                 );
         });
       default:
-        return GetBuilder<UserController>(builder: (_) {
-          return userController.leaderImageURL!.isEmpty
+        return GetBuilder<GroupController>(builder: (_) {
+          return groupController.leaderImageURL!.isEmpty
               ? const SizedBox.shrink()
               : CircleAvatar(
                   radius: MediaQuery.of(context).size.width / 8,
@@ -191,7 +192,7 @@ class SingleMemberFormWidgetState extends State<SingleMemberFormWidget> {
                         shape: BoxShape.circle,
                         image: DecorationImage(
                             image:
-                                NetworkImage(userController.leaderImageURL!))),
+                                NetworkImage(groupController.leaderImageURL!))),
                   ),
                 );
         });

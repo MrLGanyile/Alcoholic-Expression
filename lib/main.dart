@@ -5,10 +5,12 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'controllers/admin_controller.dart';
+import 'controllers/alcoholic_controller.dart';
 import 'controllers/competition_controller.dart';
 import 'controllers/location_controller.dart';
 import 'controllers/store_controller.dart';
-import '/controllers/user_controller.dart';
+import 'controllers/group_controller.dart';
 
 import 'screens/store/store_draw_registration_widget.dart';
 import 'screens/competition/won_price_summary_comments_widget.dart';
@@ -28,10 +30,12 @@ Future main() async {
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform)
       .then((value) {
-    Get.put(StoreController());
-    Get.put(UserController());
-    Get.put(CompetitionController());
     Get.put(LocationController());
+    Get.put(AlcoholicController());
+    Get.put(GroupController());
+    Get.put(AdminController());
+    Get.put(StoreController());
+    Get.put(CompetitionController());
   });
   // Ideal time to initialize
   await FirebaseAuth.instance.useAuthEmulator('127.0.0.1', 9099);

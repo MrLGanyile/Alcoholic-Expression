@@ -1,4 +1,4 @@
-import 'package:alco/controllers/user_controller.dart';
+import 'package:alco/controllers/group_controller.dart';
 
 import '/controllers/competition_controller.dart';
 
@@ -22,7 +22,7 @@ class GroupsScreen extends StatefulWidget {
 class _GroupsScreenState extends State<GroupsScreen> {
   CompetitionController competitionController =
       CompetitionController.competitionController;
-  UserController userController = UserController.instance;
+  GroupController groupController = GroupController.instance;
   late Stream<List<Group>> groupsStream;
   late List<Group> allGroups;
 
@@ -30,7 +30,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
   void initState() {
     super.initState();
 
-    groupsStream = userController.readAllGroups();
+    groupsStream = groupController.readAllGroups();
   }
 
   @override

@@ -10,11 +10,9 @@ import 'package:image_picker/image_picker.dart';
 
 import '../models/locations/converter.dart';
 import '../models/locations/section_name.dart';
-import '../models/users/admin.dart';
 import '../models/users/alcoholic.dart';
 import '../models/users/group.dart';
 import 'share_dao_functions.dart';
-import '../models/users/user.dart' as myUser;
 
 enum GroupSavingStatus {
   incorrectData,
@@ -33,14 +31,14 @@ enum GroupUpdatingStatus {
 }
 
 // Branch : group_resources_crud ->  group_crud_data_access
-class UserController extends GetxController {
+class GroupController extends GetxController {
   final firestore = FirebaseFirestore.instance;
   final functions = FirebaseFunctions.instance;
   final storage = FirebaseStorage.instance
       .refFromURL("gs://alcoholic-expressions.appspot.com/");
   final auth = FirebaseAuth.instance;
 
-  static UserController instance = Get.find();
+  static GroupController instance = Get.find();
 
   Rx<bool> _hasPickedGroupSectionName = Rx<bool>(false);
   bool get hasPickedGroupSectionName => _hasPickedGroupSectionName.value;
@@ -48,15 +46,6 @@ class UserController extends GetxController {
   void setHasPickedGroupSectionName(bool hasPickedGroupSectionName) {
     _hasPickedGroupSectionName = Rx<bool>(hasPickedGroupSectionName);
   }
-
-  // ignore: prefer_final_fields
-  late Rx<myUser.User?> _currentlyLoggedInUser = Rx(Admin(
-      phoneNumber: '0661813561',
-      profileImageURL: 'admins/profile_images/superior/0661813561.jpg',
-      isFemale: false,
-      isSuperiorAdmin: true,
-      key: "000"));
-  myUser.User? get currentlyLoggedInUser => _currentlyLoggedInUser.value;
 
   late Rx<File?> _groupImageFile;
   File? get groupImageFile => _groupImageFile.value;
@@ -119,32 +108,6 @@ class UserController extends GetxController {
   late Rx<String?> _leaderUsername = Rx('');
   String? get leaderUsername => _leaderUsername.value;
 
-  void loginUser(String userPhoneNumber) {
-    DocumentReference reference =
-        firestore.collection('alcoholics').doc(userPhoneNumber);
-
-    reference.snapshots().map((alcoholicDoc) {
-      // Currently logged in user is an alcoholic
-      if (alcoholicDoc.exists) {
-        Alcoholic alcoholic = Alcoholic.fromJson(alcoholicDoc.data());
-        _currentlyLoggedInUser = Rx(alcoholic);
-      } else {
-        reference = firestore.collection('admins').doc(userPhoneNumber);
-
-        reference.snapshots().map((adminDoc) {
-          if (adminDoc.exists) {
-            Admin admin = Admin.fromJson(adminDoc.data());
-            _currentlyLoggedInUser = Rx(admin);
-          }
-        });
-      }
-    });
-  }
-
-  void logoutUser() {
-    _currentlyLoggedInUser = Rx(null);
-  }
-
   void clearAll() {
     _groupImageFile = Rx(null);
     _groupImageURL = Rx('');
@@ -178,8 +141,6 @@ class UserController extends GetxController {
     _leaderPhoneNumber = Rx('');
     _leaderUsername = Rx('');
   }
-
-  // ==========================Alcoholic [Start]==========================
 
   void chooseMemberProfileImageFromGallery(
       int memberIndex, String phoneNumber, String username) async {
@@ -303,40 +264,6 @@ class UserController extends GetxController {
     }
   }
 
-  void saveAlcoholic(File alcoholicProfileImage, String phoneNumber,
-      SectionName sectionName, String uid, String username) async {
-    // Step 1 - create user in the firebase authentication. [Performed On The Screen Calling This Method]
-    // Step 2 - save user image in firebase storage.
-    // Step 3 - save user data in cloud firestore database.
-    try {
-      // 'gs://alcoholic-expressions.appspot.com/alcoholics/+27625446322.jpg'
-      // 1. Create download URL & save alcoholic image in firebase storage.
-      String alcoholicImageURL = await uploadResource(alcoholicProfileImage,
-          '/alcoholics/$phoneNumber/profile_images/$phoneNumber');
-
-      Alcoholic alcoholic = Alcoholic(
-          phoneNumber: phoneNumber,
-          profileImageURL: alcoholicImageURL,
-          username: username,
-          sectionName: sectionName);
-
-      // 3. Save alcoholic object
-      await firestore
-          .collection('alcoholics')
-          .doc(phoneNumber)
-          .set(alcoholic.toJson());
-      showProgressBar = false;
-    } catch (error) {
-      Get.snackbar("Saving Error", "Alcoholic Couldn'\t Be Saved.");
-      debug.log(error.toString());
-      showProgressBar = false;
-    }
-  }
-
-  // ==========================Alcoholic [End]==========================
-
-  // ==========================Group [Start]==========================
-
   void setGroupSectionName(String chosenSectionName) {
     _groupSectionName =
         Rx<SectionName?>(Converter.toSectionName(chosenSectionName));
@@ -426,7 +353,6 @@ class UserController extends GetxController {
     }
   }
 
-  // Works as expected.
   Future<void> createGroup1() async {
     final httpCallable = functions.httpsCallable('createGroup1');
 
@@ -438,15 +364,6 @@ class UserController extends GetxController {
     final result = await httpCallable.call(data);
 
     debug.log(result.data.toString());
-  }
-
-  bool isValidPhoneNumber(String phoneNumber) {
-    return phoneNumber.isNotEmpty &&
-        phoneNumber.length == 10 &&
-        phoneNumber.isNumericOnly &&
-        (phoneNumber.startsWith('06') ||
-            phoneNumber.startsWith('07') ||
-            phoneNumber.startsWith('08'));
   }
 
   bool hasMember(int memberIndex) {
@@ -576,7 +493,6 @@ class UserController extends GetxController {
     }
   }
 
-  // groups_crud -> create_group
   Future<GroupSavingStatus> createGroup() async {
     if (_groupImageFile.value != null &&
         _groupImageURL.value != null &&
@@ -752,7 +668,6 @@ class UserController extends GetxController {
     }
   }
 
-  // groups_crud -> view_groups
   Stream<List<Group>> readAllGroups() {
     Stream<List<Group>> stream = firestore
         .collection('groups')
@@ -765,7 +680,6 @@ class UserController extends GetxController {
     return stream;
   }
 
-  // groups_crud -> view_groups
   Stream<List<Group>> readGroups(SectionName sectionName) {
     Stream<List<Group>> stream = firestore
         .collection('groups')
@@ -779,7 +693,6 @@ class UserController extends GetxController {
     return stream;
   }
 
-  // To Remove - Branches groups_crud -> view_groups
   Future<List<Group>> readFutureAllGroups() async {
     return firestore.collection('groups').snapshots().map(((doc) {
       Group group = Group.fromJson(doc);
@@ -787,7 +700,6 @@ class UserController extends GetxController {
     })).toList();
   }
 
-  // groups_crud -> update_group
   GroupUpdatingStatus switchGroup(String to) {
     GroupUpdatingStatus groupUpdatingStatus = GroupUpdatingStatus.loginRequired;
 
@@ -909,7 +821,4 @@ class UserController extends GetxController {
 
     return groupUpdatingStatus;
   }
-
-  /*======================Groups[End]======================== */
-
 }

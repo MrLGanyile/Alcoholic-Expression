@@ -2,7 +2,7 @@ import 'package:alco/controllers/store_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../controllers/user_controller.dart';
+import '../../controllers/group_controller.dart';
 import '../../main.dart';
 
 import 'dart:developer' as debug;
@@ -25,7 +25,7 @@ class DrawGrandPriceCreationWidget extends StatefulWidget {
 
 class DrawGrandPriceCreationWidgetState
     extends State<DrawGrandPriceCreationWidget> {
-  UserController userController = UserController.instance;
+  GroupController groupController = GroupController.instance;
   StoreController storeController = StoreController.storeController;
   DrawGrandPriceCreationWidgetState();
 
