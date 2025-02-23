@@ -1,3 +1,6 @@
+import 'package:alco/screens/users/admin_entrance_widget.dart';
+import 'package:alco/screens/users/admin_registration_widget.dart';
+import 'package:alco/screens/users/login_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -48,9 +51,13 @@ Future main() async {
 class MyApplication extends StatefulWidget {
   MyApplication({super.key});
 
-  static String title = 'Alcoholic';
-  //final ProductionTesting productionTesting = ProductionTesting();
+  static String title = 'Alco';
   // Assets are not added into the pubspec.yaml file.
+
+  static double backArrowFontSize = 20;
+  static Color backArrowColor = Colors.blue;
+  static double backArrowTitleFontSize = 14;
+  static Color backArrowTitleColor = Colors.pink;
 
   static EdgeInsets storeDataPadding =
       const EdgeInsets.only(left: 20, right: 20, top: 10);
@@ -133,18 +140,17 @@ class _MyApplicationState extends State<MyApplication> {
     competitionController.saveFakeWonPriceComments();
     return FirebasePhoneAuthProvider(
         child: GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Alco',
-      theme: ThemeData(
-        primaryColor: const Color.fromARGB(115, 231, 195, 214),
-        secondaryHeaderColor: const Color.fromARGB(115, 231, 195, 214),
-      ),
+            debugShowCheckedModeBanner: false,
+            title: 'Alco',
+            theme: ThemeData(
+              primaryColor: const Color.fromARGB(115, 231, 195, 214),
+              secondaryHeaderColor: const Color.fromARGB(115, 231, 195, 214),
+            ),
 
-      // Make sure to create a draw given there are groups belonging to the host's location.
-      // home: StoreDrawRegistrationWidget(storeOwnerPhoneNumber: '0835367834'),
-      // home: VerificationScreen(phoneNumber: '+27661813561', pin: '12312'),
-      home: StartScreen(),
-      // home: const AlcoholicRegistrationWidget(),
-    ));
+            // Make sure to create a draw given there are groups belonging to the host's location.
+            // home: StartScreen(),
+            home: AdminRegistrationWidget()
+            // home: const AlcoholicRegistrationWidget()
+            ));
   }
 }

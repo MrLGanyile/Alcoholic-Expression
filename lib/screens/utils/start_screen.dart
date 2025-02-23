@@ -1,3 +1,4 @@
+import 'package:alco/controllers/share_dao_functions.dart';
 import 'package:alco/screens/users/admin_entrance_widget.dart';
 
 import '../store/store_draw_registration_widget.dart';
@@ -98,12 +99,12 @@ class _StartScreenState extends State<StartScreen>
                 iconColor: MyApplication.logoColor1,
                 textColor: MyApplication.logoColor2,
                 title: Text(
-                  'Admins',
+                  'Admin',
                   style: TextStyle(
                     fontSize: listTilesFontSize,
                   ),
                 ),
-                onTap: () => Get.to(() => AdminRegistrationWidget()),
+                onTap: () => Get.to(() => AdminEntranceWidget()),
               ),
               ListTile(
                 leading:
@@ -118,31 +119,6 @@ class _StartScreenState extends State<StartScreen>
                 ),
                 onTap: () {},
               ),
-              /*
-              ListTile(
-                leading: Icon(Icons.local_drink, size: listTilesIconSize),
-                iconColor: MyApplication.logoColor1,
-                textColor: MyApplication.logoColor2,
-                title: Text(
-                  'Draws',
-                  style: TextStyle(
-                    fontSize: listTilesFontSize,
-                  ),
-                ),
-                onTap: () => Get.to(() => const AdminEntranceWidget()),
-              ),*/
-              ListTile(
-                leading: Icon(Icons.account_circle, size: listTilesIconSize),
-                iconColor: MyApplication.logoColor1,
-                textColor: MyApplication.logoColor2,
-                title: Text(
-                  'Join',
-                  style: TextStyle(
-                    fontSize: listTilesFontSize,
-                  ),
-                ),
-                onTap: () => Get.to(() => const AlcoholicRegistrationWidget()),
-              ),
               ListTile(
                 leading: Icon(Icons.group, size: listTilesIconSize),
                 iconColor: MyApplication.logoColor1,
@@ -155,6 +131,56 @@ class _StartScreenState extends State<StartScreen>
                 ),
                 onTap: () => Get.to(() => AlcoholicsWidget()),
               ),
+              ListTile(
+                leading: Icon(Icons.account_circle, size: listTilesIconSize),
+                iconColor: MyApplication.logoColor1,
+                textColor: MyApplication.logoColor2,
+                title: Text(
+                  'Join',
+                  style: TextStyle(
+                    fontSize: listTilesFontSize,
+                  ),
+                ),
+                onTap: () => Get.to(() => const AlcoholicRegistrationWidget()),
+              ),
+              const Divider(
+                height: 5,
+              ),
+              ListTile(
+                  leading: Icon(Icons.logout, size: listTilesIconSize),
+                  iconColor: MyApplication.logoColor1,
+                  textColor: MyApplication.logoColor2,
+                  title: Text(
+                    'Logout',
+                    style: TextStyle(
+                      fontSize: listTilesFontSize,
+                    ),
+                  ),
+                  onTap: () {
+                    if (currentlyLoggedInUser != null) {
+                      logoutUser();
+
+                      Get.to(() => AlertDialog(
+                            title: Text(
+                              'Goodbye',
+                              style: TextStyle(
+                                  fontSize: listTilesFontSize,
+                                  color: MyApplication.storesTextColor),
+                            ),
+                            content: Container(
+                                decoration:
+                                    const BoxDecoration(color: Colors.black),
+                                child: Text(
+                                  'You Have Successfully Logged Out.',
+                                  style: TextStyle(
+                                      fontSize: listTilesFontSize - 5,
+                                      color: MyApplication.storesTextColor),
+                                )),
+                          ));
+                    } else {
+                      Get.snackbar('Error', 'You Are Not Currently Logged In.');
+                    }
+                  }),
             ],
           ),
         ),

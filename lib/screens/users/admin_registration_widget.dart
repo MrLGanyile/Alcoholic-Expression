@@ -1,3 +1,4 @@
+import '../../controllers/share_dao_functions.dart';
 import '/controllers/admin_controller.dart';
 import '/models/locations/converter.dart';
 import 'package:get/get.dart';
@@ -18,9 +19,9 @@ import '../../controllers/location_controller.dart';
 import '../../controllers/group_controller.dart';
 import '../../main.dart';
 
-import '../utils/globals.dart';
 import 'dart:developer' as debug;
-import 'dart:math';
+
+import 'login_widget.dart';
 
 class AdminRegistrationWidget extends StatelessWidget {
   AdminRegistrationWidget({
@@ -42,32 +43,7 @@ class AdminRegistrationWidget extends StatelessWidget {
   late DropdownButton2<String> dropDowButton;
 
   TextEditingController phoneNumberEditingController = TextEditingController();
-
-  bool containsNumbersOnly(String phoneNumber) {
-    for (var charIndex = 0; charIndex < phoneNumber.length; charIndex++) {
-      if (!(phoneNumber[charIndex] == '0' ||
-          phoneNumber[charIndex] == '1' ||
-          phoneNumber[charIndex] == '2' ||
-          phoneNumber[charIndex] == '3' ||
-          phoneNumber[charIndex] == '4' ||
-          phoneNumber[charIndex] == '5' ||
-          phoneNumber[charIndex] == '6' ||
-          phoneNumber[charIndex] == '7' ||
-          phoneNumber[charIndex] == '8' ||
-          phoneNumber[charIndex] == '9')) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  bool isValidPhoneNumber() {
-    return phoneNumberEditingController.text.length == 9 &&
-        (phoneNumberEditingController.text.startsWith('6') ||
-            phoneNumberEditingController.text.startsWith('7') ||
-            phoneNumberEditingController.text.startsWith('8')) &&
-        containsNumbersOnly(phoneNumberEditingController.text);
-  }
+  TextEditingController passwordEditingController = TextEditingController();
 
   // Include radio buttons for isFemale
   @override
@@ -77,22 +53,22 @@ class AdminRegistrationWidget extends StatelessWidget {
         appBar: AppBar(
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
-            iconSize: 20,
-            color: MyApplication.attractiveColor1,
+            iconSize: MyApplication.backArrowFontSize,
+            color: MyApplication.backArrowColor,
             onPressed: (() {
               Get.back();
             }),
           ),
-          title: const Text(
+          title: Text(
             'Registration',
             style: TextStyle(
-              fontSize: 14,
+              fontSize: MyApplication.backArrowTitleFontSize,
               fontWeight: FontWeight.bold,
             ),
           ),
           centerTitle: true,
           backgroundColor: Colors.black,
-          foregroundColor: MyApplication.attractiveColor1,
+          foregroundColor: MyApplication.backArrowTitleColor,
           elevation: 0,
         ),
         backgroundColor: MyApplication.scaffoldColor,
@@ -112,7 +88,7 @@ class AdminRegistrationWidget extends StatelessWidget {
               // Admin Phone Number.
               EasyContainer(
                 elevation: 0,
-                height: 65,
+                height: 70,
                 borderRadius: 6,
                 color: MyApplication.scaffoldColor,
                 showBorder: true,
@@ -122,10 +98,13 @@ class AdminRegistrationWidget extends StatelessWidget {
                   cursorColor: MyApplication.logoColor1,
                   autofocus: false,
                   showDropdownIcon: false,
-                  invalidNumberMessage: '[Invalid Phone Number!]',
+                  //invalidNumberMessage: '[Invalid Phone Number!]',
+
                   textAlignVertical: TextAlignVertical.center,
-                  style:
-                      TextStyle(fontSize: 16, color: MyApplication.logoColor1),
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: MyApplication.logoColor1,
+                  ),
                   dropdownTextStyle:
                       TextStyle(fontSize: 16, color: MyApplication.logoColor1),
                   //onChanged: (phone) =>phoneNumberEditingController.text = phone.completeNumber,
@@ -258,10 +237,11 @@ class AdminRegistrationWidget extends StatelessWidget {
                               icon: Icon(Icons.camera_alt,
                                   color: MyApplication.logoColor2),
                               onPressed: () {
-                                if (isValidPhoneNumber()) {
+                                if (isValidPhoneNumber(
+                                    '0${phoneNumberEditingController.text}')) {
                                   adminController
                                       .captureAdminProfileImageWithCamera(
-                                          phoneNumberEditingController.text);
+                                          '0${phoneNumberEditingController.text}');
                                 } else {
                                   Get.snackbar('Error', 'Invalid Phone Number');
                                 }
@@ -276,10 +256,11 @@ class AdminRegistrationWidget extends StatelessWidget {
                               icon: Icon(Icons.upload,
                                   color: MyApplication.logoColor2),
                               onPressed: () {
-                                if (isValidPhoneNumber()) {
+                                if (isValidPhoneNumber(
+                                    '0${phoneNumberEditingController.text}')) {
                                   adminController
                                       .chooseAdminProfileImageFromGallery(
-                                    phoneNumberEditingController.text,
+                                    '0${phoneNumberEditingController.text}',
                                   );
                                 } else {
                                   Get.snackbar('Error', 'Invalid Phone Number');
@@ -292,6 +273,40 @@ class AdminRegistrationWidget extends StatelessWidget {
                     ),
                   ],
                 ),
+              ),
+
+              const SizedBox(
+                height: 5,
+              ),
+
+              // Password
+              TextField(
+                keyboardType: TextInputType.name,
+                maxLength: 20,
+                style: TextStyle(color: MyApplication.logoColor1),
+                cursorColor: MyApplication.logoColor1,
+                controller: passwordEditingController,
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  prefixIcon: Icon(Icons.lock, color: MyApplication.logoColor1),
+                  labelStyle: TextStyle(
+                    fontSize: 14,
+                    color: MyApplication.logoColor2,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(6),
+                    borderSide: BorderSide(
+                      color: MyApplication.logoColor2,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(6),
+                    borderSide: BorderSide(
+                      color: MyApplication.logoColor2,
+                    ),
+                  ),
+                ),
+                obscureText: true,
               ),
 
               const SizedBox(
@@ -311,8 +326,8 @@ class AdminRegistrationWidget extends StatelessWidget {
                         // Sign Up Admin
                         Container(
                           width: MediaQuery.of(context).size.width,
-                          height: 45,
-                          margin: const EdgeInsets.symmetric(horizontal: 20),
+                          height: 60,
+                          margin: const EdgeInsets.symmetric(horizontal: 5),
                           decoration: BoxDecoration(
                               color: MyApplication.logoColor1,
                               borderRadius: const BorderRadius.all(
@@ -320,11 +335,10 @@ class AdminRegistrationWidget extends StatelessWidget {
                               )),
                           child: InkWell(
                             onTap: () async {
-                              debug.log(
-                                  'Admin Validation From AdmiRegistrationScreen');
                               // Create Admin Now
                               if (adminController
                                       .newAdminPhoneNumber!.isNotEmpty &&
+                                  adminController.newAdminPassword.isNotEmpty &&
                                   adminController
                                       .newAdminProfileImageURL.isNotEmpty &&
                                   adminController.newAdminProfileImage !=
@@ -335,7 +349,7 @@ class AdminRegistrationWidget extends StatelessWidget {
 
                                 await auth.verifyPhoneNumber(
                                   phoneNumber:
-                                      phoneNumberEditingController.text,
+                                      '+27${phoneNumberEditingController.text}',
                                   verificationCompleted:
                                       (PhoneAuthCredential credential) async {
                                     debug.log(
@@ -388,6 +402,7 @@ class AdminRegistrationWidget extends StatelessWidget {
                                           phoneNumber:
                                               '+27${phoneNumberEditingController.text}',
                                           verificationId: verificationId,
+                                          forAdmin: true,
                                         ));
                                   },
                                   codeAutoRetrievalTimeout:
@@ -423,7 +438,11 @@ class AdminRegistrationWidget extends StatelessWidget {
                             InkWell(
                               onTap: () {
                                 // Send User To Login Screen.
-                                // Get.to(const AlcoholicRegistrationWidget());
+                                // Send User To Login Screen.
+                                logoutUser(); // Logout currently logged in user.
+                                Get.to(() => LoginWidget(
+                                      forAdmin: true,
+                                    ));
                               },
                               child: Text(
                                 " Login",

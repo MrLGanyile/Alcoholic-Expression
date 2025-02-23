@@ -60,39 +60,52 @@ class AlcoholicsWidget extends StatelessWidget {
               List<Alcoholic> alcoholics = snapshot.data!;
               return Column(
                 children: [
-                  // Search Area
                   Expanded(
-                    child: StreamBuilder<List<SupportedArea>>(
-                      stream: supportedAreasStream,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          List<String> dbItems = [];
-                          for (int areaIndex = 0;
-                              areaIndex < snapshot.data!.length;
-                              areaIndex++) {
-                            dbItems.add(snapshot.data![areaIndex].toString());
-                          }
-                          items = dbItems;
-                          return pickAreaName(context);
-                        } else if (snapshot.hasError) {
-                          debug.log(
-                              "Error Fetching Supported Areas Data - ${snapshot.error}");
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        } else {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-                      },
+                    child: Column(
+                      children: [
+                        CircleAvatar(
+                          backgroundImage: const AssetImage('assets/logo.png'),
+                          radius: MediaQuery.of(context).size.width * 0.15,
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+
+                        // Search Area
+                        StreamBuilder<List<SupportedArea>>(
+                          stream: supportedAreasStream,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              List<String> dbItems = [];
+                              for (int areaIndex = 0;
+                                  areaIndex < snapshot.data!.length;
+                                  areaIndex++) {
+                                dbItems
+                                    .add(snapshot.data![areaIndex].toString());
+                              }
+                              items = dbItems;
+                              return pickAreaName(context);
+                            } else if (snapshot.hasError) {
+                              debug.log(
+                                  "Error Fetching Supported Areas Data - ${snapshot.error}");
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            } else {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                          },
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                      ],
                     ),
                   ),
                   // Alcoholics For A Particular Area.
-                  Expanded(
-                    flex: 9,
-                    child: allUsers(alcoholics),
-                  ),
+                  Expanded(flex: 2, child: allUsers(alcoholics)),
                 ],
               );
             } else if (snapshot.hasError) {
@@ -156,7 +169,7 @@ class AlcoholicsWidget extends StatelessWidget {
         alcoholicController.setSearchedSectionName(value!);
       },
       buttonStyleData: ButtonStyleData(
-        height: 60,
+        height: 50,
         width: MediaQuery.of(context).size.width * 0.90,
         padding: const EdgeInsets.only(left: 14, right: 14),
         decoration: BoxDecoration(

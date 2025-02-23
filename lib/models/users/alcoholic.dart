@@ -16,11 +16,12 @@ class Alcoholic extends User {
       required profileImageURL,
       required this.sectionName,
       required this.username,
+      required password,
       this.groupFK})
       : super(
-          phoneNumber: phoneNumber,
-          profileImageURL: profileImageURL,
-        );
+            phoneNumber: phoneNumber,
+            profileImageURL: profileImageURL,
+            password: password);
 
   @override
   Map<String, dynamic> toJson() {
@@ -36,10 +37,10 @@ class Alcoholic extends User {
   }
 
   factory Alcoholic.fromJson(dynamic json) => Alcoholic(
-        profileImageURL: json['profileImageURL'],
-        phoneNumber: json['phoneNumber'],
-        sectionName: Converter.toSectionName(json['sectionName']),
-        username: json['username'],
-        groupFK: json['groupFK'],
-      );
+      profileImageURL: json['profileImageURL'],
+      phoneNumber: json['phoneNumber'],
+      sectionName: Converter.toSectionName(json['sectionName']),
+      username: json['username'],
+      groupFK: json['groupFK'],
+      password: json['password']);
 }

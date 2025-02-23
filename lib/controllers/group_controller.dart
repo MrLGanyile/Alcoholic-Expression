@@ -512,6 +512,7 @@ class GroupController extends GetxController {
 
       if (hasMember(0)) {
         alcoholic = Alcoholic(
+          password: 'N/A',
           phoneNumber: _leaderPhoneNumber.value,
           username: _leaderUsername.value!,
           profileImageURL: trimmedImageURL(0),
@@ -522,6 +523,7 @@ class GroupController extends GetxController {
 
         if (hasMember(1)) {
           alcoholic = Alcoholic(
+            password: 'N/A',
             phoneNumber: _member1PhoneNumber.value,
             username: _member1Username.value!,
             profileImageURL: trimmedImageURL(1),
@@ -532,6 +534,7 @@ class GroupController extends GetxController {
 
           if (hasMember(2)) {
             alcoholic = Alcoholic(
+              password: 'N/A',
               phoneNumber: _member2PhoneNumber.value,
               username: _member2Username.value!,
               profileImageURL: trimmedImageURL(2),
@@ -542,6 +545,7 @@ class GroupController extends GetxController {
 
             if (hasMember(3)) {
               alcoholic = Alcoholic(
+                password: 'N/A',
                 phoneNumber: _member3PhoneNumber.value,
                 username: _member3Username.value!,
                 profileImageURL: trimmedImageURL(3),
@@ -552,6 +556,7 @@ class GroupController extends GetxController {
 
               if (hasMember(4)) {
                 alcoholic = Alcoholic(
+                  password: 'N/A',
                   phoneNumber: _member4PhoneNumber.value,
                   username: _member4Username.value!,
                   profileImageURL: trimmedImageURL(4),

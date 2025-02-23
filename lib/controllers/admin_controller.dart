@@ -52,13 +52,22 @@ class AdminController extends GetxController {
   bool get newAdminIsFemale => _newAdminIsFemale.value;
 
   // ignore: prefer_final_fields
+  late Rx<String> _newAdminPassword = Rx('');
+  String get newAdminPassword => _newAdminPassword.value;
+
+  // ignore: prefer_final_fields
   late Rx<Admin?> _currentAdmin = Rx(null);
   Admin? get currentAdmin => _currentAdmin.value;
+
+  late Rx<String?> _adminCode = Rx<String?>(null);
+  String? get adminCode => _adminCode.value;
 
   void chooseAdminProfileImageFromGallery(String phoneNumber) async {
     if (phoneNumber.isEmpty) {
       Get.snackbar(
           'Error', 'Phone Number Is Required Before Picking An Image.');
+    } else if (!isValidPhoneNumber(phoneNumber)) {
+      Get.snackbar('Error', 'Phone Number Is Invalid.');
     } else {
       final pickedImageFile =
           await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -81,6 +90,8 @@ class AdminController extends GetxController {
     if (phoneNumber.isEmpty) {
       Get.snackbar(
           'Error', 'Phone Number Is Required Before Picking An Image.');
+    } else if (!isValidPhoneNumber(phoneNumber)) {
+      Get.snackbar('Error', 'Phone Number Is Invalid.');
     } else {
       final pickedImageFile =
           await ImagePicker().pickImage(source: ImageSource.camera);
@@ -140,6 +151,7 @@ class AdminController extends GetxController {
             key: key,
             isFemale: _newAdminIsFemale.value,
             isSuperiorAdmin: false,
+            password: _newAdminPassword.value,
           );
 
           await adminReference.set(admin.toJson());

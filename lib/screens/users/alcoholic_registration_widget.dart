@@ -19,6 +19,8 @@ import '../../main.dart';
 import 'dart:developer' as debug;
 import 'dart:math';
 
+import 'login_widget.dart';
+
 class AlcoholicRegistrationWidget extends StatefulWidget {
   const AlcoholicRegistrationWidget({
     Key? key,
@@ -41,28 +43,19 @@ class _AlcoholicRegistrationWidgetState
   late List<String> items;
 
   String? selectedValue;
-  final _formKey = GlobalKey<FormState>();
 
   Color textColor = Colors.green;
   late DropdownButton2<String> dropDowButton;
 
   TextEditingController usernameEditingController = TextEditingController();
   TextEditingController phoneNumberEditingController = TextEditingController();
-
-  String? enteredCode;
-  late String correctCode;
+  TextEditingController passwordEditingController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
 
     supportedAreasStream = locationController.readAllSupportedAreas();
-  }
-
-  void setVerificationCode(String? code) {
-    setState(() {
-      enteredCode = code;
-    });
   }
 
   @override
@@ -72,22 +65,22 @@ class _AlcoholicRegistrationWidgetState
         appBar: AppBar(
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
-            iconSize: 20,
-            color: MyApplication.attractiveColor1,
+            iconSize: MyApplication.backArrowFontSize,
+            color: MyApplication.backArrowColor,
             onPressed: (() {
               Get.back();
             }),
           ),
-          title: const Text(
+          title: Text(
             'Registration',
             style: TextStyle(
-              fontSize: 14,
+              fontSize: MyApplication.backArrowTitleFontSize,
               fontWeight: FontWeight.bold,
             ),
           ),
           centerTitle: true,
           backgroundColor: Colors.black,
-          foregroundColor: MyApplication.attractiveColor1,
+          foregroundColor: MyApplication.backArrowTitleColor,
           elevation: 0,
         ),
         backgroundColor: MyApplication.scaffoldColor,
@@ -101,13 +94,13 @@ class _AlcoholicRegistrationWidgetState
               ),
 
               const SizedBox(
-                height: 10,
+                height: 5,
               ),
 
               // Alcoholic Phone Number.
               EasyContainer(
                 elevation: 0,
-                height: 65,
+                height: 70,
                 borderRadius: 6,
                 color: MyApplication.scaffoldColor,
                 showBorder: true,
@@ -131,7 +124,41 @@ class _AlcoholicRegistrationWidgetState
               ),
 
               const SizedBox(
-                height: 10,
+                height: 17,
+              ),
+
+              // Username
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: TextField(
+                  keyboardType: TextInputType.name,
+                  maxLength: 10,
+                  style: TextStyle(color: MyApplication.logoColor1),
+                  cursorColor: MyApplication.logoColor1,
+                  controller: usernameEditingController,
+                  decoration: InputDecoration(
+                    labelText: 'Username',
+                    prefixIcon: Icon(Icons.account_circle,
+                        color: MyApplication.logoColor1),
+                    labelStyle: TextStyle(
+                      fontSize: 14,
+                      color: MyApplication.logoColor2,
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(6),
+                      borderSide: BorderSide(
+                        color: MyApplication.logoColor2,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(6),
+                      borderSide: BorderSide(
+                        color: MyApplication.logoColor2,
+                      ),
+                    ),
+                  ),
+                  obscureText: false,
+                ),
               ),
 
               // Alcoholic Area Name
@@ -203,11 +230,12 @@ class _AlcoholicRegistrationWidgetState
                               icon: Icon(Icons.camera_alt,
                                   color: MyApplication.logoColor2),
                               onPressed: () {
+                                debug.log(phoneNumberEditingController.text);
                                 if (isValidPhoneNumber(
-                                    phoneNumberEditingController.text)) {
+                                    '0${phoneNumberEditingController.text}')) {
                                   alcoholicController
                                       .captureAlcoholicProfileImageWithCamera(
-                                          phoneNumberEditingController.text,
+                                          '0${phoneNumberEditingController.text}',
                                           usernameEditingController.text);
                                 } else {
                                   Get.snackbar('Error', 'Invalid Phone Number');
@@ -224,10 +252,10 @@ class _AlcoholicRegistrationWidgetState
                                   color: MyApplication.logoColor2),
                               onPressed: () {
                                 if (isValidPhoneNumber(
-                                    phoneNumberEditingController.text)) {
+                                    '0${phoneNumberEditingController.text}')) {
                                   alcoholicController
                                       .chooseAlcoholicProfileImageFromGallery(
-                                          phoneNumberEditingController.text,
+                                          '0${phoneNumberEditingController.text}',
                                           usernameEditingController.text);
                                 } else {
                                   Get.snackbar('Error', 'Invalid Phone Number');
@@ -239,6 +267,44 @@ class _AlcoholicRegistrationWidgetState
                       ),
                     ),
                   ],
+                ),
+              ),
+
+              const SizedBox(
+                height: 5,
+              ),
+
+              // Password
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: TextField(
+                  keyboardType: TextInputType.name,
+                  maxLength: 20,
+                  style: TextStyle(color: MyApplication.logoColor1),
+                  cursorColor: MyApplication.logoColor1,
+                  controller: passwordEditingController,
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    prefixIcon:
+                        Icon(Icons.lock, color: MyApplication.logoColor1),
+                    labelStyle: TextStyle(
+                      fontSize: 14,
+                      color: MyApplication.logoColor2,
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(6),
+                      borderSide: BorderSide(
+                        color: MyApplication.logoColor2,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(6),
+                      borderSide: BorderSide(
+                        color: MyApplication.logoColor2,
+                      ),
+                    ),
+                  ),
+                  obscureText: true,
                 ),
               ),
 
@@ -259,8 +325,8 @@ class _AlcoholicRegistrationWidgetState
                         // Sign Up Alcoholic
                         Container(
                           width: MediaQuery.of(context).size.width,
-                          height: 45,
-                          margin: const EdgeInsets.symmetric(horizontal: 20),
+                          height: 60,
+                          margin: const EdgeInsets.symmetric(horizontal: 5),
                           decoration: BoxDecoration(
                               color: MyApplication.logoColor1,
                               borderRadius: const BorderRadius.all(
@@ -269,22 +335,26 @@ class _AlcoholicRegistrationWidgetState
                           child: InkWell(
                             onTap: () async {
                               debug.log(
-                                  'Alcoholic Validation From AdmiRegistrationScreen');
+                                  'Alcoholic Validation From AlcoholicRegistrationScreen');
                               // Create Alcoholic Now
                               if (alcoholicController
                                       .newAlcoholicPhoneNumber!.isNotEmpty &&
+                                  alcoholicController
+                                      .newAlcoholicUsername!.isNotEmpty &&
+                                  alcoholicController
+                                      .newAlcoholicPassword.isNotEmpty &&
                                   alcoholicController
                                       .newAlcoholicImageURL!.isNotEmpty &&
                                   alcoholicController
                                           .newAlcoholicProfileImageFile !=
                                       null) {
                                 debug.log(
-                                    'Alcoholic Validated From AdmiRegistrationScreen');
+                                    'Alcoholic Validated From AlcoholicRegistrationScreen');
                                 final auth = FirebaseAuth.instance;
 
                                 await auth.verifyPhoneNumber(
                                   phoneNumber:
-                                      phoneNumberEditingController.text,
+                                      '+27${phoneNumberEditingController.text}',
                                   verificationCompleted:
                                       (PhoneAuthCredential credential) async {
                                     debug.log(
@@ -328,7 +398,7 @@ class _AlcoholicRegistrationWidgetState
                                       (FirebaseAuthException e) {
                                     if (e.code == 'invalid-phone-number') {
                                       debug.log(
-                                          'The provided phone number is not valid.');
+                                          '***The provided phone number is not valid***.');
                                     }
 
                                     // Handle other errors
@@ -339,6 +409,7 @@ class _AlcoholicRegistrationWidgetState
                                           phoneNumber:
                                               '+27${phoneNumberEditingController.text}',
                                           verificationId: verificationId,
+                                          forAdmin: false,
                                         ));
                                   },
                                   codeAutoRetrievalTimeout:
@@ -374,7 +445,10 @@ class _AlcoholicRegistrationWidgetState
                             InkWell(
                               onTap: () {
                                 // Send User To Login Screen.
-                                // Get.to(const AlcoholicRegistrationWidget());
+                                logoutUser(); // Logout currently logged in user.
+                                Get.to(() => LoginWidget(
+                                      forAdmin: false,
+                                    ));
                               },
                               child: Text(
                                 " Login",

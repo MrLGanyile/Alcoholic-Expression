@@ -18,12 +18,14 @@ final storage = FirebaseStorage.instance
 final auth = FirebaseAuth.instance;
 
 // ignore: prefer_final_fields
-late Rx<myUser.User?> _currentlyLoggedInUser = Rx(Admin(
+late Rx<myUser.User?> _currentlyLoggedInUser = Rx(
+    null /*Admin(
     phoneNumber: '0661813561',
     profileImageURL: 'admins/profile_images/superior/0661813561.jpg',
     isFemale: false,
     isSuperiorAdmin: true,
-    key: "000"));
+    key: "000")*/
+    );
 myUser.User? get currentlyLoggedInUser => _currentlyLoggedInUser.value;
 
 // Upload an image into a particular firebase storage bucket.
@@ -46,30 +48,53 @@ Future<String> findFullImageURL(String imageURL) async {
   return await storageReference.child(imageURL).getDownloadURL();
 }
 
-void loginUser(String userPhoneNumber) {
-  DocumentReference reference =
-      firestore.collection('alcoholics').doc(userPhoneNumber);
+bool isCredentialsCorrect(String phoneNumber, String password, bool forAdmin) {
+  return true;
+}
 
-  reference.snapshots().map((alcoholicDoc) {
-    // Currently logged in user is an alcoholic
-    if (alcoholicDoc.exists) {
-      Alcoholic alcoholic = Alcoholic.fromJson(alcoholicDoc.data());
-      _currentlyLoggedInUser = Rx(alcoholic);
-    } else {
-      reference = firestore.collection('admins').doc(userPhoneNumber);
+void loginUser(String userPhoneNumber, bool forAdmin) {
+  DocumentReference reference;
+  if (forAdmin) {
+    reference = firestore.collection('admins').doc(userPhoneNumber);
 
-      reference.snapshots().map((adminDoc) {
-        if (adminDoc.exists) {
-          Admin admin = Admin.fromJson(adminDoc.data());
-          _currentlyLoggedInUser = Rx(admin);
-        }
-      });
-    }
-  });
+    reference.snapshots().map((adminDoc) {
+      if (adminDoc.exists) {
+        Admin admin = Admin.fromJson(adminDoc.data());
+        _currentlyLoggedInUser = Rx(admin);
+      }
+    });
+  } else {
+    reference = firestore.collection('alcoholics').doc(userPhoneNumber);
+    reference.snapshots().map((alcoholicDoc) {
+      // Currently logged in user is an alcoholic
+      if (alcoholicDoc.exists) {
+        Alcoholic alcoholic = Alcoholic.fromJson(alcoholicDoc.data());
+        _currentlyLoggedInUser = Rx(alcoholic);
+      }
+    });
+  }
 }
 
 void logoutUser() {
   _currentlyLoggedInUser = Rx(null);
+}
+
+bool containsNumbersOnly(String phoneNumber) {
+  for (var charIndex = 0; charIndex < phoneNumber.length; charIndex++) {
+    if (!(phoneNumber[charIndex] == '0' ||
+        phoneNumber[charIndex] == '1' ||
+        phoneNumber[charIndex] == '2' ||
+        phoneNumber[charIndex] == '3' ||
+        phoneNumber[charIndex] == '4' ||
+        phoneNumber[charIndex] == '5' ||
+        phoneNumber[charIndex] == '6' ||
+        phoneNumber[charIndex] == '7' ||
+        phoneNumber[charIndex] == '8' ||
+        phoneNumber[charIndex] == '9')) {
+      return false;
+    }
+  }
+  return true;
 }
 
 bool isValidPhoneNumber(String phoneNumber) {

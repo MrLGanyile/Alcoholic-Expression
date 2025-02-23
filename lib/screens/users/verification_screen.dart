@@ -1,3 +1,6 @@
+import 'package:alco/controllers/admin_controller.dart';
+import 'package:alco/controllers/alcoholic_controller.dart';
+import 'package:alco/controllers/share_dao_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
@@ -12,9 +15,13 @@ import 'dart:developer' as debug;
 class VerificationScreen extends StatefulWidget {
   String phoneNumber;
   String verificationId;
+  bool forAdmin;
 
   VerificationScreen(
-      {Key? key, required this.phoneNumber, required this.verificationId})
+      {Key? key,
+      required this.phoneNumber,
+      required this.verificationId,
+      required this.forAdmin})
       : super(key: key);
 
   @override
@@ -25,6 +32,9 @@ class _VerificationScreenState extends State<VerificationScreen> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController otpController = TextEditingController();
   GroupController groupController = GroupController.instance;
+  AdminController adminController = AdminController.instance;
+  AlcoholicController alcoholicController =
+      AlcoholicController.alcoholicController;
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +58,37 @@ class _VerificationScreenState extends State<VerificationScreen> {
                   _numberText()
                 ],
               ),
-              TextField(
-                controller: otpController,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: TextField(
+                  keyboardType: TextInputType.number,
+                  maxLength: 10,
+                  style: TextStyle(color: MyApplication.logoColor1),
+                  cursorColor: MyApplication.logoColor1,
+                  controller: otpController,
+                  decoration: InputDecoration(
+                    labelText: 'OTP',
+                    prefixIcon:
+                        Icon(Icons.numbers, color: MyApplication.logoColor1),
+                    labelStyle: TextStyle(
+                      fontSize: 14,
+                      color: MyApplication.logoColor2,
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(6),
+                      borderSide: BorderSide(
+                        color: MyApplication.logoColor2,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(6),
+                      borderSide: BorderSide(
+                        color: MyApplication.logoColor2,
+                      ),
+                    ),
+                  ),
+                  obscureText: false,
+                ),
               ),
               Container(
                 width: MediaQuery.of(context).size.width,
@@ -64,11 +103,66 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 child: InkWell(
                   onTap: () async {
                     try {
-                      PhoneAuthProvider.credential(
-                          verificationId: widget.verificationId,
-                          smsCode: otpController.text);
-                      debug.log(
-                          'Signed In Successfully From VerificationScreen');
+                      PhoneAuthCredential credential =
+                          PhoneAuthProvider.credential(
+                              verificationId: widget.verificationId,
+                              smsCode: otpController.text);
+                      final auth = FirebaseAuth.instance;
+                      await auth.signInWithCredential(credential);
+
+                      loginUser(widget.phoneNumber, widget.forAdmin);
+
+                      if (widget.forAdmin) {
+                        Future<AdminSavingStatus> adminSavingStatus =
+                            adminController.saveAdmin();
+
+                        adminSavingStatus.then((value) {
+                          if (value == AdminSavingStatus.unathourized) {
+                            debug.log(
+                                'AdminSavingStatus.unathourized From AdminRegistrationScreen...');
+                          } else if (value ==
+                              AdminSavingStatus.adminAlreadyExist) {
+                            debug.log(
+                                'AdminSavingStatus.adminAlreadyExist From AdminRegistrationScreen...');
+                          } else if (value == AdminSavingStatus.loginRequired) {
+                            debug.log(
+                                'AdminSavingStatus.loginRequired From AdminRegistrationScreen...');
+                          } else if (value ==
+                              AdminSavingStatus.incompleteData) {
+                            debug.log(
+                                'AdminSavingStatus.incompleteData From AdminRegistrationScreen...');
+                          } else {
+                            debug.log(
+                                '2. Successfully Saved User From AdminRegistrationScreen...');
+                          }
+                        });
+                      } else {
+                        Future<AlcoholicSavingStatus> adminSavingStatus =
+                            alcoholicController.saveAlcoholic();
+
+                        adminSavingStatus.then((value) {
+                          if (value == AlcoholicSavingStatus.unathourized) {
+                            debug.log(
+                                'AlcoholicSavingStatus.unathourized From AlcoholicRegistrationScreen...');
+                          } else if (value ==
+                              AlcoholicSavingStatus.adminAlreadyExist) {
+                            debug.log(
+                                'AlcoholicSavingStatus.adminAlreadyExist From AlcoholicRegistrationScreen...');
+                          } else if (value ==
+                              AlcoholicSavingStatus.loginRequired) {
+                            debug.log(
+                                'AlcoholicSavingStatus.loginRequired From AlcoholicRegistrationScreen...');
+                          } else if (value ==
+                              AlcoholicSavingStatus.incompleteData) {
+                            debug.log(
+                                'AlcoholicSavingStatus.incompleteData From AlcoholicRegistrationScreen...');
+                          } else {
+                            debug.log(
+                                'Successfully Saved User From AlcoholicRegistrationScreen...');
+                          }
+                        });
+                      }
+                      Get.close(2);
                     } catch (error) {
                       Get.snackbar('Error', 'Error Signing The User In.');
                       debug.log('Error Signing User From VerificationScreen');

@@ -2,17 +2,19 @@
 abstract class User {
   String phoneNumber;
   String profileImageURL;
+  String password;
 
-  User({
-    required this.phoneNumber,
-    required this.profileImageURL,
-  });
+  User(
+      {required this.phoneNumber,
+      required this.profileImageURL,
+      required this.password});
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> map = {};
     map.addAll({
       'phoneNumber': phoneNumber,
       'profileImageURL': profileImageURL,
+      'password': password,
     });
     return map;
   }

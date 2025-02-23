@@ -10,8 +10,12 @@ class Admin extends User {
       required profileImageURL,
       required this.isFemale,
       required this.isSuperiorAdmin,
+      required password,
       required this.key})
-      : super(phoneNumber: phoneNumber, profileImageURL: profileImageURL);
+      : super(
+            phoneNumber: phoneNumber,
+            profileImageURL: profileImageURL,
+            password: password);
 
   @override
   Map<String, dynamic> toJson() {
@@ -28,5 +32,6 @@ class Admin extends User {
       profileImageURL: json['profileImageURL'],
       isFemale: json['isFemale'],
       isSuperiorAdmin: json['isSuperiorAdmin'],
+      password: json['password'],
       key: json['key']);
 }

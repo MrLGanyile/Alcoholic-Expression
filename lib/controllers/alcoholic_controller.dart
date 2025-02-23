@@ -41,6 +41,10 @@ class AlcoholicController extends GetxController {
   String? get newAlcoholicUsername => _newAlcoholicUsername.value;
 
   // ignore: prefer_final_fields
+  late Rx<String> _newAlcoholicPassword = Rx('');
+  String get newAlcoholicPassword => _newAlcoholicPassword.value;
+
+  // ignore: prefer_final_fields
   late Rx<SectionName> _newAlcoholSectionName =
       Rx(SectionName.howardCollegeCampusUKZNDurbanKwaZuluNatalSouthAfrica);
   SectionName get newAlcoholSectionName => _newAlcoholSectionName.value;
@@ -151,6 +155,7 @@ class AlcoholicController extends GetxController {
             .doc(_newAlcoholicPhoneNumber.value);
 
         Alcoholic alcoholic = Alcoholic(
+            password: _newAlcoholicPassword.value,
             phoneNumber: reference.id,
             profileImageURL: trimmedImageURL(),
             username: _newAlcoholicUsername.value!,
