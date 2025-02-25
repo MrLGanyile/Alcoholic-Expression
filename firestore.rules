@@ -51,7 +51,7 @@ service cloud.firestore {
     // Branch : group_resources_crud_storage_security_rules
     // Note: Has Model Named {Alcoholic}
     match /alcoholics/{alcoholicPhoneNumber}{
-      allow create: if true; //request.auth!=null &&
+      allow create: if request.auth!=null; // &&
 
       //exists(/databases/$(database)/documents/admins/
       //$(request.auth.uid))==false &&
@@ -204,16 +204,17 @@ service cloud.firestore {
 
     // Note: Has Model Named {Admin}
     match /admins/{adminPhoneNumber}{
-      allow create: if isSuperiorAdmin() && 
-      request.resource.data.isSuperiorAdmin == false;
+      allow write, read;
+      // allow create: if isSuperiorAdmin() && 
+      // request.resource.data.isSuperiorAdmin == false;
 
-      allow read: if isSuperiorAdmin() || 
-      (request.auth != null && request.auth.uid == resource.data.phoneNumber);
+      // allow read: if isSuperiorAdmin() || 
+      // (request.auth != null && request.auth.uid == resource.data.phoneNumber);
 
-      allow delete: if isSuperiorAdmin() && 
-      resource.data.isSuperiorAdmin == false;
+      // allow delete: if isSuperiorAdmin() && 
+      // resource.data.isSuperiorAdmin == false;
 
-      allow update: if false; 
+      // allow update: if false; 
     }
 
     // ==============================Done With Unit Testing [End]==============================

@@ -18,7 +18,7 @@ final storage = FirebaseStorage.instance
 final auth = FirebaseAuth.instance;
 
 // ignore: prefer_final_fields
-late Rx<myUser.User?> _currentlyLoggedInUser = Rx(
+Rx<myUser.User?> _currentlyLoggedInUser = Rx(
     null /*Admin(
     phoneNumber: '0661813561',
     profileImageURL: 'admins/profile_images/superior/0661813561.jpg',

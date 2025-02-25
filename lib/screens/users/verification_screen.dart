@@ -39,6 +39,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: SafeArea(
         child: SizedBox.expand(
           child: Column(
@@ -92,7 +93,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
               ),
               Container(
                 width: MediaQuery.of(context).size.width,
-                height: 45,
+                height: 60,
                 margin: const EdgeInsets.symmetric(horizontal: 20),
                 decoration: BoxDecoration(
                   color: MyApplication.logoColor1,
@@ -187,12 +188,12 @@ class _VerificationScreenState extends State<VerificationScreen> {
     );
   }
 
-  Widget _headingText() => const Text(
+  Widget _headingText() => Text(
         'Verification',
         style: TextStyle(
-          fontWeight: FontWeight.w600,
-          fontSize: 25,
-        ),
+            fontWeight: FontWeight.w600,
+            fontSize: 25,
+            color: MyApplication.attractiveColor1),
       );
 
   Widget _subHeadingText() => const Text(
@@ -200,15 +201,15 @@ class _VerificationScreenState extends State<VerificationScreen> {
         style: TextStyle(
           fontWeight: FontWeight.w300,
           fontSize: 15,
-          color: Colors.black38,
+          color: Colors.white38,
         ),
       );
 
   Widget _numberText() => Text(
         widget.phoneNumber,
-        style: const TextStyle(
-          fontWeight: FontWeight.w500,
-          fontSize: 15,
-        ),
+        style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 15,
+            color: MyApplication.logoColor1),
       );
 }

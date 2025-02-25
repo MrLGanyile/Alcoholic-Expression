@@ -334,6 +334,8 @@ class _AlcoholicRegistrationWidgetState
                               )),
                           child: InkWell(
                             onTap: () async {
+                              alcoholicController.setNewAlcoholicPassword(
+                                  passwordEditingController.text);
                               debug.log(
                                   'Alcoholic Validation From AlcoholicRegistrationScreen');
                               // Create Alcoholic Now

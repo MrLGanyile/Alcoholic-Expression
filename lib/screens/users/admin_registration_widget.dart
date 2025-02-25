@@ -335,6 +335,8 @@ class AdminRegistrationWidget extends StatelessWidget {
                               )),
                           child: InkWell(
                             onTap: () async {
+                              adminController.setAdminPassword(
+                                  passwordEditingController.text);
                               // Create Admin Now
                               if (adminController
                                       .newAdminPhoneNumber!.isNotEmpty &&

@@ -149,8 +149,7 @@ class _MyApplicationState extends State<MyApplication> {
 
             // Make sure to create a draw given there are groups belonging to the host's location.
             // home: StartScreen(),
-            home: AdminRegistrationWidget()
-            // home: const AlcoholicRegistrationWidget()
-            ));
+            // home: AdminRegistrationWidget()
+            home: const AlcoholicRegistrationWidget()));
   }
 }

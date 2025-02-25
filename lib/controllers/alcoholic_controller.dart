@@ -53,6 +53,10 @@ class AlcoholicController extends GetxController {
       SectionName.dutDurbanCentralDurbanKwaZuluNatalSouthAfrica);
   SectionName? get searchedSectionName => locateableSectionName.value;
 
+  void setNewAlcoholicPassword(String password) {
+    _newAlcoholicPassword = Rx(password);
+  }
+
   void captureAlcoholicProfileImageWithCamera(
       String phoneNumber, String username) async {
     if (phoneNumber.isEmpty) {

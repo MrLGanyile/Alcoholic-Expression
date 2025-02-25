@@ -76,7 +76,7 @@ class AdminController extends GetxController {
         _newAdminProfileImage = Rx<File?>(File(pickedImageFile.path));
         _newAdminProfileImageURL = Rx<String>(await uploadResource(
             _newAdminProfileImage.value!,
-            '/admins/profile_images/$phoneNumber'));
+            '/admins/profile_images/normal/$phoneNumber'));
         _newAdminPhoneNumber = Rx<String?>(phoneNumber);
         Get.snackbar('Image Status', 'Image File Successfully Picked.');
         update();
@@ -100,7 +100,7 @@ class AdminController extends GetxController {
         _newAdminProfileImage = Rx<File?>(File(pickedImageFile.path));
         _newAdminProfileImageURL = Rx<String>(await uploadResource(
             _newAdminProfileImage.value!,
-            '/admins/profile_images/$phoneNumber'));
+            '/admins/profile_images/normal/$phoneNumber'));
         _newAdminPhoneNumber = Rx<String?>(phoneNumber);
 
         Get.snackbar('Image Status', 'Image File Successfully Picked.');
@@ -109,6 +109,10 @@ class AdminController extends GetxController {
         Get.snackbar('Error', 'Image Wasn\'t Picked.');
       }
     }
+  }
+
+  void setAdminPassword(String password) {
+    _newAdminPassword = Rx(password);
   }
 
   void setNewAdminSectionName(SectionName sectionName) {
